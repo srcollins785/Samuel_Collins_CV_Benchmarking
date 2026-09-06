@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Samuel_Collins_CV_Benchmarking"
+version = "0.1.0"
+description = "Benchmark classical machine-learning and neural-network image classifiers through one public function."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [{ name = "Samuel Collins" }]
+keywords = ["computer-vision", "image-classification", "benchmarking", "scikit-learn"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+]
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "pillow>=10.0",
+    "scikit-learn>=1.3",
+    "matplotlib>=3.7",
+    "torch>=2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4", "build>=1.0", "twine>=4.0"]
+
+[project.urls]
+Homepage = "https://github.com/srcollins785/Samuel_Collins_CV_Benchmarking"
+Repository = "https://github.com/srcollins785/Samuel_Collins_CV_Benchmarking"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

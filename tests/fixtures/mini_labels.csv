@@ -1,0 +1,17 @@
+image_path,class_name
+mini/cat/cat_01.jpeg,cat
+mini/cat/cat_02.jpeg,cat
+mini/cat/cat_03.jpeg,cat
+mini/cat/cat_04.jpeg,cat
+mini/cat/cat_05.jpeg,cat
+mini/dog/dog_01.jpeg,dog
+mini/dog/dog_02.jpeg,dog
+mini/dog/dog_03.jpeg,dog
+mini/dog/dog_04.jpeg,dog
+mini/dog/dog_05.jpeg,dog
+mini/horse/horse_01.jpeg,horse
+mini/horse/horse_02.jpeg,horse
+mini/horse/horse_03.jpeg,horse
+mini/horse/horse_04.jpeg,horse
+mini/horse/horse_05.jpeg,horse
+mini/cat/cat_corrupt.jpeg,cat

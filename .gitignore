@@ -1,0 +1,20 @@
+# Working dataset: regenerate with examples/download_animals10.py.
+# Not committed - Animals-10 images are scraped from the web and are not
+# ours to redistribute. See README "Datasets".
+data/
+
+# Kaggle source archive, kept outside the repo
+animals10_source/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.pytest_cache/
+
+# macOS
+.DS_Store
