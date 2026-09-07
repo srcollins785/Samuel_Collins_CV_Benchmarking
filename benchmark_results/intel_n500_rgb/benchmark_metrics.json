@@ -8,8 +8,8 @@
     "macro_recall": 0.705,
     "macro_f1": 0.7040087935524961,
     "weighted_f1": 0.704008793552496,
-    "training_time_seconds": 36.39243195900002,
-    "inference_time_ms_per_image": 0.7993817366666652,
+    "training_time_seconds": 26.752590583,
+    "inference_time_ms_per_image": 0.4119047916666337,
     "confusion_matrix": [
       [
         77,
@@ -634,8 +634,8 @@
     "macro_recall": 0.625,
     "macro_f1": 0.6210285485680533,
     "weighted_f1": 0.6210285485680535,
-    "training_time_seconds": 110.76423370799999,
-    "inference_time_ms_per_image": 345.0748038883333,
+    "training_time_seconds": 139.535610791,
+    "inference_time_ms_per_image": 91.08186868,
     "confusion_matrix": [
       [
         55,
@@ -824,8 +824,8 @@
     "macro_recall": 0.57,
     "macro_f1": 0.5638715792063363,
     "weighted_f1": 0.5638715792063365,
-    "training_time_seconds": 2.5574104170000034,
-    "inference_time_ms_per_image": 0.04768361166666679,
+    "training_time_seconds": 2.6537767080000023,
+    "inference_time_ms_per_image": 0.04893534666666829,
     "confusion_matrix": [
       [
         45,
@@ -1014,8 +1014,8 @@
     "macro_recall": 0.4983333333333333,
     "macro_f1": 0.4985916407943225,
     "weighted_f1": 0.4985916407943225,
-    "training_time_seconds": 0.7704113750000374,
-    "inference_time_ms_per_image": 0.02617382000001574,
+    "training_time_seconds": 0.8230484999999987,
+    "inference_time_ms_per_image": 0.024780069999981908,
     "confusion_matrix": [
       [
         31,
@@ -1204,8 +1204,8 @@
     "macro_recall": 0.39499999999999996,
     "macro_f1": 0.39591199771607627,
     "weighted_f1": 0.39591199771607627,
-    "training_time_seconds": 15.563449624999997,
-    "inference_time_ms_per_image": 0.0023014583333313965,
+    "training_time_seconds": 15.133488583999998,
+    "inference_time_ms_per_image": 0.0024113883333320985,
     "confusion_matrix": [
       [
         32,
@@ -1394,8 +1394,8 @@
     "macro_recall": 0.39333333333333337,
     "macro_f1": 0.39518961279050213,
     "weighted_f1": 0.3951896127905022,
-    "training_time_seconds": 5.101939832999999,
-    "inference_time_ms_per_image": 0.03995861166666762,
+    "training_time_seconds": 5.6734300829999995,
+    "inference_time_ms_per_image": 0.04088291666666688,
     "confusion_matrix": [
       [
         17,

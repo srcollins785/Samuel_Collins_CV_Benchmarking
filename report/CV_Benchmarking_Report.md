@@ -13,7 +13,7 @@ samuel.collins@students.cau.edu
 
 This report compares six image classification methods — four classical machine-learning models and two neural networks — through a single public function in an installable package, `Samuel_Collins_CV_Benchmarking`.
 
-Every model in a given run sees one stratified split, one set of metrics and one measurement of cost. Across runs, exactly one thing changes at a time: the size of the training set, the color mode, or the dataset. There are 5 runs over 2 datasets.
+Every model in a given run sees one stratified split, one set of metrics and one measurement of cost. Across runs, exactly one thing changes at a time: the size of the training set, the color mode, or the dataset. There are 6 runs over 2 datasets.
 
 ```python
 from samuel_collins_cv_benchmarking import benchmark_image_classification
@@ -77,12 +77,12 @@ results = benchmark_image_classification(
 
 | Model | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) | Inference Time (ms/img) |
 |---|---|---|---|---|---|---|---|
-| Simple CNN | 0.433 | 0.446 | 0.433 | 0.434 | 0.434 | 44.1 | 0.408 |
-| SVM | 0.353 | 0.362 | 0.353 | 0.352 | 0.352 | 500.4 | 111.146 |
-| Random Forest | 0.322 | 0.331 | 0.322 | 0.319 | 0.319 | 3.3 | 0.028 |
-| Neural Network | 0.287 | 0.280 | 0.287 | 0.281 | 0.281 | 1.4 | 0.025 |
-| Logistic Regression | 0.226 | 0.230 | 0.226 | 0.225 | 0.225 | 9.1 | 0.044 |
-| Decision Tree | 0.180 | 0.182 | 0.180 | 0.180 | 0.180 | 20.8 | 0.002 |
+| Simple CNN | 0.433 | 0.446 | 0.433 | 0.434 | 0.434 | 42.4 | 0.411 |
+| SVM | 0.353 | 0.362 | 0.353 | 0.352 | 0.352 | 546.5 | 123.585 |
+| Random Forest | 0.322 | 0.331 | 0.322 | 0.319 | 0.319 | 3.1 | 0.034 |
+| Neural Network | 0.287 | 0.280 | 0.287 | 0.281 | 0.281 | 1.3 | 0.024 |
+| Logistic Regression | 0.226 | 0.230 | 0.226 | 0.225 | 0.225 | 9.2 | 0.039 |
+| Decision Tree | 0.180 | 0.182 | 0.180 | 0.180 | 0.180 | 21.4 | 0.003 |
 
 **Best: Simple CNN**, macro F1 0.434 (4.3x the 0.100 chance level for 10 classes).
 
@@ -119,12 +119,12 @@ results = benchmark_image_classification(
 
 | Model | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) | Inference Time (ms/img) |
 |---|---|---|---|---|---|---|---|
-| Simple CNN | 0.320 | 0.323 | 0.320 | 0.295 | 0.295 | 7.9 | 0.393 |
-| Random Forest | 0.300 | 0.310 | 0.300 | 0.294 | 0.294 | 0.6 | 0.074 |
-| SVM | 0.240 | 0.265 | 0.240 | 0.242 | 0.242 | 29.4 | 22.317 |
-| Logistic Regression | 0.215 | 0.216 | 0.215 | 0.213 | 0.213 | 1.1 | 0.030 |
-| Neural Network | 0.180 | 0.182 | 0.180 | 0.178 | 0.178 | 0.3 | 0.025 |
-| Decision Tree | 0.095 | 0.091 | 0.095 | 0.093 | 0.093 | 3.2 | 0.008 |
+| Simple CNN | 0.320 | 0.323 | 0.320 | 0.295 | 0.295 | 6.4 | 0.402 |
+| Random Forest | 0.300 | 0.310 | 0.300 | 0.294 | 0.294 | 0.6 | 0.081 |
+| SVM | 0.240 | 0.265 | 0.240 | 0.242 | 0.242 | 28.2 | 33.793 |
+| Logistic Regression | 0.215 | 0.216 | 0.215 | 0.213 | 0.213 | 1.5 | 0.045 |
+| Neural Network | 0.180 | 0.182 | 0.180 | 0.178 | 0.178 | 0.4 | 0.026 |
+| Decision Tree | 0.095 | 0.091 | 0.095 | 0.093 | 0.093 | 3.4 | 0.005 |
 
 **Best: Simple CNN**, macro F1 0.295 (2.9x the 0.100 chance level for 10 classes).
 
@@ -161,12 +161,12 @@ results = benchmark_image_classification(
 
 | Model | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) | Inference Time (ms/img) |
 |---|---|---|---|---|---|---|---|
-| Simple CNN | 0.351 | 0.351 | 0.351 | 0.349 | 0.349 | 44.9 | 0.256 |
-| Random Forest | 0.299 | 0.308 | 0.299 | 0.296 | 0.296 | 1.8 | 0.029 |
-| SVM | 0.283 | 0.294 | 0.283 | 0.281 | 0.281 | 13.1 | 5.904 |
+| Simple CNN | 0.351 | 0.351 | 0.351 | 0.349 | 0.349 | 43.5 | 0.246 |
+| Random Forest | 0.299 | 0.308 | 0.299 | 0.296 | 0.296 | 1.7 | 0.028 |
+| SVM | 0.283 | 0.294 | 0.283 | 0.281 | 0.281 | 13.0 | 3.991 |
 | Neural Network | 0.253 | 0.255 | 0.253 | 0.251 | 0.251 | 0.5 | 0.009 |
-| Decision Tree | 0.191 | 0.190 | 0.191 | 0.190 | 0.190 | 7.0 | 0.003 |
-| Logistic Regression | 0.169 | 0.169 | 0.169 | 0.167 | 0.167 | 7.2 | 0.047 |
+| Decision Tree | 0.191 | 0.190 | 0.191 | 0.190 | 0.190 | 6.8 | 0.003 |
+| Logistic Regression | 0.169 | 0.169 | 0.169 | 0.167 | 0.167 | 5.2 | 0.013 |
 
 **Best: Simple CNN**, macro F1 0.349 (3.5x the 0.100 chance level for 10 classes).
 
@@ -186,7 +186,49 @@ results = benchmark_image_classification(
 | cat | dog | 16 |
 | cat | spider | 15 |
 
-## 4.4 Intel Image Classification — rgb, 500 per class
+## 4.4 Animals-10 — grayscale, 100 per class
+
+```python
+results = benchmark_image_classification(
+    dataset="./data/animals10_n100/labels.csv",
+    dataset_type="csv",
+    target_labels="class_name",
+    color_mode="grayscale",
+)
+```
+
+1,000 images, 10 classes, split 800 training / 200 testing at seed 42.
+
+![class_distribution](../benchmark_results/animals10_n100_grayscale/class_distribution.png)
+
+| Model | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) | Inference Time (ms/img) |
+|---|---|---|---|---|---|---|---|
+| Simple CNN | 0.260 | 0.269 | 0.260 | 0.249 | 0.249 | 7.2 | 0.226 |
+| Random Forest | 0.255 | 0.242 | 0.255 | 0.239 | 0.239 | 0.3 | 0.137 |
+| SVM | 0.215 | 0.214 | 0.215 | 0.207 | 0.207 | 0.6 | 0.806 |
+| Neural Network | 0.200 | 0.191 | 0.200 | 0.191 | 0.191 | 0.1 | 0.011 |
+| Logistic Regression | 0.135 | 0.134 | 0.135 | 0.132 | 0.132 | 1.1 | 0.033 |
+| Decision Tree | 0.125 | 0.136 | 0.125 | 0.129 | 0.129 | 1.1 | 0.002 |
+
+**Best: Simple CNN**, macro F1 0.249 (2.5x the 0.100 chance level for 10 classes).
+
+![model_comparison](../benchmark_results/animals10_n100_grayscale/model_comparison.png)
+
+![confusion_matrices/simple_cnn](../benchmark_results/animals10_n100_grayscale/confusion_matrices/simple_cnn.png)
+
+![prediction_examples](../benchmark_results/animals10_n100_grayscale/prediction_examples.png)
+
+**Most frequent confusions.**
+
+| True class | Predicted as | Images |
+|---|---|---|
+| horse | sheep | 8 |
+| chicken | horse | 5 |
+| cow | sheep | 5 |
+| elephant | sheep | 5 |
+| butterfly | horse | 4 |
+
+## 4.5 Intel Image Classification — rgb, 500 per class
 
 ```python
 results = benchmark_image_classification(
@@ -203,12 +245,12 @@ results = benchmark_image_classification(
 
 | Model | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) | Inference Time (ms/img) |
 |---|---|---|---|---|---|---|---|
-| Simple CNN | 0.705 | 0.712 | 0.705 | 0.704 | 0.704 | 36.4 | 0.799 |
-| SVM | 0.625 | 0.622 | 0.625 | 0.621 | 0.621 | 110.8 | 345.075 |
-| Random Forest | 0.570 | 0.566 | 0.570 | 0.564 | 0.564 | 2.6 | 0.048 |
-| Neural Network | 0.498 | 0.515 | 0.498 | 0.499 | 0.499 | 0.8 | 0.026 |
-| Decision Tree | 0.395 | 0.398 | 0.395 | 0.396 | 0.396 | 15.6 | 0.002 |
-| Logistic Regression | 0.393 | 0.406 | 0.393 | 0.395 | 0.395 | 5.1 | 0.040 |
+| Simple CNN | 0.705 | 0.712 | 0.705 | 0.704 | 0.704 | 26.8 | 0.412 |
+| SVM | 0.625 | 0.622 | 0.625 | 0.621 | 0.621 | 139.5 | 91.082 |
+| Random Forest | 0.570 | 0.566 | 0.570 | 0.564 | 0.564 | 2.7 | 0.049 |
+| Neural Network | 0.498 | 0.515 | 0.498 | 0.499 | 0.499 | 0.8 | 0.025 |
+| Decision Tree | 0.395 | 0.398 | 0.395 | 0.396 | 0.396 | 15.1 | 0.002 |
+| Logistic Regression | 0.393 | 0.406 | 0.393 | 0.395 | 0.395 | 5.7 | 0.041 |
 
 **Best: Simple CNN**, macro F1 0.704 (4.2x the 0.167 chance level for 6 classes).
 
@@ -228,7 +270,7 @@ results = benchmark_image_classification(
 | sea | mountain | 12 |
 | buildings | street | 10 |
 
-## 4.5 Intel Image Classification — grayscale, 500 per class
+## 4.6 Intel Image Classification — grayscale, 500 per class
 
 ```python
 results = benchmark_image_classification(
@@ -245,12 +287,12 @@ results = benchmark_image_classification(
 
 | Model | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) | Inference Time (ms/img) |
 |---|---|---|---|---|---|---|---|
-| Simple CNN | 0.657 | 0.657 | 0.657 | 0.656 | 0.656 | 32.1 | 0.260 |
-| SVM | 0.528 | 0.523 | 0.528 | 0.516 | 0.516 | 3.7 | 3.473 |
-| Random Forest | 0.505 | 0.500 | 0.505 | 0.497 | 0.497 | 1.7 | 0.048 |
-| Neural Network | 0.442 | 0.434 | 0.442 | 0.433 | 0.433 | 0.3 | 0.010 |
-| Decision Tree | 0.307 | 0.310 | 0.307 | 0.307 | 0.307 | 5.3 | 0.001 |
-| Logistic Regression | 0.293 | 0.305 | 0.293 | 0.292 | 0.292 | 7.3 | 0.022 |
+| Simple CNN | 0.657 | 0.657 | 0.657 | 0.656 | 0.656 | 30.5 | 0.239 |
+| SVM | 0.528 | 0.523 | 0.528 | 0.516 | 0.516 | 3.5 | 3.223 |
+| Random Forest | 0.505 | 0.500 | 0.505 | 0.497 | 0.497 | 1.6 | 0.046 |
+| Neural Network | 0.442 | 0.434 | 0.442 | 0.433 | 0.433 | 0.3 | 0.009 |
+| Decision Tree | 0.307 | 0.310 | 0.307 | 0.307 | 0.307 | 5.0 | 0.001 |
+| Logistic Regression | 0.293 | 0.305 | 0.293 | 0.292 | 0.292 | 2.8 | 0.012 |
 
 **Best: Simple CNN**, macro F1 0.656 (3.9x the 0.167 chance level for 6 classes).
 
@@ -274,6 +316,19 @@ results = benchmark_image_classification(
 
 Same dataset, same color mode, nested subsets — the smaller set is a strict prefix of the larger, so this is a learning curve rather than two unrelated samples.
 
+**Animals-10, grayscale**
+
+| Model | 100/class | 500/class | change |
+|---|---|---|---|
+| Simple CNN | 0.249 | 0.349 | +40% |
+| Random Forest | 0.239 | 0.296 | +24% |
+| SVM | 0.207 | 0.281 | +36% |
+| Neural Network | 0.191 | 0.251 | +31% |
+| Decision Tree | 0.129 | 0.190 | +48% |
+| Logistic Regression | 0.132 | 0.167 | +26% |
+
+Simple CNN leads at both sizes, but its margin over the runner-up widens from 0.010 to 0.053 macro F1. Models whose scores have flattened are near what raw pixels can give them; models still climbing would gain more from data than from a change of architecture.
+
 **Animals-10, rgb**
 
 | Model | 100/class | 500/class | change |
@@ -291,23 +346,26 @@ Simple CNN leads at both sizes, but its margin over the runner-up widens from 0.
 
 Identical images in both columns; only `color_mode` differs. Grayscale gives 4,096 features per image against RGB's 12,288.
 
-| Model | Animals-10 | Intel Image Classification |
-|---|---|---|
-| Simple CNN | +24% | +7% |
-| Random Forest | +8% | +14% |
-| SVM | +25% | +20% |
-| Neural Network | +12% | +15% |
-| Decision Tree | -5% | +29% |
-| Logistic Regression | +34% | +35% |
+| Model | Animals-10 | Animals-10 | Intel Image Classification |
+|---|---|---|---|
+| Simple CNN | +18% | +24% | +7% |
+| Random Forest | +23% | +8% | +14% |
+| SVM | +17% | +25% | +20% |
+| Neural Network | -7% | +12% | +15% |
+| Logistic Regression | +61% | +34% | +35% |
+| Decision Tree | -28% | -5% | +29% |
 
-**Decision Tree disagrees across datasets** (Animals-10 -5%, Intel Image Classification +29%), so the effect belongs to the data rather than to the model. Where a class is separable by color directly, one threshold on one channel is informative; where it is not, the extra channels are mostly noise to a model with no ensemble to average them away.
+**Neural Network disagrees across datasets** (Animals-10 -7%, Animals-10 +12%, Intel Image Classification +15%), so the effect belongs to the data rather than to the model. Where a class is separable by color directly, one threshold on one channel is informative; where it is not, the extra channels are mostly noise to a model with no ensemble to average them away.
+
+**Decision Tree disagrees across datasets** (Animals-10 -28%, Animals-10 -5%, Intel Image Classification +29%), so the effect belongs to the data rather than to the model. Where a class is separable by color directly, one threshold on one channel is informative; where it is not, the extra channels are mostly noise to a model with no ensemble to average them away.
 
 **Cost.** RGB triples the feature count, and the SVM pays more than three times for it:
 
 | Dataset | SVM training, grayscale | SVM training, RGB | factor |
 |---|---|---|---|
-| Animals-10 | 13.1 s | 500.4 s | 38x |
-| Intel Image Classification | 3.7 s | 110.8 s | 30x |
+| Animals-10 | 0.6 s | 28.2 s | 48x |
+| Animals-10 | 13.0 s | 546.5 s | 42x |
+| Intel Image Classification | 3.5 s | 139.5 s | 40x |
 
 ## 7. Experiment: dataset and padding
 
@@ -332,14 +390,14 @@ From animals10_n500_rgb:
 
 | Model | Training (s) | Inference (ms/image) | Macro F1 |
 |---|---|---|---|
-| Simple CNN | 44.1 | 0.408 | 0.434 |
-| SVM | 500.4 | 111.146 | 0.352 |
-| Random Forest | 3.3 | 0.028 | 0.319 |
-| Neural Network | 1.4 | 0.025 | 0.281 |
-| Logistic Regression | 9.1 | 0.044 | 0.225 |
-| Decision Tree | 20.8 | 0.002 | 0.180 |
+| Simple CNN | 42.4 | 0.411 | 0.434 |
+| SVM | 546.5 | 123.585 | 0.352 |
+| Random Forest | 3.1 | 0.034 | 0.319 |
+| Neural Network | 1.3 | 0.024 | 0.281 |
+| Logistic Regression | 9.2 | 0.039 | 0.225 |
+| Decision Tree | 21.4 | 0.003 | 0.180 |
 
-Inference cost spans a factor of 59,373 between Decision Tree and SVM. Classifying a thousand images would take SVM about 111.1 seconds against Decision Tree's 0.002 seconds.
+Inference cost spans a factor of 48,001 between Decision Tree and SVM. Classifying a thousand images would take SVM about 123.6 seconds against Decision Tree's 0.003 seconds.
 
 Accuracy alone would not surface this. A model chosen on macro F1 for a CPU-bound application could be unusable in practice, which is why the ranking breaks ties on the lower inference time.
 
@@ -442,6 +500,6 @@ python scripts/run_benchmarks.py --color-mode grayscale
 python scripts/generate_report.py
 ```
 
-Package version 0.1.0, random seed 42, image size 64x64. Every model fixes its own random state; each run's full configuration is in its `run_configuration.json`.
+Package version 1.0.0, random seed 42, image size 64x64. Every model fixes its own random state; each run's full configuration is in its `run_configuration.json`.
 
 The images are not committed. Both datasets are third-party collections, so the download scripts rebuild the subsets instead, and the seeded sampling makes that rebuild exact.

@@ -1,7 +1,7 @@
 {
   "package": {
     "name": "Samuel_Collins_CV_Benchmarking",
-    "version": "0.1.0"
+    "version": "1.0.0"
   },
   "dataset_type": "csv",
   "color_mode": "rgb",
