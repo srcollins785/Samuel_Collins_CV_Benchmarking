@@ -567,6 +567,23 @@ class TestJsonFormatDetection:
         assert len(dataset) == 2
         assert any("loaded as JSON" in w for w in dataset.warnings)
 
+    def test_a_bare_object_is_rejected_as_not_a_list(self, images):
+        # Section 3.3: a JSON manifest holds a *list* of records. A single
+        # object spread over several lines parses as neither form, and the
+        # error should say which shape was expected rather than crash on an
+        # index into a dict.
+        manifest = images / "m.json"
+        manifest.write_text('{\n  "image_path": "cat/a.jpg",\n  "class_name": "cat"\n}')
+        with pytest.raises(ValueError, match="list of records"):
+            load_json(manifest, "class_name")
+
+    def test_a_dict_of_records_is_rejected(self, images):
+        manifest = images / "m.json"
+        manifest.write_text(
+            '{\n  "first": {"image_path": "cat/a.jpg", "class_name": "cat"}\n}')
+        with pytest.raises(ValueError, match="list of records"):
+            load_json(manifest, "class_name")
+
     def test_unknown_extension_is_sniffed(self, images):
         manifest = images / "m.txt"
         manifest.write_text(self.LINES)
