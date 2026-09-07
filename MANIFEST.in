@@ -1,0 +1,13 @@
+# The sdist picked up tests/test_*.py automatically but not conftest.py or
+# the fixture images, which left a test suite that could not run: conftest
+# is what puts src/ on the path and supplies the fixtures_dir fixture.
+include README.md LICENSE
+recursive-include tests *.py
+recursive-include tests/fixtures *.jpeg *.jpg *.png *.bmp *.tiff *.csv *.json *.jsonl
+
+# Never ship the datasets, the results, the report or personal notes.
+prune data
+prune benchmark_results
+prune class_notes
+prune report
+prune scripts
