@@ -72,6 +72,48 @@ def exploding_spec():
                      build=ExplodingModel, scaled=False)
 
 
+class SlowFitModel:
+    """Slow to train, instant to predict, so the two phases are separable."""
+
+    FIT_SECONDS = 0.30
+
+    def fit(self, X, y):
+        import time as _time
+        _time.sleep(self.FIT_SECONDS)
+        self._first = int(np.unique(y)[0])
+        return self
+
+    def predict(self, X):
+        return np.full(len(X), self._first, dtype=np.int64)
+
+
+def slow_fit_spec():
+    return ModelSpec(key="slow_fit", name="Slow Fit Model",
+                     build=SlowFitModel, scaled=False)
+
+
+class ConstantModel:
+    """Always predicts the first class, so the others are never predicted.
+
+    This is the only situation in which zero_division actually fires.
+    Precision's denominator is the number of times a class was *predicted*,
+    so a class predicted even once wrongly has a well-defined precision of
+    zero. It takes a class predicted never for the denominator to reach zero.
+    """
+
+    def fit(self, X, y):
+        self._first = int(np.unique(y)[0])
+        return self
+
+    def predict(self, X):
+        return np.full(len(X), self._first, dtype=np.int64)
+
+
+def constant_spec():
+    return ModelSpec(key="constant", name="Constant Model",
+                     build=ConstantModel, scaled=False)
+
+
 class TruncatingModel:
     """A model that returns too few predictions."""
 
@@ -145,6 +187,15 @@ class TestMetrics:
         assert result.training_time_seconds > 0
         assert result.inference_time_ms_per_image > 0
 
+    def test_training_and_inference_are_timed_separately(self, split):
+        # Section 7 asks for comparable fit and prediction phases. If the
+        # timer were not reset between them, inference would carry the whole
+        # training cost and the slowest model would look slowest at both.
+        result = evaluate_model(slow_fit_spec(), split)
+        assert result.training_time_seconds >= SlowFitModel.FIT_SECONDS
+        total_inference_ms = result.inference_time_ms_per_image * len(split.test_index)
+        assert total_inference_ms < SlowFitModel.FIT_SECONDS * 1000 / 10
+
     def test_confusion_matrix_is_square_and_totals_the_test_set(self, result, split):
         classes = len(split.dataset.class_names)
         assert result.confusion_matrix.shape == (classes, classes)
@@ -185,6 +236,24 @@ class TestMacroF1PunishesIgnoredClasses:
             if name in ("cat", "dog", "horse")
         ]
         assert 0.0 in per_class
+
+    def test_macro_precision_averages_the_per_class_values(self, result, imbalanced_split):
+        # Pins the value rather than only its range. With zero_division=1 the
+        # ignored class would contribute a precision of 1.0 to this average
+        # instead of 0.0, which would quietly flatter every model that skips
+        # a class.
+        per_class = [
+            result.classification_report[name]["precision"]
+            for name in imbalanced_split.dataset.class_names
+        ]
+        assert result.macro_precision == pytest.approx(float(np.mean(per_class)))
+
+    def test_macro_recall_averages_the_per_class_values(self, result, imbalanced_split):
+        per_class = [
+            result.classification_report[name]["recall"]
+            for name in imbalanced_split.dataset.class_names
+        ]
+        assert result.macro_recall == pytest.approx(float(np.mean(per_class)))
 
     def test_weighted_f1_sits_between_the_two(self, result):
         # Weighted F1 counts classes by size, so it tracks accuracy more
@@ -356,3 +425,49 @@ class TestPredictionExamples:
     def test_examples_are_json_serialisable(self, imbalanced_split):
         result = evaluate_model(neural_model_specs()[0], imbalanced_split)
         json.dumps(prediction_examples(result, imbalanced_split))
+
+
+class TestZeroDivisionOnNeverPredictedClasses:
+    """Section 8 requires zero_division=0, and this is where it bites.
+
+    A class that is predicted even once, wrongly, has precision 0/1 - well
+    defined, and zero_division never applies. Only a class predicted *never*
+    gives 0/0, and then the setting decides whether that class contributes 0
+    or 1 to the macro average. Scoring it 1 would flatter a model that
+    ignored the class completely.
+    """
+
+    @pytest.fixture(scope="class")
+    def result(self, split):
+        return evaluate_model(constant_spec(), split)
+
+    def test_two_classes_are_never_predicted(self, result, split):
+        predicted = set(int(p) for p in result.predictions)
+        assert len(predicted) == 1
+        assert len(split.dataset.class_names) == 3
+
+    def test_never_predicted_classes_score_zero_precision(self, result, split):
+        ignored = split.dataset.class_names[1:]
+        for name in ignored:
+            assert result.classification_report[name]["precision"] == 0.0
+
+    def test_macro_precision_counts_them_as_zero(self, result, split):
+        # One class right, two contributing nothing: about a third.
+        per_class = [
+            result.classification_report[name]["precision"]
+            for name in split.dataset.class_names
+        ]
+        assert result.macro_precision == pytest.approx(float(np.mean(per_class)))
+        assert result.macro_precision < 0.4
+
+    def test_macro_f1_counts_them_as_zero(self, result, split):
+        per_class = [
+            result.classification_report[name]["f1-score"]
+            for name in split.dataset.class_names
+        ]
+        assert result.macro_f1 == pytest.approx(float(np.mean(per_class)))
+
+    def test_accuracy_still_reflects_the_one_class_it_gets_right(self, result):
+        # A third of the balanced test set, so accuracy stays near 0.33 while
+        # macro precision is dragged down by the two zeros.
+        assert result.accuracy == pytest.approx(1 / 3, abs=0.05)
