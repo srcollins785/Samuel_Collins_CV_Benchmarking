@@ -17,10 +17,24 @@ reports.
 pip install Samuel_Collins_CV_Benchmarking
 ```
 
-From a clone, for development:
+From a clone, for development. The virtual environment matters on macOS,
+where the system `python3` and a Homebrew `python3` are different
+interpreters with different packages installed:
 
 ```bash
-pip install -e ".[dev]"
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev,report]"
+```
+
+Inside the environment, plain `python`, `pytest` and `twine` resolve to the
+right interpreter, and everything below can be run without a path prefix.
+
+## Running everything
+
+```bash
+python scripts/run_all.py                 # tests, benchmarks, report, PDF
+python scripts/run_all.py --report-only   # just rebuild the report
 ```
 
 ## Usage

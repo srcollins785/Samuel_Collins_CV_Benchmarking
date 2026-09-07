@@ -50,4 +50,16 @@ filterwarnings = [
     "ignore:divide by zero encountered in matmul:RuntimeWarning",
     "ignore:overflow encountered in matmul:RuntimeWarning",
     "ignore:invalid value encountered in matmul:RuntimeWarning",
+    # matplotlib 3.9 calls pyparsing APIs that pyparsing 3.3 deprecated.
+    # Nothing here is ours and nothing is actionable from this side; left
+    # unfiltered it is roughly a thousand lines per run, enough to bury a
+    # warning that does matter.
+    # Matched on the message rather than the warning class. Naming the class
+    # (ignore::pyparsing.PyparsingDeprecationWarning) is tidier but couples
+    # the config to one dependency version: pyparsing 3.2 does not export
+    # that name, and pytest then fails to start rather than merely warning -
+    # a worse outcome than the noise being suppressed. pyparsing words these
+    # two ways, so both are matched.
+    "ignore:.*deprecated - use.*:DeprecationWarning",
+    "ignore:.*is deprecated, use.*:DeprecationWarning",
 ]
