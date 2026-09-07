@@ -180,13 +180,26 @@ def figure(timeline, path: Path, caption, seconds=5.0):
     image = blank()
     draw = ImageDraw.Draw(image)
     picture = Image.open(path).convert("RGB")
-    box_w, box_h = WIDTH - 300, HEIGHT - 300
+
+    # The caption is measured before the picture is placed, so a two-line
+    # caption takes two lines of room rather than being drawn on top of
+    # itself - which is exactly what happened until a contact sheet of the
+    # finished film made it visible.
+    lines = wrap(draw, caption, F_BODY, WIDTH - 320)
+    caption_height = len(lines) * 44 + 40
+    box_w = WIDTH - 220
+    box_h = HEIGHT - 150 - caption_height
+
     scale = min(box_w / picture.width, box_h / picture.height)
     picture = picture.resize((int(picture.width * scale), int(picture.height * scale)),
                              Image.LANCZOS)
-    image.paste(picture, ((WIDTH - picture.width) // 2, 110))
-    for line in wrap(draw, caption, F_BODY, WIDTH - 400):
-        draw.text((150, HEIGHT - 150), line, font=F_BODY, fill=INK_SECONDARY)
+    top = (HEIGHT - caption_height - picture.height) // 2
+    image.paste(picture, ((WIDTH - picture.width) // 2, max(60, top)))
+
+    y = HEIGHT - caption_height + 10
+    for line in lines:
+        draw.text((160, y), line, font=F_BODY, fill=INK_SECONDARY)
+        y += 44
     timeline.add(image, seconds)
 
 
