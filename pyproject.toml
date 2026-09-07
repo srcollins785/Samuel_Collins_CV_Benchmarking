@@ -38,3 +38,13 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+filterwarnings = [
+    # numpy 2.0 built against Apple's Accelerate BLAS raises these on matmul
+    # calls whose inputs and outputs are entirely finite. Verified spurious:
+    # a clean `a @ b` of random normals emits all three. Filtered narrowly so
+    # the suite output stays readable; NOT suppressed in the package itself,
+    # where a real overflow must still reach the user.
+    "ignore:divide by zero encountered in matmul:RuntimeWarning",
+    "ignore:overflow encountered in matmul:RuntimeWarning",
+    "ignore:invalid value encountered in matmul:RuntimeWarning",
+]
