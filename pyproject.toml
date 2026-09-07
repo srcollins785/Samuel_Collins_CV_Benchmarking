@@ -28,6 +28,9 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=7.4", "build>=1.0", "twine>=4.0"]
+# Only the report tooling in scripts/ needs these; the library itself does
+# not, so they stay out of the default install.
+report = ["markdown>=3.5"]
 
 [project.urls]
 Homepage = "https://github.com/srcollins785/Samuel_Collins_CV_Benchmarking"
