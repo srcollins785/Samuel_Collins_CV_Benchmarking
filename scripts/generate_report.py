@@ -11,7 +11,7 @@ It also stays outside the installed package. The package ships to PyPI for
 anyone to use; a course report carrying a student name, a course number and
 an instructor is not library code.
 
-Run directories encode three things - dataset, subset size, colour mode - and
+Run directories encode three things - dataset, subset size, color mode - and
 every comparison in the report holds two of them fixed and varies the third.
 Reading across runs that differ in more than one is how a confounded
 comparison gets written up as a finding.
@@ -103,11 +103,11 @@ of chance the two datasets are close and the CNN is very slightly better on the 
 one. My comparison had two variables moving and I had assigned the whole difference to
 the one I was interested in.
 
-The same thing happened with colour. On Animals-10 the Decision Tree scored slightly
+The same thing happened with color. On Animals-10 the Decision Tree scored slightly
 worse in RGB than in grayscale, and I had a tidy explanation ready about a single tree
 overfitting the extra channels with no ensemble to average the mistake away. On Intel the
-same model gained twenty-nine percent from colour. The explanation was not wrong so much
-as not general: Intel's classes separate on colour directly, blue sea and white glacier
+same model gained twenty-nine percent from color. The explanation was not wrong so much
+as not general: Intel's classes separate on color directly, blue sea and white glacier
 and green forest, where one threshold on one channel carries real information, while
 brown animals photographed on green grass give a lone tree several thousand mostly noisy
 columns. Two datasets turned a plausible story into a specific claim, and I would not
@@ -126,7 +126,7 @@ The Decision Tree scoring 0.093 at a hundred per class, below the 0.100 you get 
 guessing among ten classes, was the clearest lesson in what these models actually do. A
 single tree splits on individual pixel values, and one pixel out of 12,288 carries almost
 no information about which animal is in the frame. Two hundred of those same trees voting
-reached 0.319. Nothing changed except that the errors of many weak learners cancelled,
+reached 0.319. Nothing changed except that the errors of many weak learners canceled,
 and that is the entire idea of an ensemble, made concrete in a way a textbook description
 never managed for me.
 
@@ -134,7 +134,7 @@ Looking at the misclassified images was worth more than any metric. Three of the
 errors I inspected were cat, cow and dog all predicted as sheep, and all three were
 animals photographed standing on grass. The model appears to have learned something about
 green outdoor backgrounds rather than about the animals, which no confusion matrix would
-have told me on its own. Seeing the standardised sixty-four by sixty-four input rather
+have told me on its own. Seeing the standardized sixty-four by sixty-four input rather
 than the original photograph also made the cost of preserving aspect ratio obvious: on
 the widest images close to half of what the network receives is black padding I put
 there. I still think padding was the right choice over stretching, but it is a real price
@@ -248,7 +248,7 @@ def section_objective(runs: dict) -> list:
         "",
         f"Every model in a given run sees one stratified split, one set of "
         f"metrics and one measurement of cost. Across runs, exactly one thing "
-        f"changes at a time: the size of the training set, the colour mode, or "
+        f"changes at a time: the size of the training set, the color mode, or "
         f"the dataset. There are {len(runs)} runs over "
         f"{len(datasets)} datasets.",
         "",
@@ -290,8 +290,8 @@ def section_datasets(runs: dict) -> list:
         "subset is a byte-identical prefix of a larger one, which is what makes "
         "two sizes comparable as a learning curve.",
         "",
-        "**Standardisation.** Every image is fitted into 64x64 by scaling the "
-        "longest side and padding the remainder with zeros, then normalised to "
+        "**Standardization.** Every image is fitted into 64x64 by scaling the "
+        "longest side and padding the remainder with zeros, then normalized to "
         "[0, 1]. Aspect ratio is preserved rather than stretched.",
         "",
     ]
@@ -398,7 +398,7 @@ def top_confusions(matrix, classes, limit=5) -> list:
 
 
 def section_size_experiment(runs: dict) -> list:
-    """Same dataset, same colour mode, different subset size."""
+    """Same dataset, same color mode, different subset size."""
     groups = {}
     for run in runs.values():
         groups.setdefault((run["dataset"], run["color_mode"]), []).append(run)
@@ -410,7 +410,7 @@ def section_size_experiment(runs: dict) -> list:
     lines = [
         "## 5. Experiment: training set size",
         "",
-        "Same dataset, same colour mode, nested subsets - the smaller set is a "
+        "Same dataset, same color mode, nested subsets - the smaller set is a "
         "strict prefix of the larger, so this is a learning curve rather than "
         "two unrelated samples.",
         "",
@@ -458,8 +458,8 @@ def section_size_experiment(runs: dict) -> list:
     return lines
 
 
-def section_colour_experiment(runs: dict) -> list:
-    """Same dataset, same size, different colour mode."""
+def section_color_experiment(runs: dict) -> list:
+    """Same dataset, same size, different color mode."""
     pairs = {}
     for run in runs.values():
         pairs.setdefault((run["dataset"], run["size"]), {})[run["color_mode"]] = run
@@ -468,7 +468,7 @@ def section_colour_experiment(runs: dict) -> list:
         return []
 
     lines = [
-        "## 6. Experiment: colour",
+        "## 6. Experiment: color",
         "",
         "Identical images in both columns; only `color_mode` differs. Grayscale "
         "gives 4,096 features per image against RGB's 12,288.",
@@ -507,7 +507,7 @@ def section_colour_experiment(runs: dict) -> list:
         lines += [
             f"**{model} disagrees across datasets** ({described}), so the effect "
             "belongs to the data rather than to the model. Where a class is "
-            "separable by colour directly, one threshold on one channel is "
+            "separable by color directly, one threshold on one channel is "
             "informative; where it is not, the extra channels are mostly noise "
             "to a model with no ensemble to average them away.",
             "",
@@ -530,7 +530,7 @@ def section_colour_experiment(runs: dict) -> list:
 
 
 def section_dataset_experiment(runs: dict) -> list:
-    """Different datasets at the same size and colour mode."""
+    """Different datasets at the same size and color mode."""
     groups = {}
     for run in runs.values():
         groups.setdefault((run["size"], run["color_mode"]), []).append(run)
@@ -548,7 +548,7 @@ def section_dataset_experiment(runs: dict) -> list:
         "## 7. Experiment: dataset and padding",
         "",
         "The two datasets differ in how much of the 64x64 canvas survives "
-        "standardisation: Animals-10 loses 27% to padding, Intel essentially "
+        "standardization: Animals-10 loses 27% to padding, Intel essentially "
         "none. They also differ in class count, which has to be accounted for "
         "before the padding question can be asked at all.",
         "",
@@ -567,15 +567,15 @@ def section_dataset_experiment(runs: dict) -> list:
     models = list(macro_f1(members[0]).sort_values(ascending=False).index)
     lifts = {r["name"]: [] for r in members}
     for model in models:
-        raw, normalised = [], []
+        raw, normalized = [], []
         for run in members:
             score = macro_f1(run).get(model)
             chance = 1 / len(run["classes"])
             raw.append(f"{score:.3f}")
-            normalised.append(f"{score / chance:.2f}")
+            normalized.append(f"{score / chance:.2f}")
             lifts[run["name"]].append(score / chance)
         lines.append(f"| {model} | " + " | ".join(raw) + " | " +
-                     " | ".join(normalised) + " |")
+                     " | ".join(normalized) + " |")
     lines.append("")
 
     means = {name: sum(values) / len(values) for name, values in lifts.items()}
@@ -695,7 +695,7 @@ def build() -> str:
     for index, run in enumerate(ordered, start=1):
         lines += section_run(run, index)
     lines += section_size_experiment(runs)
-    lines += section_colour_experiment(runs)
+    lines += section_color_experiment(runs)
     lines += section_dataset_experiment(runs)
     lines += section_cost(runs)
     lines += section_reflection()

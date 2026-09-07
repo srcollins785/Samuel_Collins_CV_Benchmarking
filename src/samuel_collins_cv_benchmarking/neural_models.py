@@ -313,7 +313,7 @@ def simple_cnn_spec() -> ModelSpec:
         key="simple_cnn",
         name="Simple CNN",
         build=lambda: SimpleCNN(),
-        scaled=False,  # pixels are already normalised to [0, 1]
+        scaled=False,  # pixels are already normalized to [0, 1]
         parameters=parameters,
         kind="cnn",
     )

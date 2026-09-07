@@ -249,7 +249,7 @@ class TestNeuralRegistry:
         assert isinstance(spec().named_steps["scaler"], StandardScaler)
 
     def test_the_cnn_is_not_scaled(self):
-        # Its input is already normalised to [0, 1] by preprocessing.
+        # Its input is already normalized to [0, 1] by preprocessing.
         assert neural_model_specs()[1].scaled is False
 
     def test_the_cnn_wants_image_tensors(self):

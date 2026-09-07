@@ -1,4 +1,4 @@
-"""Validate images, resize to a fixed size and normalise channels.
+"""Validate images, resize to a fixed size and normalize channels.
 
 This is where the loaders' *promises* are redeemed. A loader reports only what
 the filesystem can tell it; here every image is actually opened, and a file
@@ -13,7 +13,7 @@ That means two things worth remembering:
 
 Every image ends up as float32 in [0, 1] with shape (64, 64, 1) or
 (64, 64, 3). Aspect ratio is preserved by letterboxing - scale the longest
-side to 64, centre the result, pad the remainder with zeros - rather than
+side to 64, center the result, pad the remainder with zeros - rather than
 stretching, per section 4.2.
 """
 
@@ -27,14 +27,14 @@ from PIL import Image
 from ._config import COLOR_MODES, IMAGE_SIZE
 from .data_loader import LoadedDataset
 
-# PIL's own names for the two colour modes the public API exposes.
+# PIL's own names for the two color modes the public API exposes.
 _PIL_MODE = {"grayscale": "L", "rgb": "RGB"}
 _CHANNELS = {"grayscale": 1, "rgb": 3}
 
 
 @dataclass
 class PreparedDataset:
-    """Decoded, standardised images ready for training.
+    """Decoded, standardized images ready for training.
 
     ``images`` is the tensor the CNN consumes. ``features`` is the flattened
     view the classical models consume - a reshape of the same buffer, not a
@@ -76,7 +76,7 @@ def _array_to_uint8(array: np.ndarray) -> tuple:
     """Bring an in-memory image to uint8 0-255, reporting any assumption made.
 
     The scale of an incoming array is genuinely ambiguous: 0-255 integers and
-    0-1 floats are both common. Dividing an already-normalised float array by
+    0-1 floats are both common. Dividing an already-normalized float array by
     255 a second time would compress every image to near-black and quietly
     destroy accuracy, so the range is inspected rather than assumed.
     """
@@ -127,7 +127,7 @@ def _to_image(source: Union[Path, np.ndarray]) -> tuple:
 def _letterbox(image: Image.Image, size: tuple) -> Image.Image:
     """Fit an image into ``size`` without distorting it.
 
-    Scales the longest side to fit, centres the result, and leaves the
+    Scales the longest side to fit, centers the result, and leaves the
     remainder at zero. A 150x64 photograph becomes 64x27 of content with 37
     rows of padding: shapes stay true at the cost of constant pixels. The
     alternative, stretching to square, keeps every pixel meaningful but makes
@@ -160,7 +160,7 @@ def _describe(source: Union[Path, np.ndarray], index: int) -> str:
 
 
 def preprocess(dataset: LoadedDataset, color_mode: str) -> PreparedDataset:
-    """Decode, standardise and encode a loaded dataset.
+    """Decode, standardize and encode a loaded dataset.
 
     Parameters
     ----------

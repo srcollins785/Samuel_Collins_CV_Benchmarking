@@ -87,7 +87,7 @@ class TestArgumentValidation:
             benchmark_image_classification(np.zeros((4, 8, 8)), "spreadsheet",
                                            ["a", "a", "b", "b"], "rgb")
 
-    def test_rejects_an_unknown_colour_mode(self, workspace):
+    def test_rejects_an_unknown_color_mode(self, workspace):
         with pytest.raises(ValueError, match="color_mode must be one of"):
             benchmark_image_classification(np.zeros((4, 8, 8)), "array",
                                            ["a", "a", "b", "b"], "cmyk")
@@ -153,10 +153,10 @@ class TestEveryDatasetType:
 
 
 # --------------------------------------------------------------------------
-# Colour modes
+# Color modes
 # --------------------------------------------------------------------------
 
-class TestColourModes:
+class TestColorModes:
 
     def test_grayscale_gives_one_channel(self, workspace, array_dataset):
         tensor, labels = array_dataset
@@ -282,7 +282,7 @@ class TestWrittenArtifacts:
             assert "macro_f1" in entry
 
     def test_run_configuration_records_reproducibility_evidence(self, run):
-        # Section 9: image size, colour mode, seed, split, model parameters
+        # Section 9: image size, color mode, seed, split, model parameters
         # and package version.
         configuration = json.loads((run / "run_configuration.json").read_text())
         assert configuration["image_size"] == [64, 64]

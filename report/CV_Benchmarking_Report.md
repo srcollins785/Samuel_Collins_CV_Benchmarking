@@ -7,13 +7,13 @@ samuel.collins@students.cau.edu
 
 **Course:** CCIS 727 - Introduction to Computer Vision  
 **Instructor:** Dr. Kishor Gupta  
-**Date:** 2026-09-06
+**Date:** 2026-09-07
 
 ## 1. Objective
 
 This report compares six image classification methods - four classical machine-learning models and two neural networks - through a single public function in an installable package, `Samuel_Collins_CV_Benchmarking`.
 
-Every model in a given run sees one stratified split, one set of metrics and one measurement of cost. Across runs, exactly one thing changes at a time: the size of the training set, the colour mode, or the dataset. There are 5 runs over 2 datasets.
+Every model in a given run sees one stratified split, one set of metrics and one measurement of cost. Across runs, exactly one thing changes at a time: the size of the training set, the color mode, or the dataset. There are 5 runs over 2 datasets.
 
 ```python
 from samuel_collins_cv_benchmarking import benchmark_image_classification
@@ -48,7 +48,7 @@ Larger than the 64x64 internal size and square, so every image downscales into t
 
 **Sampling.** Per class, the file list is sorted, shuffled with a seed derived from the class name, and the first N images that decode successfully are taken. Because the seed never depends on N, a smaller subset is a byte-identical prefix of a larger one, which is what makes two sizes comparable as a learning curve.
 
-**Standardisation.** Every image is fitted into 64x64 by scaling the longest side and padding the remainder with zeros, then normalised to [0, 1]. Aspect ratio is preserved rather than stretched.
+**Standardization.** Every image is fitted into 64x64 by scaling the longest side and padding the remainder with zeros, then normalized to [0, 1]. Aspect ratio is preserved rather than stretched.
 
 ## 3. Method
 
@@ -272,7 +272,7 @@ results = benchmark_image_classification(
 
 ## 5. Experiment: training set size
 
-Same dataset, same colour mode, nested subsets - the smaller set is a strict prefix of the larger, so this is a learning curve rather than two unrelated samples.
+Same dataset, same color mode, nested subsets - the smaller set is a strict prefix of the larger, so this is a learning curve rather than two unrelated samples.
 
 **Animals-10, rgb**
 
@@ -287,7 +287,7 @@ Same dataset, same colour mode, nested subsets - the smaller set is a strict pre
 
 Simple CNN leads at both sizes, but its margin over the runner-up widens from 0.001 to 0.082 macro F1. Models whose scores have flattened are near what raw pixels can give them; models still climbing would gain more from data than from a change of architecture.
 
-## 6. Experiment: colour
+## 6. Experiment: color
 
 Identical images in both columns; only `color_mode` differs. Grayscale gives 4,096 features per image against RGB's 12,288.
 
@@ -300,7 +300,7 @@ Identical images in both columns; only `color_mode` differs. Grayscale gives 4,0
 | Decision Tree | -5% | +29% |
 | Logistic Regression | +34% | +35% |
 
-**Decision Tree disagrees across datasets** (Animals-10 -5%, Intel Image Classification +29%), so the effect belongs to the data rather than to the model. Where a class is separable by colour directly, one threshold on one channel is informative; where it is not, the extra channels are mostly noise to a model with no ensemble to average them away.
+**Decision Tree disagrees across datasets** (Animals-10 -5%, Intel Image Classification +29%), so the effect belongs to the data rather than to the model. Where a class is separable by color directly, one threshold on one channel is informative; where it is not, the extra channels are mostly noise to a model with no ensemble to average them away.
 
 **Cost.** RGB triples the feature count, and the SVM pays more than three times for it:
 
@@ -311,7 +311,7 @@ Identical images in both columns; only `color_mode` differs. Grayscale gives 4,0
 
 ## 7. Experiment: dataset and padding
 
-The two datasets differ in how much of the 64x64 canvas survives standardisation: Animals-10 loses 27% to padding, Intel essentially none. They also differ in class count, which has to be accounted for before the padding question can be asked at all.
+The two datasets differ in how much of the 64x64 canvas survives standardization: Animals-10 loses 27% to padding, Intel essentially none. They also differ in class count, which has to be accounted for before the padding question can be asked at all.
 
 | Model | Animals-10 (10c) | Intel Image Classification (6c) | Animals-10 x chance | Intel Image Classification x chance |
 |---|---|---|---|---|
@@ -379,11 +379,11 @@ of chance the two datasets are close and the CNN is very slightly better on the 
 one. My comparison had two variables moving and I had assigned the whole difference to
 the one I was interested in.
 
-The same thing happened with colour. On Animals-10 the Decision Tree scored slightly
+The same thing happened with color. On Animals-10 the Decision Tree scored slightly
 worse in RGB than in grayscale, and I had a tidy explanation ready about a single tree
 overfitting the extra channels with no ensemble to average the mistake away. On Intel the
-same model gained twenty-nine percent from colour. The explanation was not wrong so much
-as not general: Intel's classes separate on colour directly, blue sea and white glacier
+same model gained twenty-nine percent from color. The explanation was not wrong so much
+as not general: Intel's classes separate on color directly, blue sea and white glacier
 and green forest, where one threshold on one channel carries real information, while
 brown animals photographed on green grass give a lone tree several thousand mostly noisy
 columns. Two datasets turned a plausible story into a specific claim, and I would not
@@ -402,7 +402,7 @@ The Decision Tree scoring 0.093 at a hundred per class, below the 0.100 you get 
 guessing among ten classes, was the clearest lesson in what these models actually do. A
 single tree splits on individual pixel values, and one pixel out of 12,288 carries almost
 no information about which animal is in the frame. Two hundred of those same trees voting
-reached 0.319. Nothing changed except that the errors of many weak learners cancelled,
+reached 0.319. Nothing changed except that the errors of many weak learners canceled,
 and that is the entire idea of an ensemble, made concrete in a way a textbook description
 never managed for me.
 
@@ -410,7 +410,7 @@ Looking at the misclassified images was worth more than any metric. Three of the
 errors I inspected were cat, cow and dog all predicted as sheep, and all three were
 animals photographed standing on grass. The model appears to have learned something about
 green outdoor backgrounds rather than about the animals, which no confusion matrix would
-have told me on its own. Seeing the standardised sixty-four by sixty-four input rather
+have told me on its own. Seeing the standardized sixty-four by sixty-four input rather
 than the original photograph also made the cost of preserving aspect ratio obvious: on
 the widest images close to half of what the network receives is black padding I put
 there. I still think padding was the right choice over stretching, but it is a real price

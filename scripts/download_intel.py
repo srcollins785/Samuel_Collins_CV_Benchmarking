@@ -2,7 +2,7 @@
 
 Six natural-scene classes - buildings, forest, glacier, mountain, sea, street -
 at 150x150 pixels. The size is the point: the images are square and larger
-than the 64x64 the package standardises to, so every one downscales into the
+than the 64x64 the package standardizes to, so every one downscales into the
 canvas with no padding at all.
 
 That is the contrast with Animals-10, whose photographs are mostly 4:3 and

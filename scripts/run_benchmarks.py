@@ -11,7 +11,7 @@ signature: each tier runs in its own temporary working directory, and the
 directory it produces is moved into ``benchmark_results/<tier>/`` afterwards.
 The library keeps its simple contract, and the runs accumulate.
 
-Results are filed under ``benchmark_results/<tier>_<color_mode>/``. The colour
+Results are filed under ``benchmark_results/<tier>_<color_mode>/``. The color
 mode is part of the directory name because it is part of the run's identity:
 the same images in grayscale and in RGB are two different experiments, and
 naming them alike would let the second silently overwrite the first.
@@ -60,7 +60,7 @@ def available_tiers() -> list:
 
 
 def run_tier(tier: str, color_mode: str = "rgb") -> dict:
-    """Benchmark one tier and file its results under tier and colour mode."""
+    """Benchmark one tier and file its results under tier and color mode."""
     manifest = DATA_DIR / tier / "labels.csv"
     if not manifest.is_file():
         raise FileNotFoundError(

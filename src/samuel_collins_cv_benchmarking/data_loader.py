@@ -251,7 +251,7 @@ def _sorted_class_names(result: LoadedDataset) -> list:
 
     LabelEncoder assigns integers alphabetically. Any other order would leave
     ``class_names[i]`` naming a different class than the models mean by ``i``,
-    mislabelling every confusion matrix.
+    mislabeling every confusion matrix.
     """
     return sorted({label for _, label in result.samples})
 
@@ -492,7 +492,7 @@ def load_json(
             f"Could not parse {manifest} as JSON or JSONL. " + "; ".join(failures)
         )
 
-    # Normalise both forms to (where, record) so the rest is shared. A JSON
+    # Normalize both forms to (where, record) so the rest is shared. A JSON
     # array numbers records by position; JSONL numbers them by line, which is
     # what a text editor shows.
     if records and isinstance(records[0], tuple):
@@ -559,7 +559,7 @@ def _class_names_from_vector(values: list, result: LoadedDataset) -> list:
     Numeric labels are zero-padded to a common width. Without that, ``str()``
     sorts 0..10 as "0", "1", "10", "2", and since class names are sorted to
     match ``LabelEncoder``, ``class_names[1]`` would name "10" while the models
-    mean something else - mislabelling every confusion matrix in a way that
+    mean something else - mislabeling every confusion matrix in a way that
     still looks plausible. Padding makes alphabetical order agree with numeric
     order at any class count.
 
@@ -601,7 +601,7 @@ def load_array(
     would poison every metric computed from it, so those are skipped.
 
     Pixel values are left exactly as given. Preprocessing decides how to
-    normalise them by looking at the dtype, so an integer array of 0-255 and a
+    normalize them by looking at the dtype, so an integer array of 0-255 and a
     float array already scaled to 0-1 both survive this stage untouched.
 
     Parameters

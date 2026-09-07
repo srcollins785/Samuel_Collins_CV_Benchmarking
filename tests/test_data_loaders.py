@@ -311,7 +311,7 @@ class TestLoadCsvHappyPath:
         # scikit-learn's LabelEncoder assigns integers in sorted order. If
         # class_names used row order instead, class_names[i] would name a
         # different class than the models mean by i, and every confusion
-        # matrix would be mislabelled.
+        # matrix would be mislabeled.
         make_tree(tmp_path, {"cat": ["a.jpg"], "dog": ["b.jpg"], "horse": ["c.jpg"]})
         manifest = write_csv(tmp_path / "m.csv", [
             ("horse/c.jpg", "horse"),
@@ -747,7 +747,7 @@ class TestLoadArrayHappyPath:
         assert all(isinstance(source, np.ndarray) for source, _ in dataset.samples)
 
     def test_pixel_values_are_left_untouched(self):
-        # Preprocessing decides how to normalise by looking at the dtype, so
+        # Preprocessing decides how to normalize by looking at the dtype, so
         # an integer 0-255 array must arrive unchanged.
         raw = np.array([[[10, 200]], [[30, 40]], [[50, 60]], [[70, 80]]], dtype=np.uint8)
         dataset = load_array(raw, ["a", "a", "b", "b"])
@@ -776,7 +776,7 @@ class TestNumericLabelPadding:
 
     def test_double_digit_labels_are_padded(self):
         # Without padding these sort as "0","1","10","2",..., so class_names[1]
-        # would name "10" while the models mean 1, mislabelling every
+        # would name "10" while the models mean 1, mislabeling every
         # confusion matrix in a way that still looks plausible.
         labels = [i % 11 for i in range(22)]
         dataset = load_array(images(22, 4, 4), labels)

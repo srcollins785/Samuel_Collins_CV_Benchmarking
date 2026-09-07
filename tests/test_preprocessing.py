@@ -1,4 +1,4 @@
-"""Tests for image standardisation and label encoding.
+"""Tests for image standardization and label encoding.
 
 Covers the assignment's requirements that corrupted files are handled, that
 grayscale output has one channel and RGB three, that every image has the same
@@ -18,10 +18,10 @@ CLASSES = ["cat", "dog", "horse"]
 CORRUPT_BYTES = b"\xff\xd8\xff\xe0 this is not a valid JPEG payload"
 
 
-def write_image(path, size=(20, 20), colour=128, mode="RGB"):
+def write_image(path, size=(20, 20), color=128, mode="RGB"):
     """Write a small real image so PIL can actually decode it."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    fill = (colour, colour, colour) if mode == "RGB" else colour
+    fill = (color, color, color) if mode == "RGB" else color
     Image.new(mode, size, fill).save(path)
     return path
 
@@ -35,10 +35,10 @@ def pair(array):
 # Output shape and range
 # --------------------------------------------------------------------------
 
-class TestStandardisedOutput:
+class TestStandardizedOutput:
 
     @pytest.mark.parametrize("mode,channels", [("grayscale", 1), ("rgb", 3)])
-    def test_channel_count_matches_colour_mode(self, fixtures_dir, mode, channels):
+    def test_channel_count_matches_color_mode(self, fixtures_dir, mode, channels):
         prepared = preprocess(load_folder(fixtures_dir / "mini", CLASSES), mode)
         assert prepared.images.shape == (15, 64, 64, channels)
 
@@ -47,7 +47,7 @@ class TestStandardisedOutput:
         prepared = preprocess(load_folder(fixtures_dir / "mini", CLASSES), "rgb")
         assert len({image.shape for image in prepared.images}) == 1
 
-    def test_values_are_normalised_to_zero_one(self, fixtures_dir):
+    def test_values_are_normalized_to_zero_one(self, fixtures_dir):
         prepared = preprocess(load_folder(fixtures_dir / "mini", CLASSES), "rgb")
         assert prepared.images.dtype == np.float32
         assert prepared.images.min() >= 0.0
@@ -65,12 +65,12 @@ class TestStandardisedOutput:
         prepared = preprocess(load_folder(fixtures_dir / "mini", CLASSES), "rgb")
         assert np.shares_memory(prepared.images, prepared.features)
 
-    def test_rejects_an_unknown_colour_mode(self, fixtures_dir):
+    def test_rejects_an_unknown_color_mode(self, fixtures_dir):
         with pytest.raises(ValueError, match="color_mode"):
             preprocess(load_folder(fixtures_dir / "mini", CLASSES), "cmyk")
 
 
-class TestColourConversion:
+class TestColorConversion:
 
     def test_single_channel_source_becomes_three(self):
         prepared = preprocess(pair(np.full((4, 8, 8), 200, np.uint8)), "rgb")
@@ -96,22 +96,22 @@ class TestLetterboxing:
         return int((plane.sum(axis=1) == 0).sum()), int((plane.sum(axis=0) == 0).sum())
 
     def test_square_input_needs_no_padding(self, tmp_path):
-        write_image(tmp_path / "cat" / "a.png", size=(40, 40), colour=200)
-        write_image(tmp_path / "dog" / "b.png", size=(40, 40), colour=200)
+        write_image(tmp_path / "cat" / "a.png", size=(40, 40), color=200)
+        write_image(tmp_path / "dog" / "b.png", size=(40, 40), color=200)
         prepared = preprocess(load_folder(tmp_path, ["cat", "dog"]), "grayscale")
         rows, columns = self.blank_rows_and_columns(prepared.images[0])
         assert (rows, columns) == (0, 0)
 
     def test_wide_input_is_padded_top_and_bottom(self, tmp_path):
-        write_image(tmp_path / "cat" / "a.png", size=(150, 64), colour=200)
-        write_image(tmp_path / "dog" / "b.png", size=(150, 64), colour=200)
+        write_image(tmp_path / "cat" / "a.png", size=(150, 64), color=200)
+        write_image(tmp_path / "dog" / "b.png", size=(150, 64), color=200)
         prepared = preprocess(load_folder(tmp_path, ["cat", "dog"]), "grayscale")
         rows, columns = self.blank_rows_and_columns(prepared.images[0])
         assert rows > 0 and columns == 0
 
     def test_tall_input_is_padded_left_and_right(self, tmp_path):
-        write_image(tmp_path / "cat" / "a.png", size=(64, 150), colour=200)
-        write_image(tmp_path / "dog" / "b.png", size=(64, 150), colour=200)
+        write_image(tmp_path / "cat" / "a.png", size=(64, 150), color=200)
+        write_image(tmp_path / "dog" / "b.png", size=(64, 150), color=200)
         prepared = preprocess(load_folder(tmp_path, ["cat", "dog"]), "grayscale")
         rows, columns = self.blank_rows_and_columns(prepared.images[0])
         assert columns > 0 and rows == 0
@@ -119,8 +119,8 @@ class TestLetterboxing:
     def test_content_keeps_its_aspect_ratio(self, tmp_path):
         # A 2:1 image must occupy a 2:1 region of the 64x64 output rather than
         # being stretched to fill it.
-        write_image(tmp_path / "cat" / "a.png", size=(120, 60), colour=200)
-        write_image(tmp_path / "dog" / "b.png", size=(120, 60), colour=200)
+        write_image(tmp_path / "cat" / "a.png", size=(120, 60), color=200)
+        write_image(tmp_path / "dog" / "b.png", size=(120, 60), color=200)
         prepared = preprocess(load_folder(tmp_path, ["cat", "dog"]), "grayscale")
         plane = prepared.images[0][:, :, 0]
         filled_rows = int((plane.sum(axis=1) > 0).sum())
@@ -128,17 +128,17 @@ class TestLetterboxing:
         assert filled_columns / filled_rows == pytest.approx(2.0, abs=0.15)
 
     def test_padding_is_exactly_zero(self, tmp_path):
-        write_image(tmp_path / "cat" / "a.png", size=(150, 64), colour=200)
-        write_image(tmp_path / "dog" / "b.png", size=(150, 64), colour=200)
+        write_image(tmp_path / "cat" / "a.png", size=(150, 64), color=200)
+        write_image(tmp_path / "dog" / "b.png", size=(150, 64), color=200)
         prepared = preprocess(load_folder(tmp_path, ["cat", "dog"]), "grayscale")
         assert prepared.images[0].min() == 0.0
 
 
 # --------------------------------------------------------------------------
-# Normalisation of in-memory arrays
+# Normalization of in-memory arrays
 # --------------------------------------------------------------------------
 
-class TestArrayNormalisation:
+class TestArrayNormalization:
     """The scale of an incoming array is ambiguous and must be inspected."""
 
     def test_integer_arrays_are_divided_by_255(self):

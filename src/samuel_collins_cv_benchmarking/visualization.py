@@ -11,18 +11,18 @@ halves. Two series, so a legend is always present.
 time together. Those are four measures on wildly different scales, and putting
 two of them on one pair of axes would be a dual-axis chart - the single worst
 thing you can do to a reader, because the crossing point of the two series is
-an artefact of the scales rather than a fact about the data. Four small
+an artifact of the scales rather than a fact about the data. Four small
 multiples instead, each with its own axis, models in the same order in every
 panel so the eye can track one model across all four.
 
 *Confusion matrices* encode magnitude, so they get one hue running light to
-dark rather than a rainbow. Cells are coloured by the share of their true
-class and annotated with the raw count: on an imbalanced set, colouring by
+dark rather than a rainbow. Cells are colored by the share of their true
+class and annotated with the raw count: on an imbalanced set, coloring by
 raw count would leave the whole row of a small class pale and unreadable
 regardless of how well the model did on it.
 
-Colours come from a validated palette. The categorical pair used here was
-checked for colourblind separation rather than eyeballed - worst adjacent
+Colors come from a validated palette. The categorical pair used here was
+checked for colorblind separation rather than eyeballed - worst adjacent
 CVD Delta E 24.7, normal-vision 33.6, both clear of their floors.
 
 These render to PNG for a printed report, so they are drawn for the light
@@ -64,7 +64,7 @@ BLUES = LinearSegmentedColormap.from_list("benchmark_blues", SEQUENTIAL)
 # run, which would bury anything worth reading.
 FONT = ["Helvetica Neue", "Helvetica", "Arial", "DejaVu Sans"]
 
-# A hairline of surface colour drawn around each bar, so stacked segments and
+# A hairline of surface color drawn around each bar, so stacked segments and
 # neighbouring bars are separated by a visible gap rather than touching.
 SEGMENT_GAP = 1.5
 
@@ -198,7 +198,7 @@ def plot_model_comparison(results, path: Path) -> Path:
 
         for position, value in zip(positions, values):
             label = f"{value:.3f}" if value < 100 else f"{value:.0f}"
-            # A static PNG has no tooltip, so every value is labelled: the
+            # A static PNG has no tooltip, so every value is labeled: the
             # label is standing in for the table view a reader would otherwise
             # hover for.
             axes.text(value * 1.35 if use_log else value + max(values) * 0.02,
@@ -227,10 +227,10 @@ def plot_model_comparison(results, path: Path) -> Path:
 
 
 def plot_confusion_matrix(result, class_names, path: Path) -> Path:
-    """One labelled matrix, coloured by share of the true class.
+    """One labeled matrix, colored by share of the true class.
 
-    Colour encodes the row-normalised value and the annotation carries the raw
-    count. Colouring by raw count instead would wash out every row of a small
+    Color encodes the row-normalized value and the annotation carries the raw
+    count. Coloring by raw count instead would wash out every row of a small
     class: on a 40/40/20 split the smaller class can never reach the same
     counts as the larger ones, so its row would read as uniformly pale no
     matter how well the model handled it.
@@ -252,9 +252,9 @@ def plot_confusion_matrix(result, class_names, path: Path) -> Path:
     for row in range(matrix.shape[0]):
         for column in range(matrix.shape[1]):
             # Ink flips on the darker cells so the count stays legible.
-            colour = "#ffffff" if shares[row, column] > 0.55 else INK
+            color = "#ffffff" if shares[row, column] > 0.55 else INK
             axes.text(column, row, f"{int(matrix[row, column])}",
-                      ha="center", va="center", fontsize=10, color=colour)
+                      ha="center", va="center", fontsize=10, color=color)
 
     axes.set_xticks(range(len(class_names)))
     axes.set_yticks(range(len(class_names)))
@@ -321,9 +321,9 @@ def save_all(results, split, output_dir: Path) -> dict:
 def plot_prediction_examples(result, split, path: Path, per_row: int = 5) -> Path:
     """Correct and incorrect predictions, as the model actually saw them.
 
-    Shows the standardised 64x64 input rather than the original photograph.
+    Shows the standardized 64x64 input rather than the original photograph.
     That is what the classifier was given - letterboxed, resized, and in the
-    requested colour mode - so a reader looking for why an image was
+    requested color mode - so a reader looking for why an image was
     misclassified is looking at the same evidence the model had. A full
     resolution photograph would hide the padding and the loss of detail that
     are often the explanation.
@@ -367,7 +367,7 @@ def plot_prediction_examples(result, split, path: Path, per_row: int = 5) -> Pat
             axes.imshow(image[:, :, 0], cmap="gray", vmin=0, vmax=1) \
                 if image.shape[2] == 1 else axes.imshow(image)
 
-            # The status colour is paired with text, never carrying the
+            # The status color is paired with text, never carrying the
             # meaning on its own.
             if true_name == predicted_name:
                 caption = true_name

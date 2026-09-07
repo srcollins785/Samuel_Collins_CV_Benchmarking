@@ -96,7 +96,7 @@ class TestClassDistribution:
                     == distributions["full"][name])
 
     def test_two_series_carry_a_legend(self, split, tmp_path, monkeypatch):
-        # Identity must never be colour-alone.
+        # Identity must never be color-alone.
         captured = {}
         original = visualization.plt.subplots
 
@@ -120,7 +120,7 @@ class TestModelComparison:
 
     def test_uses_four_separate_panels(self, results, tmp_path, monkeypatch):
         # Four measures on four axes rather than two on one pair, because a
-        # dual-axis chart makes the crossing point an artefact of the scales.
+        # dual-axis chart makes the crossing point an artifact of the scales.
         captured = {}
         original = visualization.plt.subplots
 
@@ -219,8 +219,8 @@ class TestModelComparison:
 
 class TestConfusionMatrix:
 
-    def test_colours_by_share_so_small_classes_stay_readable(self, results, split, tmp_path):
-        # Colouring by raw count would leave the whole row of a small class
+    def test_colors_by_share_so_small_classes_stay_readable(self, results, split, tmp_path):
+        # Coloring by raw count would leave the whole row of a small class
         # pale regardless of how well the model handled it.
         result = next(r for r in results if r.succeeded)
         matrix = np.asarray(result.confusion_matrix, dtype=float)
@@ -250,7 +250,7 @@ class TestConfusionMatrix:
         total = sum(int(t) for t in texts if t.isdigit())
         assert total == len(split.test_index)
 
-    def test_axes_are_labelled_with_class_names(self, results, split, tmp_path, monkeypatch):
+    def test_axes_are_labeled_with_class_names(self, results, split, tmp_path, monkeypatch):
         captured = {}
         original = visualization.plt.subplots
 
@@ -280,8 +280,8 @@ class TestPalette:
     def test_sequential_ramp_is_one_hue_light_to_dark(self):
         # Magnitude gets one hue, never a rainbow. Checked by lightness being
         # monotonically decreasing across the ramp.
-        def luminance(hex_colour):
-            r, g, b = (int(hex_colour[i:i + 2], 16) for i in (1, 3, 5))
+        def luminance(hex_color):
+            r, g, b = (int(hex_color[i:i + 2], 16) for i in (1, 3, 5))
             return 0.299 * r + 0.587 * g + 0.114 * b
 
         values = [luminance(c) for c in visualization.SEQUENTIAL]

@@ -248,7 +248,7 @@ def _write_artifacts(results, split, dataset_type, color_mode, output_dir: Path)
     (output_dir / "benchmark_metrics.json").write_text(
         json.dumps(metrics, indent=2), encoding="utf-8")
 
-    # Section 9: the configuration file records image size, colour mode, seed,
+    # Section 9: the configuration file records image size, color mode, seed,
     # split, model parameters and package version - everything a reader needs
     # to reproduce the run without reading the source.
     configuration = {
@@ -284,8 +284,8 @@ def benchmark_image_classification(
     and return a complete benchmark comparison.
 
     Runs the whole pipeline: read the dataset in whichever of the four
-    organizations it arrives in, standardise every image to 64x64 in the
-    requested colour mode, build one stratified 80/20 split at seed 42, train
+    organizations it arrives in, standardize every image to 64x64 in the
+    requested color mode, build one stratified 80/20 split at seed 42, train
     and score all six models on that same split, write the result directory,
     and return the comparison.
 
@@ -333,7 +333,7 @@ def benchmark_image_classification(
     prepared = preprocess(loaded, color_mode)
     if prepared.skipped:
         print(f"skipped {len(prepared.skipped)} undecodable image(s)")
-    print(f"standardised to {prepared.images.shape[1:]} in {color_mode}")
+    print(f"standardized to {prepared.images.shape[1:]} in {color_mode}")
 
     split = make_split(prepared)
     print(f"split {len(split.train_index)} training / {len(split.test_index)} testing")
