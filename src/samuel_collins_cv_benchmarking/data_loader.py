@@ -75,8 +75,9 @@ def load_folder(
     NotADirectoryError
         The path exists but is a file.
     ValueError
-        ``target_labels`` is not a list of names, a named class folder is
-        missing, or fewer than two classes survive validation.
+        ``target_labels`` is not a list of names, repeats a class name, names
+        a class folder that is missing, or fewer than two classes survive
+        validation.
     """
     root = Path(dataset)
     if not root.exists():
@@ -90,6 +91,21 @@ def load_folder(
         raise ValueError(
             'dataset_type="folder" needs target_labels to be a list of class-folder '
             f"names, for example [\"cat\", \"dog\"]. Got {type(target_labels).__name__}."
+        )
+
+    # A repeated class name would walk the same folder twice, putting every one
+    # of its images into the dataset twice. The duplicates would then be split
+    # independently, so the same image could land in both the training and the
+    # testing half - the data leakage section 7 prohibits. Reject it outright.
+    seen, duplicates = set(), []
+    for name in target_labels:
+        if name in seen and name not in duplicates:
+            duplicates.append(name)
+        seen.add(name)
+    if duplicates:
+        raise ValueError(
+            f"target_labels contains repeated class name(s): {duplicates}. "
+            "Each class must appear exactly once."
         )
 
     missing = [name for name in target_labels if not (root / name).is_dir()]
