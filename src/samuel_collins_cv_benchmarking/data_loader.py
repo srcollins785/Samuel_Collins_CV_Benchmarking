@@ -147,18 +147,27 @@ def load_folder(
     for label in empty_classes:
         result.warnings.append(f"dropped class {label!r}: no supported image files")
 
-    # Section 4.1: at least two classes must remain, or there is nothing to
-    # classify and the stratified split cannot be built.
+    return _finalize(result, f"Checked {len(target_labels)} folder(s) under {root}.")
+
+
+def _finalize(result: LoadedDataset, context: str) -> LoadedDataset:
+    """Apply the section 4.1 checks every loader owes, whatever its input.
+
+    Keeping these here rather than in each loader means the four dataset
+    organizations cannot drift into four different ideas of what counts as a
+    usable dataset.
+    """
+    # At least two classes must remain, or there is nothing to classify and
+    # the stratified split cannot be built.
     if len(result.class_names) < 2:
         raise ValueError(
             f"At least two classes with images are required, found "
-            f"{len(result.class_names)}: {result.class_names}. "
-            f"Checked {len(target_labels)} folder(s) under {root}."
+            f"{len(result.class_names)}: {result.class_names}. {context}"
         )
 
-    # Section 4.1 recommends five images per class. Fewer is allowed but is
-    # worth surfacing, because a class with one image cannot appear in both
-    # the training and testing halves of the split.
+    # Five images per class is recommended. Fewer is allowed but is worth
+    # surfacing, because a class with one image cannot appear in both the
+    # training and testing halves of the split.
     for label, count in result.count_by_class().items():
         if count < 5:
             result.warnings.append(
@@ -166,3 +175,139 @@ def load_folder(
             )
 
     return result
+
+
+def load_csv(
+    dataset: Union[str, Path],
+    target_labels: str,
+) -> LoadedDataset:
+    """Load a CSV manifest listing one image per row.
+
+    Expects the layout described in the assignment::
+
+        image_path,class_name
+        images/image001.jpg,cat
+        images/image002.jpg,dog
+
+    Relative paths are resolved against the manifest's own directory, so a
+    manifest and its images can be moved together without editing any rows.
+    Absolute paths are used as given.
+
+    Note that ``target_labels`` means something different here than it does
+    for a class-folder dataset: this is the *name of the label column*, a
+    single string, not a list of class names.
+
+    Parameters
+    ----------
+    dataset
+        Path to the CSV file.
+    target_labels
+        Name of the column holding each row's class.
+
+    Returns
+    -------
+    LoadedDataset
+        Samples as ``(path, class_name)`` pairs. Class names are sorted
+        alphabetically, matching how scikit-learn's ``LabelEncoder`` assigns
+        integers, so ``class_names[i]`` is the class the models call ``i``.
+
+    Raises
+    ------
+    FileNotFoundError
+        The manifest does not exist.
+    IsADirectoryError
+        The path points at a directory.
+    ValueError
+        ``target_labels`` is not a column name, the manifest is empty or
+        unparseable, a required column is absent, or fewer than two classes
+        survive validation.
+    """
+    import pandas as pd
+
+    manifest = Path(dataset)
+    if not manifest.exists():
+        raise FileNotFoundError(f"CSV manifest not found: {manifest}")
+    if manifest.is_dir():
+        raise IsADirectoryError(
+            f'dataset_type="csv" needs a CSV file, but {manifest} is a directory.'
+        )
+
+    if not isinstance(target_labels, str):
+        raise ValueError(
+            'dataset_type="csv" needs target_labels to be the name of the label '
+            f'column, for example "class_name". Got {type(target_labels).__name__}. '
+            "(A list of class names is only used with dataset_type=\"folder\".)"
+        )
+
+    # dtype=str keeps a column of values like 1, 2, 3 as class *names* rather
+    # than letting pandas infer integers, which would break the string label
+    # contract every other loader follows.
+    try:
+        frame = pd.read_csv(manifest, dtype=str)
+    except pd.errors.EmptyDataError:
+        raise ValueError(f"CSV manifest is empty: {manifest}") from None
+    except pd.errors.ParserError as error:
+        raise ValueError(f"Could not parse CSV manifest {manifest}: {error}") from None
+
+    for column in ("image_path", target_labels):
+        if column not in frame.columns:
+            raise ValueError(
+                f"CSV manifest {manifest} has no {column!r} column. "
+                f"Columns present: {list(frame.columns)}."
+            )
+
+    result = LoadedDataset()
+    seen_paths = set()
+
+    for position, row in enumerate(frame.itertuples(index=False), start=2):
+        # start=2 so the number matches the line a spreadsheet would show,
+        # counting the header as line 1.
+        raw_path = getattr(row, "image_path", None)
+        raw_label = getattr(row, target_labels, None)
+
+        if not isinstance(raw_path, str) or not raw_path.strip():
+            result.warnings.append(f"skipped (blank image_path): row {position}")
+            continue
+        if not isinstance(raw_label, str) or not raw_label.strip():
+            result.warnings.append(f"skipped (blank label): row {position}")
+            continue
+
+        label = raw_label.strip()
+        path = Path(raw_path.strip())
+        if not path.is_absolute():
+            path = manifest.parent / path
+
+        if path.suffix.lower() not in SUPPORTED_EXTENSIONS:
+            result.warnings.append(
+                f"skipped (unsupported extension {path.suffix!r}): row {position}, {path}"
+            )
+            continue
+
+        # The one structural failure a class-folder dataset cannot have: a
+        # manifest can name a file that is simply not there.
+        if not path.exists():
+            result.warnings.append(f"skipped (not found): row {position}, {path}")
+            continue
+        if not path.is_file():
+            result.warnings.append(f"skipped (not a file): row {position}, {path}")
+            continue
+
+        # A repeated path would put the same image into the dataset twice, so
+        # copies could land in both halves of the split - the leakage section 7
+        # prohibits. The first occurrence is kept.
+        resolved = path.resolve()
+        if resolved in seen_paths:
+            result.warnings.append(
+                f"skipped (duplicate of an earlier row): row {position}, {path}"
+            )
+            continue
+        seen_paths.add(resolved)
+
+        result.samples.append((path, label))
+
+    # Sorted, because scikit-learn's LabelEncoder sorts when it assigns
+    # integers. Any other order would leave class_names[i] naming a different
+    # class than the models mean by i, mislabelling every confusion matrix.
+    result.class_names = sorted({label for _, label in result.samples})
+
+    return _finalize(result, f"Read {len(frame)} row(s) from {manifest}.")
