@@ -1,0 +1,46 @@
+[
+  {
+    "image_path": "broken/cat/cat_01.jpeg",
+    "class_name": "cat"
+  },
+  {
+    "image_path": "broken/cat/cat_02.jpeg",
+    "class_name": "cat"
+  },
+  {
+    "image_path": "broken/cat/cat_03.jpeg",
+    "class_name": "cat"
+  },
+  {
+    "image_path": "broken/dog/dog_01.jpeg",
+    "class_name": "dog"
+  },
+  {
+    "image_path": "broken/dog/dog_02.jpeg",
+    "class_name": "dog"
+  },
+  {
+    "image_path": "broken/dog/dog_03.jpeg",
+    "class_name": "dog"
+  },
+  {
+    "image_path": "broken/horse/horse_01.jpeg",
+    "class_name": "horse"
+  },
+  {
+    "image_path": "broken/horse/horse_02.jpeg",
+    "class_name": "horse"
+  },
+  {
+    "image_path": "broken/horse/horse_03.jpeg",
+    "class_name": "horse"
+  },
+  {
+    "image_path": "broken/cat/cat_corrupt.jpeg",
+    "class_name": "cat"
+  },
+  {
+    "image_path": "broken/dog/dog_missing.jpeg",
+    "class_name": "dog"
+  }
+]

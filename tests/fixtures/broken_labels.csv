@@ -1,0 +1,12 @@
+image_path,class_name
+broken/cat/cat_01.jpeg,cat
+broken/cat/cat_02.jpeg,cat
+broken/cat/cat_03.jpeg,cat
+broken/dog/dog_01.jpeg,dog
+broken/dog/dog_02.jpeg,dog
+broken/dog/dog_03.jpeg,dog
+broken/horse/horse_01.jpeg,horse
+broken/horse/horse_02.jpeg,horse
+broken/horse/horse_03.jpeg,horse
+broken/cat/cat_corrupt.jpeg,cat
+broken/dog/dog_missing.jpeg,dog

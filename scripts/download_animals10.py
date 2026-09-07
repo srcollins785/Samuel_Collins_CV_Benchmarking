@@ -10,12 +10,18 @@ API > Create New Token).
 
 Usage
 -----
-    python examples/download_animals10.py                 # 100 images/class
-    python examples/download_animals10.py --per-class 250
-    python examples/download_animals10.py --keep-archive  # retain the 614 MB zip
+    python scripts/download_animals10.py                 # 500 images/class
+    python scripts/download_animals10.py --per-class 10  # fast smoke set
+    python scripts/download_animals10.py --keep-archive  # retain the 614 MB zip
 
-Sampling is deterministic: each class is shuffled with a seed derived from its
-English name, so a given --per-class value always yields the same images.
+Each tier is written to its own directory (``data/animals10_n<N>``) so several
+sizes can coexist.
+
+Sampling is deterministic and nested. The shuffle seed depends only on the
+class name, never on N, so each tier is a prefix of the same fixed ordering:
+n10 is byte-identical to the first 10 images of n100, filenames included.
+That makes a comparison across tiers a genuine learning curve rather than
+three unrelated samples.
 """
 
 import argparse
@@ -72,11 +78,12 @@ def download(work_dir: Path) -> Path:
     return raw
 
 
-def build(raw: Path, per_class: int) -> None:
-    """Sample `per_class` verified images per class into data/."""
+def build(raw: Path, per_class: int, out_dir: Path) -> None:
+    """Sample `per_class` verified images per class into `out_dir`."""
     import random
 
-    images_root = DATA_DIR / "images"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    images_root = out_dir / "images"
     if images_root.exists():
         shutil.rmtree(images_root)
     images_root.mkdir(parents=True)
@@ -89,8 +96,8 @@ def build(raw: Path, per_class: int) -> None:
         )
         random.Random(english).shuffle(candidates)
 
-        out_dir = images_root / english
-        out_dir.mkdir()
+        class_dir = images_root / english
+        class_dir.mkdir()
 
         picked = 0
         for path in candidates:
@@ -108,40 +115,43 @@ def build(raw: Path, per_class: int) -> None:
             picked += 1
             ext = ".jpeg" if path.suffix.lower() == ".jpg" else path.suffix.lower()
             name = f"{english}_{picked:03d}{ext}"
-            shutil.copy2(path, out_dir / name)
+            shutil.copy2(path, class_dir / name)
             records.append({"image_path": f"images/{english}/{name}",
                             "class_name": english})
 
         if picked < per_class:
             print(f"!! {english}: only {picked} valid images available")
 
-    # Manifest paths resolve relative to the manifest location (data/).
-    with open(DATA_DIR / "labels.csv", "w", newline="") as f:
+    # Manifest paths resolve relative to the manifest location.
+    with open(out_dir / "labels.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["image_path", "class_name"])
         w.writeheader()
         w.writerows(records)
-    with open(DATA_DIR / "labels.json", "w") as f:
+    with open(out_dir / "labels.json", "w") as f:
         json.dump(records, f, indent=2)
-    with open(DATA_DIR / "labels.jsonl", "w") as f:
+    with open(out_dir / "labels.jsonl", "w") as f:
         for r in records:
             f.write(json.dumps(r) + "\n")
 
-    print(f"wrote {len(records)} images across {len(IT_TO_EN)} classes to {DATA_DIR}")
+    print(f"wrote {len(records)} images across {len(IT_TO_EN)} classes to {out_dir}")
     print(f"skipped {rejected} undecodable source files")
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--per-class", type=int, default=100,
-                    help="images per class (default: 100)")
+    ap.add_argument("--per-class", type=int, default=500,
+                    help="images per class (default: 500)")
+    ap.add_argument("--out", type=Path, default=None,
+                    help="output directory (default: data/animals10_n<per-class>)")
     ap.add_argument("--work-dir", type=Path, default=REPO_ROOT.parent / "animals10_source",
                     help="where the archive is downloaded and extracted")
     ap.add_argument("--keep-archive", action="store_true",
                     help="keep the 614 MB zip and extracted copy afterwards")
     args = ap.parse_args()
 
+    out_dir = args.out or (DATA_DIR / f"animals10_n{args.per_class}")
     raw = download(args.work_dir)
-    build(raw, args.per_class)
+    build(raw, args.per_class, out_dir)
 
     if not args.keep_archive:
         print(f"note: source archive retained at {args.work_dir} "

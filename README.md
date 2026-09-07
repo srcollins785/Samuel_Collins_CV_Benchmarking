@@ -29,7 +29,7 @@ pip install -e ".[dev]"
 from samuel_collins_cv_benchmarking import benchmark_image_classification
 
 results = benchmark_image_classification(
-    dataset="./data/images",
+    dataset="./data/animals10_n500/images",
     dataset_type="folder",
     target_labels=["cat", "dog", "horse"],
     color_mode="rgb",
@@ -55,7 +55,7 @@ above.
 and TIFF are supported.
 
 ```
-data/images/
+data/animals10_n500/images/
 ├── cat/cat_001.jpeg
 ├── dog/dog_001.jpeg
 └── horse/horse_001.jpeg
@@ -63,7 +63,7 @@ data/images/
 
 ```python
 benchmark_image_classification(
-    dataset="./data/images", dataset_type="folder",
+    dataset="./data/animals10_n500/images", dataset_type="folder",
     target_labels=["cat", "dog", "horse"], color_mode="rgb")
 ```
 
@@ -77,7 +77,7 @@ images/cat/cat_001.jpeg,cat
 
 ```python
 benchmark_image_classification(
-    dataset="./data/labels.csv", dataset_type="csv",
+    dataset="./data/animals10_n500/labels.csv", dataset_type="csv",
     target_labels="class_name", color_mode="rgb")
 ```
 
@@ -90,7 +90,7 @@ line. Every record carries `image_path` and the label field.
 
 ```python
 benchmark_image_classification(
-    dataset="./data/labels.json", dataset_type="json",
+    dataset="./data/animals10_n500/labels.json", dataset_type="json",
     target_labels="class_name", color_mode="rgb")
 ```
 
@@ -105,24 +105,46 @@ benchmark_image_classification(
 
 ## Datasets
 
-**RGB — Animals-10.** 10 classes, 100 images per class. The images are **not
-committed to this repository**: Animals-10 is assembled from web-scraped
-photographs, so redistributing it here is not appropriate. Rebuild it in one
-command (needs Kaggle API credentials at `~/.kaggle/kaggle.json`):
+**RGB - Animals-10.** 10 classes. The images are **not committed to this
+repository**: Animals-10 is assembled from web-scraped photographs, so
+redistributing it here is not appropriate. Rebuild it in one command (needs
+Kaggle API credentials at `~/.kaggle/kaggle.json`):
 
 ```bash
-python examples/download_animals10.py            # 100 images/class
-python examples/download_animals10.py --per-class 250
+python scripts/download_animals10.py                 # 500/class -> data/animals10_n500
+python scripts/download_animals10.py --per-class 10  # fast smoke set
+python scripts/download_animals10.py --per-class 100 --out data/custom
 ```
 
-This writes `data/images/` plus `data/labels.csv`, `labels.json` and
-`labels.jsonl`. Sampling is a deterministic stratified subset: each class is
-shuffled with a seed derived from its English name, so a given `--per-class`
-value always reproduces the same images. Every file is opened, verified and
-RGB-converted before selection. Source folder names are Italian and are mapped
-to English (`cane`→`dog`, `gatto`→`cat`, `ragno`→`spider`, …).
+Each tier lands in its own directory containing `images/` plus `labels.csv`,
+`labels.json` and `labels.jsonl`, so several sizes coexist:
 
-**Grayscale — not yet added.**
+```
+data/animals10_n500/
+├── images/<class>/<class>_001.jpeg
+├── labels.csv
+├── labels.json
+└── labels.jsonl
+```
+
+### Sampling method
+
+Reported subset: **500 images per class, 5,000 total**, drawn from
+`alessiocorrado99/animals10`. Per class, the file list is sorted, shuffled with
+`random.Random(<english class name>)`, and the first N images that decode
+successfully are taken. Every file is opened, verified and RGB-converted before
+selection; undecodable files are skipped and counted.
+
+The seed depends only on the class name, never on N, so the tiers are **nested**:
+`n10` is byte-identical to the first 10 images of `n100`, filenames included.
+A comparison across tiers is therefore a genuine learning curve rather than
+three unrelated samples.
+
+Source folder names are Italian and are mapped to English (`cane`->`dog`,
+`gatto`->`cat`, `ragno`->`spider`, ...). The per-class ceiling is set by the
+smallest class, elephant, at 1,446 images.
+
+**Grayscale - not yet added.**
 
 ## Tests
 
@@ -130,10 +152,16 @@ to English (`cane`→`dog`, `gatto`→`cat`, `ragno`→`spider`, …).
 pytest tests/
 ```
 
-`tests/fixtures/` holds a small committed dataset — 3 classes x 5 images at
-varied dimensions, plus one deliberately corrupt file for the error-handling
-tests — with matching CSV, JSON and JSONL manifests, so the suite runs in a
-clean checkout with no downloads.
+`tests/fixtures/` holds small committed datasets so the suite runs in a clean
+checkout with no downloads:
+
+| Fixture | Contents |
+|---|---|
+| `mini/` | 3 classes x 5 images, pristine. One image per required extension (`.jpeg`, `.jpg`, `.png`, `.bmp`, `.tiff`) at five different dimensions, so resizing and aspect handling are exercised. |
+| `broken/` | 3 classes x 3 images plus one undecodable file and, in the manifests, one row pointing at a file that is not on disk. Covers the skip-and-report path. |
+
+Each tree has matching `*_labels.csv`, `.json` and `.jsonl` manifests, so all
+four dataset organizations can be tested against committed data.
 
 ## License
 
