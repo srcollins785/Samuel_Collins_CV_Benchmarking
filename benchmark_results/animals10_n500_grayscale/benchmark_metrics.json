@@ -1,0 +1,2399 @@
+{
+  "simple_cnn": {
+    "name": "Simple CNN",
+    "succeeded": true,
+    "error": null,
+    "accuracy": 0.351,
+    "macro_precision": 0.35055174017703206,
+    "macro_recall": 0.35100000000000003,
+    "macro_f1": 0.34891593165350476,
+    "weighted_f1": 0.3489159316535048,
+    "training_time_seconds": 44.918146833,
+    "inference_time_ms_per_image": 0.2559914160000005,
+    "confusion_matrix": [
+      [
+        43,
+        9,
+        6,
+        5,
+        4,
+        2,
+        5,
+        6,
+        12,
+        8
+      ],
+      [
+        7,
+        21,
+        13,
+        3,
+        16,
+        5,
+        5,
+        9,
+        15,
+        6
+      ],
+      [
+        6,
+        12,
+        40,
+        7,
+        6,
+        4,
+        7,
+        7,
+        3,
+        8
+      ],
+      [
+        6,
+        6,
+        3,
+        31,
+        4,
+        8,
+        20,
+        17,
+        2,
+        3
+      ],
+      [
+        5,
+        19,
+        13,
+        5,
+        23,
+        6,
+        10,
+        4,
+        13,
+        2
+      ],
+      [
+        1,
+        0,
+        7,
+        14,
+        4,
+        30,
+        14,
+        9,
+        8,
+        13
+      ],
+      [
+        5,
+        7,
+        5,
+        9,
+        7,
+        7,
+        47,
+        5,
+        5,
+        3
+      ],
+      [
+        6,
+        5,
+        5,
+        12,
+        7,
+        3,
+        14,
+        39,
+        4,
+        5
+      ],
+      [
+        7,
+        9,
+        6,
+        1,
+        7,
+        9,
+        4,
+        3,
+        45,
+        9
+      ],
+      [
+        5,
+        13,
+        10,
+        1,
+        11,
+        8,
+        3,
+        3,
+        14,
+        32
+      ]
+    ],
+    "classification_report": {
+      "butterfly": {
+        "precision": 0.4725274725274725,
+        "recall": 0.43,
+        "f1-score": 0.450261780104712,
+        "support": 100.0
+      },
+      "cat": {
+        "precision": 0.2079207920792079,
+        "recall": 0.21,
+        "f1-score": 0.208955223880597,
+        "support": 100.0
+      },
+      "chicken": {
+        "precision": 0.37037037037037035,
+        "recall": 0.4,
+        "f1-score": 0.38461538461538464,
+        "support": 100.0
+      },
+      "cow": {
+        "precision": 0.3522727272727273,
+        "recall": 0.31,
+        "f1-score": 0.32978723404255317,
+        "support": 100.0
+      },
+      "dog": {
+        "precision": 0.25842696629213485,
+        "recall": 0.23,
+        "f1-score": 0.24338624338624337,
+        "support": 100.0
+      },
+      "elephant": {
+        "precision": 0.36585365853658536,
+        "recall": 0.3,
+        "f1-score": 0.32967032967032966,
+        "support": 100.0
+      },
+      "horse": {
+        "precision": 0.3643410852713178,
+        "recall": 0.47,
+        "f1-score": 0.4104803493449782,
+        "support": 100.0
+      },
+      "sheep": {
+        "precision": 0.38235294117647056,
+        "recall": 0.39,
+        "f1-score": 0.38613861386138615,
+        "support": 100.0
+      },
+      "spider": {
+        "precision": 0.371900826446281,
+        "recall": 0.45,
+        "f1-score": 0.4072398190045249,
+        "support": 100.0
+      },
+      "squirrel": {
+        "precision": 0.3595505617977528,
+        "recall": 0.32,
+        "f1-score": 0.3386243386243386,
+        "support": 100.0
+      },
+      "accuracy": 0.351,
+      "macro avg": {
+        "precision": 0.35055174017703206,
+        "recall": 0.35100000000000003,
+        "f1-score": 0.34891593165350476,
+        "support": 1000.0
+      },
+      "weighted avg": {
+        "precision": 0.35055174017703206,
+        "recall": 0.351,
+        "f1-score": 0.3489159316535048,
+        "support": 1000.0
+      }
+    },
+    "training_history": {
+      "epochs_run": 14,
+      "epochs_max": 20,
+      "stopped_early": true,
+      "best_validation_loss": 1.7960361242294312,
+      "validation_samples": 600,
+      "training_samples": 3400,
+      "validation_index": [
+        1792,
+        3244,
+        3281,
+        3504,
+        1393,
+        50,
+        912,
+        21,
+        2842,
+        1676,
+        846,
+        1465,
+        3840,
+        850,
+        3808,
+        3391,
+        1454,
+        1585,
+        1934,
+        2943,
+        689,
+        1805,
+        1207,
+        2212,
+        3154,
+        2485,
+        1877,
+        2820,
+        1206,
+        1266,
+        3047,
+        1644,
+        1823,
+        2219,
+        2595,
+        1832,
+        1091,
+        1518,
+        1913,
+        3532,
+        1759,
+        1527,
+        1953,
+        3817,
+        2659,
+        707,
+        584,
+        950,
+        1178,
+        3539,
+        88,
+        3546,
+        833,
+        2897,
+        2144,
+        383,
+        3736,
+        619,
+        3905,
+        2590,
+        674,
+        749,
+        1791,
+        3687,
+        2289,
+        1149,
+        3575,
+        3919,
+        2865,
+        1732,
+        2960,
+        2964,
+        3376,
+        668,
+        2784,
+        2548,
+        3104,
+        130,
+        1343,
+        1548,
+        2191,
+        306,
+        855,
+        557,
+        330,
+        3778,
+        2327,
+        2559,
+        1428,
+        1195,
+        1295,
+        3305,
+        3414,
+        3153,
+        1787,
+        2777,
+        3711,
+        400,
+        2953,
+        3438,
+        3509,
+        3915,
+        661,
+        20,
+        48,
+        3924,
+        3785,
+        102,
+        3693,
+        2786,
+        1822,
+        3726,
+        1487,
+        1999,
+        1374,
+        2959,
+        235,
+        1580,
+        3152,
+        2924,
+        1841,
+        3847,
+        505,
+        252,
+        3678,
+        1291,
+        2930,
+        3113,
+        3586,
+        3444,
+        877,
+        257,
+        892,
+        2515,
+        2563,
+        1955,
+        3623,
+        2645,
+        2357,
+        2966,
+        2968,
+        348,
+        2217,
+        169,
+        2881,
+        3346,
+        959,
+        3581,
+        2532,
+        2462,
+        188,
+        2089,
+        2323,
+        1501,
+        2620,
+        1462,
+        3531,
+        784,
+        764,
+        3589,
+        2816,
+        2000,
+        3367,
+        3622,
+        2302,
+        3088,
+        2977,
+        894,
+        3755,
+        2062,
+        2629,
+        1848,
+        3216,
+        52,
+        3682,
+        3695,
+        969,
+        2004,
+        3271,
+        2310,
+        1118,
+        3960,
+        3816,
+        2018,
+        189,
+        2343,
+        2301,
+        3140,
+        3976,
+        543,
+        2146,
+        3719,
+        3540,
+        308,
+        3002,
+        1645,
+        3165,
+        2587,
+        2707,
+        2338,
+        3360,
+        2309,
+        588,
+        1965,
+        166,
+        1944,
+        1971,
+        2998,
+        2860,
+        2612,
+        1330,
+        1365,
+        2231,
+        821,
+        468,
+        528,
+        276,
+        459,
+        3893,
+        1790,
+        160,
+        495,
+        2368,
+        2451,
+        3776,
+        491,
+        328,
+        241,
+        3500,
+        3664,
+        2128,
+        270,
+        1818,
+        2554,
+        1574,
+        3834,
+        2681,
+        502,
+        1923,
+        3700,
+        2768,
+        2097,
+        3573,
+        2500,
+        2801,
+        264,
+        2630,
+        872,
+        3880,
+        982,
+        2951,
+        1636,
+        684,
+        1510,
+        516,
+        3753,
+        3017,
+        800,
+        3774,
+        1522,
+        2856,
+        2068,
+        2651,
+        1616,
+        1966,
+        845,
+        3432,
+        1659,
+        1943,
+        2580,
+        397,
+        1277,
+        3906,
+        1630,
+        1622,
+        2794,
+        910,
+        2572,
+        772,
+        2363,
+        3873,
+        2641,
+        13,
+        2916,
+        1421,
+        1381,
+        2995,
+        3648,
+        2997,
+        1136,
+        3889,
+        3308,
+        1319,
+        3156,
+        149,
+        1757,
+        2864,
+        3812,
+        2941,
+        546,
+        1595,
+        3562,
+        771,
+        1151,
+        2618,
+        3797,
+        359,
+        523,
+        1558,
+        2076,
+        243,
+        1438,
+        519,
+        2502,
+        58,
+        3169,
+        3307,
+        1762,
+        2628,
+        3466,
+        825,
+        1360,
+        485,
+        1032,
+        372,
+        891,
+        1254,
+        3506,
+        2779,
+        3746,
+        1422,
+        399,
+        3942,
+        3449,
+        3144,
+        3597,
+        1364,
+        1638,
+        932,
+        2064,
+        3357,
+        2821,
+        745,
+        3345,
+        2101,
+        1187,
+        34,
+        1076,
+        544,
+        1184,
+        3183,
+        393,
+        1463,
+        526,
+        3756,
+        1962,
+        3175,
+        1056,
+        807,
+        525,
+        3699,
+        2244,
+        1973,
+        1754,
+        2478,
+        1611,
+        3517,
+        1218,
+        595,
+        1994,
+        1834,
+        3374,
+        87,
+        994,
+        591,
+        2025,
+        2778,
+        3476,
+        3674,
+        717,
+        2288,
+        3706,
+        906,
+        1080,
+        2655,
+        1217,
+        628,
+        2713,
+        3326,
+        3238,
+        3302,
+        3813,
+        1296,
+        1584,
+        319,
+        2804,
+        677,
+        2880,
+        2672,
+        1456,
+        636,
+        344,
+        3998,
+        3467,
+        3720,
+        404,
+        2433,
+        2491,
+        1529,
+        507,
+        3240,
+        2537,
+        315,
+        1361,
+        339,
+        3352,
+        2947,
+        313,
+        1135,
+        847,
+        2141,
+        2737,
+        343,
+        106,
+        2118,
+        663,
+        3190,
+        1712,
+        1350,
+        2354,
+        1780,
+        273,
+        293,
+        3863,
+        521,
+        748,
+        1583,
+        2406,
+        1331,
+        2175,
+        2976,
+        710,
+        2776,
+        54,
+        1173,
+        2135,
+        2330,
+        553,
+        842,
+        447,
+        1795,
+        1673,
+        2286,
+        2192,
+        1621,
+        1312,
+        2770,
+        1894,
+        1991,
+        804,
+        1017,
+        2303,
+        2142,
+        2942,
+        2886,
+        1769,
+        3464,
+        71,
+        1606,
+        2278,
+        3289,
+        1159,
+        3245,
+        2088,
+        1925,
+        2827,
+        1116,
+        3373,
+        174,
+        1857,
+        3537,
+        1253,
+        1565,
+        3761,
+        3170,
+        2926,
+        2168,
+        3948,
+        1013,
+        121,
+        3937,
+        3872,
+        1313,
+        1081,
+        3655,
+        2268,
+        2757,
+        1992,
+        345,
+        1145,
+        1048,
+        457,
+        2360,
+        475,
+        214,
+        671,
+        2344,
+        1377,
+        263,
+        3126,
+        2496,
+        3382,
+        2174,
+        2160,
+        517,
+        2479,
+        3740,
+        2131,
+        151,
+        3523,
+        3207,
+        452,
+        3439,
+        3803,
+        3738,
+        2158,
+        2072,
+        1490,
+        134,
+        1189,
+        754,
+        3610,
+        2885,
+        2464,
+        2085,
+        1170,
+        1038,
+        1100,
+        2113,
+        920,
+        205,
+        1286,
+        678,
+        2868,
+        646,
+        2081,
+        2523,
+        3953,
+        860,
+        1125,
+        1570,
+        1287,
+        1448,
+        2439,
+        2758,
+        3112,
+        983,
+        91,
+        921,
+        2461,
+        2582,
+        3612,
+        1039,
+        1918,
+        1250,
+        3542,
+        2413,
+        3200,
+        191,
+        3218,
+        2577,
+        954,
+        3198,
+        2911,
+        638,
+        3543,
+        187,
+        811,
+        769,
+        718,
+        2412,
+        99,
+        3258,
+        446,
+        3129,
+        2366,
+        488,
+        2516,
+        1520,
+        2662,
+        1612,
+        1959,
+        1821,
+        1998,
+        2052,
+        1446,
+        1681,
+        2075,
+        3236,
+        1512
+      ],
+      "per_epoch": [
+        {
+          "epoch": 1,
+          "train_loss": 2.2908716168123133,
+          "validation_loss": 2.2357163429260254
+        },
+        {
+          "epoch": 2,
+          "train_loss": 2.1982375509598677,
+          "validation_loss": 2.1536927223205566
+        },
+        {
+          "epoch": 3,
+          "train_loss": 2.078102546018713,
+          "validation_loss": 2.0247724056243896
+        },
+        {
+          "epoch": 4,
+          "train_loss": 1.976244062535903,
+          "validation_loss": 1.962153673171997
+        },
+        {
+          "epoch": 5,
+          "train_loss": 1.8968834492739508,
+          "validation_loss": 1.9355047941207886
+        },
+        {
+          "epoch": 6,
+          "train_loss": 1.82363460484673,
+          "validation_loss": 1.8613476753234863
+        },
+        {
+          "epoch": 7,
+          "train_loss": 1.7510071984459372,
+          "validation_loss": 1.858012080192566
+        },
+        {
+          "epoch": 8,
+          "train_loss": 1.6867962079889633,
+          "validation_loss": 1.8431220054626465
+        },
+        {
+          "epoch": 9,
+          "train_loss": 1.612327618037953,
+          "validation_loss": 1.8242769241333008
+        },
+        {
+          "epoch": 10,
+          "train_loss": 1.5584454679489135,
+          "validation_loss": 1.8260313272476196
+        },
+        {
+          "epoch": 11,
+          "train_loss": 1.4661141398373772,
+          "validation_loss": 1.7960361242294312
+        },
+        {
+          "epoch": 12,
+          "train_loss": 1.4088285715439741,
+          "validation_loss": 1.8049935102462769
+        },
+        {
+          "epoch": 13,
+          "train_loss": 1.338861663201276,
+          "validation_loss": 1.8167937994003296
+        },
+        {
+          "epoch": 14,
+          "train_loss": 1.2862176670747645,
+          "validation_loss": 1.8333181142807007
+        }
+      ]
+    },
+    "prediction_examples": {
+      "correct": [
+        {
+          "test_position": 0,
+          "dataset_index": 1,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/butterfly/butterfly_002.jpeg",
+          "true_class": "butterfly",
+          "predicted_class": "butterfly"
+        },
+        {
+          "test_position": 104,
+          "dataset_index": 518,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cat/cat_019.jpeg",
+          "true_class": "cat",
+          "predicted_class": "cat"
+        },
+        {
+          "test_position": 203,
+          "dataset_index": 1012,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/chicken/chicken_013.jpeg",
+          "true_class": "chicken",
+          "predicted_class": "chicken"
+        },
+        {
+          "test_position": 302,
+          "dataset_index": 1510,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cow/cow_011.jpeg",
+          "true_class": "cow",
+          "predicted_class": "cow"
+        },
+        {
+          "test_position": 400,
+          "dataset_index": 2000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/dog/dog_001.jpeg",
+          "true_class": "dog",
+          "predicted_class": "dog"
+        }
+      ],
+      "incorrect": [
+        {
+          "test_position": 2,
+          "dataset_index": 20,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/butterfly/butterfly_021.jpeg",
+          "true_class": "butterfly",
+          "predicted_class": "squirrel"
+        },
+        {
+          "test_position": 100,
+          "dataset_index": 503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cat/cat_004.jpeg",
+          "true_class": "cat",
+          "predicted_class": "spider"
+        },
+        {
+          "test_position": 200,
+          "dataset_index": 1000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/chicken/chicken_001.jpeg",
+          "true_class": "chicken",
+          "predicted_class": "dog"
+        },
+        {
+          "test_position": 300,
+          "dataset_index": 1502,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cow/cow_003.jpeg",
+          "true_class": "cow",
+          "predicted_class": "chicken"
+        },
+        {
+          "test_position": 402,
+          "dataset_index": 2011,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/dog/dog_012.jpeg",
+          "true_class": "dog",
+          "predicted_class": "elephant"
+        }
+      ]
+    }
+  },
+  "random_forest": {
+    "name": "Random Forest",
+    "succeeded": true,
+    "error": null,
+    "accuracy": 0.299,
+    "macro_precision": 0.30839186452137335,
+    "macro_recall": 0.29900000000000004,
+    "macro_f1": 0.29560402361826543,
+    "weighted_f1": 0.29560402361826543,
+    "training_time_seconds": 1.7935232919999997,
+    "inference_time_ms_per_image": 0.02863941699999728,
+    "confusion_matrix": [
+      [
+        22,
+        12,
+        14,
+        4,
+        3,
+        11,
+        5,
+        4,
+        9,
+        16
+      ],
+      [
+        6,
+        22,
+        8,
+        4,
+        10,
+        16,
+        4,
+        9,
+        13,
+        8
+      ],
+      [
+        6,
+        4,
+        45,
+        4,
+        7,
+        12,
+        8,
+        9,
+        3,
+        2
+      ],
+      [
+        6,
+        3,
+        14,
+        24,
+        4,
+        15,
+        11,
+        15,
+        1,
+        7
+      ],
+      [
+        3,
+        10,
+        19,
+        6,
+        22,
+        12,
+        8,
+        8,
+        8,
+        4
+      ],
+      [
+        2,
+        1,
+        19,
+        7,
+        2,
+        33,
+        12,
+        9,
+        11,
+        4
+      ],
+      [
+        3,
+        3,
+        12,
+        9,
+        7,
+        10,
+        39,
+        10,
+        3,
+        4
+      ],
+      [
+        4,
+        4,
+        16,
+        8,
+        6,
+        6,
+        7,
+        39,
+        3,
+        7
+      ],
+      [
+        7,
+        6,
+        13,
+        0,
+        5,
+        16,
+        3,
+        8,
+        33,
+        9
+      ],
+      [
+        5,
+        10,
+        13,
+        4,
+        4,
+        19,
+        5,
+        15,
+        5,
+        20
+      ]
+    ],
+    "classification_report": {
+      "butterfly": {
+        "precision": 0.34375,
+        "recall": 0.22,
+        "f1-score": 0.2682926829268293,
+        "support": 100.0
+      },
+      "cat": {
+        "precision": 0.29333333333333333,
+        "recall": 0.22,
+        "f1-score": 0.25142857142857145,
+        "support": 100.0
+      },
+      "chicken": {
+        "precision": 0.26011560693641617,
+        "recall": 0.45,
+        "f1-score": 0.32967032967032966,
+        "support": 100.0
+      },
+      "cow": {
+        "precision": 0.34285714285714286,
+        "recall": 0.24,
+        "f1-score": 0.2823529411764706,
+        "support": 100.0
+      },
+      "dog": {
+        "precision": 0.3142857142857143,
+        "recall": 0.22,
+        "f1-score": 0.25882352941176473,
+        "support": 100.0
+      },
+      "elephant": {
+        "precision": 0.22,
+        "recall": 0.33,
+        "f1-score": 0.264,
+        "support": 100.0
+      },
+      "horse": {
+        "precision": 0.38235294117647056,
+        "recall": 0.39,
+        "f1-score": 0.38613861386138615,
+        "support": 100.0
+      },
+      "sheep": {
+        "precision": 0.30952380952380953,
+        "recall": 0.39,
+        "f1-score": 0.34513274336283184,
+        "support": 100.0
+      },
+      "spider": {
+        "precision": 0.3707865168539326,
+        "recall": 0.33,
+        "f1-score": 0.3492063492063492,
+        "support": 100.0
+      },
+      "squirrel": {
+        "precision": 0.24691358024691357,
+        "recall": 0.2,
+        "f1-score": 0.22099447513812154,
+        "support": 100.0
+      },
+      "accuracy": 0.299,
+      "macro avg": {
+        "precision": 0.30839186452137335,
+        "recall": 0.29900000000000004,
+        "f1-score": 0.29560402361826543,
+        "support": 1000.0
+      },
+      "weighted avg": {
+        "precision": 0.3083918645213733,
+        "recall": 0.299,
+        "f1-score": 0.29560402361826543,
+        "support": 1000.0
+      }
+    },
+    "training_history": {},
+    "prediction_examples": {
+      "correct": [
+        {
+          "test_position": 6,
+          "dataset_index": 48,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/butterfly/butterfly_049.jpeg",
+          "true_class": "butterfly",
+          "predicted_class": "butterfly"
+        },
+        {
+          "test_position": 102,
+          "dataset_index": 512,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cat/cat_013.jpeg",
+          "true_class": "cat",
+          "predicted_class": "cat"
+        },
+        {
+          "test_position": 203,
+          "dataset_index": 1012,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/chicken/chicken_013.jpeg",
+          "true_class": "chicken",
+          "predicted_class": "chicken"
+        },
+        {
+          "test_position": 301,
+          "dataset_index": 1503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cow/cow_004.jpeg",
+          "true_class": "cow",
+          "predicted_class": "cow"
+        },
+        {
+          "test_position": 400,
+          "dataset_index": 2000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/dog/dog_001.jpeg",
+          "true_class": "dog",
+          "predicted_class": "dog"
+        }
+      ],
+      "incorrect": [
+        {
+          "test_position": 0,
+          "dataset_index": 1,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/butterfly/butterfly_002.jpeg",
+          "true_class": "butterfly",
+          "predicted_class": "chicken"
+        },
+        {
+          "test_position": 100,
+          "dataset_index": 503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cat/cat_004.jpeg",
+          "true_class": "cat",
+          "predicted_class": "spider"
+        },
+        {
+          "test_position": 200,
+          "dataset_index": 1000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/chicken/chicken_001.jpeg",
+          "true_class": "chicken",
+          "predicted_class": "squirrel"
+        },
+        {
+          "test_position": 300,
+          "dataset_index": 1502,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cow/cow_003.jpeg",
+          "true_class": "cow",
+          "predicted_class": "elephant"
+        },
+        {
+          "test_position": 401,
+          "dataset_index": 2009,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/dog/dog_010.jpeg",
+          "true_class": "dog",
+          "predicted_class": "cow"
+        }
+      ]
+    }
+  },
+  "svm": {
+    "name": "SVM",
+    "succeeded": true,
+    "error": null,
+    "accuracy": 0.283,
+    "macro_precision": 0.29436096586014393,
+    "macro_recall": 0.28300000000000003,
+    "macro_f1": 0.2805650435448422,
+    "weighted_f1": 0.2805650435448422,
+    "training_time_seconds": 13.146969042000002,
+    "inference_time_ms_per_image": 5.903507459000004,
+    "confusion_matrix": [
+      [
+        18,
+        13,
+        9,
+        6,
+        6,
+        10,
+        7,
+        10,
+        7,
+        14
+      ],
+      [
+        5,
+        20,
+        7,
+        4,
+        11,
+        11,
+        7,
+        13,
+        10,
+        12
+      ],
+      [
+        2,
+        7,
+        42,
+        2,
+        5,
+        16,
+        7,
+        10,
+        5,
+        4
+      ],
+      [
+        6,
+        7,
+        12,
+        18,
+        2,
+        24,
+        10,
+        14,
+        2,
+        5
+      ],
+      [
+        5,
+        10,
+        18,
+        1,
+        23,
+        17,
+        7,
+        5,
+        6,
+        8
+      ],
+      [
+        2,
+        1,
+        20,
+        10,
+        3,
+        31,
+        8,
+        11,
+        7,
+        7
+      ],
+      [
+        5,
+        3,
+        15,
+        6,
+        4,
+        11,
+        35,
+        8,
+        6,
+        7
+      ],
+      [
+        5,
+        9,
+        15,
+        9,
+        6,
+        4,
+        8,
+        37,
+        3,
+        4
+      ],
+      [
+        5,
+        4,
+        10,
+        0,
+        5,
+        16,
+        3,
+        6,
+        35,
+        16
+      ],
+      [
+        6,
+        10,
+        16,
+        5,
+        4,
+        19,
+        5,
+        9,
+        2,
+        24
+      ]
+    ],
+    "classification_report": {
+      "butterfly": {
+        "precision": 0.3050847457627119,
+        "recall": 0.18,
+        "f1-score": 0.22641509433962265,
+        "support": 100.0
+      },
+      "cat": {
+        "precision": 0.23809523809523808,
+        "recall": 0.2,
+        "f1-score": 0.21739130434782608,
+        "support": 100.0
+      },
+      "chicken": {
+        "precision": 0.25609756097560976,
+        "recall": 0.42,
+        "f1-score": 0.3181818181818182,
+        "support": 100.0
+      },
+      "cow": {
+        "precision": 0.29508196721311475,
+        "recall": 0.18,
+        "f1-score": 0.2236024844720497,
+        "support": 100.0
+      },
+      "dog": {
+        "precision": 0.3333333333333333,
+        "recall": 0.23,
+        "f1-score": 0.27218934911242604,
+        "support": 100.0
+      },
+      "elephant": {
+        "precision": 0.1949685534591195,
+        "recall": 0.31,
+        "f1-score": 0.23938223938223938,
+        "support": 100.0
+      },
+      "horse": {
+        "precision": 0.36082474226804123,
+        "recall": 0.35,
+        "f1-score": 0.3553299492385787,
+        "support": 100.0
+      },
+      "sheep": {
+        "precision": 0.3008130081300813,
+        "recall": 0.37,
+        "f1-score": 0.33183856502242154,
+        "support": 100.0
+      },
+      "spider": {
+        "precision": 0.42168674698795183,
+        "recall": 0.35,
+        "f1-score": 0.3825136612021858,
+        "support": 100.0
+      },
+      "squirrel": {
+        "precision": 0.2376237623762376,
+        "recall": 0.24,
+        "f1-score": 0.23880597014925373,
+        "support": 100.0
+      },
+      "accuracy": 0.283,
+      "macro avg": {
+        "precision": 0.29436096586014393,
+        "recall": 0.28300000000000003,
+        "f1-score": 0.2805650435448422,
+        "support": 1000.0
+      },
+      "weighted avg": {
+        "precision": 0.29436096586014393,
+        "recall": 0.283,
+        "f1-score": 0.2805650435448422,
+        "support": 1000.0
+      }
+    },
+    "training_history": {},
+    "prediction_examples": {
+      "correct": [
+        {
+          "test_position": 6,
+          "dataset_index": 48,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/butterfly/butterfly_049.jpeg",
+          "true_class": "butterfly",
+          "predicted_class": "butterfly"
+        },
+        {
+          "test_position": 102,
+          "dataset_index": 512,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cat/cat_013.jpeg",
+          "true_class": "cat",
+          "predicted_class": "cat"
+        },
+        {
+          "test_position": 203,
+          "dataset_index": 1012,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/chicken/chicken_013.jpeg",
+          "true_class": "chicken",
+          "predicted_class": "chicken"
+        },
+        {
+          "test_position": 308,
+          "dataset_index": 1551,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cow/cow_052.jpeg",
+          "true_class": "cow",
+          "predicted_class": "cow"
+        },
+        {
+          "test_position": 400,
+          "dataset_index": 2000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/dog/dog_001.jpeg",
+          "true_class": "dog",
+          "predicted_class": "dog"
+        }
+      ],
+      "incorrect": [
+        {
+          "test_position": 0,
+          "dataset_index": 1,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/butterfly/butterfly_002.jpeg",
+          "true_class": "butterfly",
+          "predicted_class": "chicken"
+        },
+        {
+          "test_position": 100,
+          "dataset_index": 503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cat/cat_004.jpeg",
+          "true_class": "cat",
+          "predicted_class": "spider"
+        },
+        {
+          "test_position": 200,
+          "dataset_index": 1000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/chicken/chicken_001.jpeg",
+          "true_class": "chicken",
+          "predicted_class": "dog"
+        },
+        {
+          "test_position": 300,
+          "dataset_index": 1502,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cow/cow_003.jpeg",
+          "true_class": "cow",
+          "predicted_class": "elephant"
+        },
+        {
+          "test_position": 401,
+          "dataset_index": 2009,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/dog/dog_010.jpeg",
+          "true_class": "dog",
+          "predicted_class": "elephant"
+        }
+      ]
+    }
+  },
+  "neural_network": {
+    "name": "Neural Network",
+    "succeeded": true,
+    "error": null,
+    "accuracy": 0.253,
+    "macro_precision": 0.2553750703668271,
+    "macro_recall": 0.253,
+    "macro_f1": 0.2505237211740173,
+    "weighted_f1": 0.2505237211740173,
+    "training_time_seconds": 0.5029451250000037,
+    "inference_time_ms_per_image": 0.009304833000001622,
+    "confusion_matrix": [
+      [
+        15,
+        12,
+        8,
+        7,
+        9,
+        14,
+        7,
+        7,
+        13,
+        8
+      ],
+      [
+        6,
+        17,
+        7,
+        7,
+        13,
+        12,
+        9,
+        6,
+        12,
+        11
+      ],
+      [
+        5,
+        10,
+        33,
+        0,
+        8,
+        13,
+        11,
+        7,
+        10,
+        3
+      ],
+      [
+        4,
+        6,
+        14,
+        24,
+        9,
+        15,
+        9,
+        12,
+        4,
+        3
+      ],
+      [
+        3,
+        11,
+        13,
+        4,
+        19,
+        12,
+        18,
+        6,
+        7,
+        7
+      ],
+      [
+        2,
+        7,
+        12,
+        8,
+        5,
+        27,
+        12,
+        9,
+        10,
+        8
+      ],
+      [
+        1,
+        0,
+        12,
+        10,
+        10,
+        11,
+        35,
+        4,
+        10,
+        7
+      ],
+      [
+        5,
+        5,
+        12,
+        14,
+        12,
+        7,
+        9,
+        28,
+        4,
+        4
+      ],
+      [
+        9,
+        6,
+        2,
+        7,
+        12,
+        8,
+        10,
+        6,
+        34,
+        6
+      ],
+      [
+        6,
+        13,
+        6,
+        3,
+        15,
+        16,
+        7,
+        8,
+        5,
+        21
+      ]
+    ],
+    "classification_report": {
+      "butterfly": {
+        "precision": 0.26785714285714285,
+        "recall": 0.15,
+        "f1-score": 0.19230769230769232,
+        "support": 100.0
+      },
+      "cat": {
+        "precision": 0.19540229885057472,
+        "recall": 0.17,
+        "f1-score": 0.18181818181818182,
+        "support": 100.0
+      },
+      "chicken": {
+        "precision": 0.2773109243697479,
+        "recall": 0.33,
+        "f1-score": 0.3013698630136986,
+        "support": 100.0
+      },
+      "cow": {
+        "precision": 0.2857142857142857,
+        "recall": 0.24,
+        "f1-score": 0.2608695652173913,
+        "support": 100.0
+      },
+      "dog": {
+        "precision": 0.16964285714285715,
+        "recall": 0.19,
+        "f1-score": 0.1792452830188679,
+        "support": 100.0
+      },
+      "elephant": {
+        "precision": 0.2,
+        "recall": 0.27,
+        "f1-score": 0.2297872340425532,
+        "support": 100.0
+      },
+      "horse": {
+        "precision": 0.2755905511811024,
+        "recall": 0.35,
+        "f1-score": 0.30837004405286345,
+        "support": 100.0
+      },
+      "sheep": {
+        "precision": 0.3010752688172043,
+        "recall": 0.28,
+        "f1-score": 0.29015544041450775,
+        "support": 100.0
+      },
+      "spider": {
+        "precision": 0.3119266055045872,
+        "recall": 0.34,
+        "f1-score": 0.3253588516746411,
+        "support": 100.0
+      },
+      "squirrel": {
+        "precision": 0.2692307692307692,
+        "recall": 0.21,
+        "f1-score": 0.23595505617977527,
+        "support": 100.0
+      },
+      "accuracy": 0.253,
+      "macro avg": {
+        "precision": 0.2553750703668271,
+        "recall": 0.253,
+        "f1-score": 0.2505237211740173,
+        "support": 1000.0
+      },
+      "weighted avg": {
+        "precision": 0.25537507036682716,
+        "recall": 0.253,
+        "f1-score": 0.2505237211740173,
+        "support": 1000.0
+      }
+    },
+    "training_history": {},
+    "prediction_examples": {
+      "correct": [
+        {
+          "test_position": 6,
+          "dataset_index": 48,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/butterfly/butterfly_049.jpeg",
+          "true_class": "butterfly",
+          "predicted_class": "butterfly"
+        },
+        {
+          "test_position": 102,
+          "dataset_index": 512,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cat/cat_013.jpeg",
+          "true_class": "cat",
+          "predicted_class": "cat"
+        },
+        {
+          "test_position": 203,
+          "dataset_index": 1012,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/chicken/chicken_013.jpeg",
+          "true_class": "chicken",
+          "predicted_class": "chicken"
+        },
+        {
+          "test_position": 302,
+          "dataset_index": 1510,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cow/cow_011.jpeg",
+          "true_class": "cow",
+          "predicted_class": "cow"
+        },
+        {
+          "test_position": 405,
+          "dataset_index": 2034,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/dog/dog_035.jpeg",
+          "true_class": "dog",
+          "predicted_class": "dog"
+        }
+      ],
+      "incorrect": [
+        {
+          "test_position": 0,
+          "dataset_index": 1,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/butterfly/butterfly_002.jpeg",
+          "true_class": "butterfly",
+          "predicted_class": "squirrel"
+        },
+        {
+          "test_position": 100,
+          "dataset_index": 503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cat/cat_004.jpeg",
+          "true_class": "cat",
+          "predicted_class": "horse"
+        },
+        {
+          "test_position": 200,
+          "dataset_index": 1000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/chicken/chicken_001.jpeg",
+          "true_class": "chicken",
+          "predicted_class": "horse"
+        },
+        {
+          "test_position": 300,
+          "dataset_index": 1502,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cow/cow_003.jpeg",
+          "true_class": "cow",
+          "predicted_class": "butterfly"
+        },
+        {
+          "test_position": 400,
+          "dataset_index": 2000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/dog/dog_001.jpeg",
+          "true_class": "dog",
+          "predicted_class": "chicken"
+        }
+      ]
+    }
+  },
+  "decision_tree": {
+    "name": "Decision Tree",
+    "succeeded": true,
+    "error": null,
+    "accuracy": 0.191,
+    "macro_precision": 0.18958330250588284,
+    "macro_recall": 0.191,
+    "macro_f1": 0.19003833597173908,
+    "weighted_f1": 0.1900383359717391,
+    "training_time_seconds": 6.988448709,
+    "inference_time_ms_per_image": 0.0027293749999977024,
+    "confusion_matrix": [
+      [
+        19,
+        8,
+        11,
+        6,
+        12,
+        7,
+        10,
+        7,
+        11,
+        9
+      ],
+      [
+        9,
+        17,
+        6,
+        12,
+        8,
+        6,
+        11,
+        11,
+        13,
+        7
+      ],
+      [
+        14,
+        10,
+        15,
+        11,
+        11,
+        10,
+        7,
+        6,
+        7,
+        9
+      ],
+      [
+        5,
+        5,
+        6,
+        26,
+        7,
+        14,
+        7,
+        16,
+        4,
+        10
+      ],
+      [
+        7,
+        9,
+        10,
+        7,
+        20,
+        5,
+        13,
+        6,
+        16,
+        7
+      ],
+      [
+        4,
+        6,
+        8,
+        15,
+        9,
+        16,
+        14,
+        10,
+        10,
+        8
+      ],
+      [
+        9,
+        8,
+        9,
+        7,
+        10,
+        11,
+        16,
+        10,
+        10,
+        10
+      ],
+      [
+        8,
+        7,
+        10,
+        14,
+        6,
+        9,
+        8,
+        24,
+        2,
+        12
+      ],
+      [
+        13,
+        8,
+        10,
+        6,
+        5,
+        11,
+        2,
+        11,
+        23,
+        11
+      ],
+      [
+        9,
+        16,
+        8,
+        7,
+        8,
+        7,
+        6,
+        10,
+        14,
+        15
+      ]
+    ],
+    "classification_report": {
+      "butterfly": {
+        "precision": 0.1958762886597938,
+        "recall": 0.19,
+        "f1-score": 0.19289340101522842,
+        "support": 100.0
+      },
+      "cat": {
+        "precision": 0.18085106382978725,
+        "recall": 0.17,
+        "f1-score": 0.17525773195876287,
+        "support": 100.0
+      },
+      "chicken": {
+        "precision": 0.16129032258064516,
+        "recall": 0.15,
+        "f1-score": 0.15544041450777202,
+        "support": 100.0
+      },
+      "cow": {
+        "precision": 0.23423423423423423,
+        "recall": 0.26,
+        "f1-score": 0.24644549763033174,
+        "support": 100.0
+      },
+      "dog": {
+        "precision": 0.20833333333333334,
+        "recall": 0.2,
+        "f1-score": 0.20408163265306123,
+        "support": 100.0
+      },
+      "elephant": {
+        "precision": 0.16666666666666666,
+        "recall": 0.16,
+        "f1-score": 0.16326530612244897,
+        "support": 100.0
+      },
+      "horse": {
+        "precision": 0.1702127659574468,
+        "recall": 0.16,
+        "f1-score": 0.16494845360824742,
+        "support": 100.0
+      },
+      "sheep": {
+        "precision": 0.21621621621621623,
+        "recall": 0.24,
+        "f1-score": 0.22748815165876776,
+        "support": 100.0
+      },
+      "spider": {
+        "precision": 0.20909090909090908,
+        "recall": 0.23,
+        "f1-score": 0.21904761904761905,
+        "support": 100.0
+      },
+      "squirrel": {
+        "precision": 0.15306122448979592,
+        "recall": 0.15,
+        "f1-score": 0.15151515151515152,
+        "support": 100.0
+      },
+      "accuracy": 0.191,
+      "macro avg": {
+        "precision": 0.18958330250588284,
+        "recall": 0.191,
+        "f1-score": 0.19003833597173908,
+        "support": 1000.0
+      },
+      "weighted avg": {
+        "precision": 0.18958330250588284,
+        "recall": 0.191,
+        "f1-score": 0.1900383359717391,
+        "support": 1000.0
+      }
+    },
+    "training_history": {},
+    "prediction_examples": {
+      "correct": [
+        {
+          "test_position": 2,
+          "dataset_index": 20,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/butterfly/butterfly_021.jpeg",
+          "true_class": "butterfly",
+          "predicted_class": "butterfly"
+        },
+        {
+          "test_position": 103,
+          "dataset_index": 515,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cat/cat_016.jpeg",
+          "true_class": "cat",
+          "predicted_class": "cat"
+        },
+        {
+          "test_position": 203,
+          "dataset_index": 1012,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/chicken/chicken_013.jpeg",
+          "true_class": "chicken",
+          "predicted_class": "chicken"
+        },
+        {
+          "test_position": 301,
+          "dataset_index": 1503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cow/cow_004.jpeg",
+          "true_class": "cow",
+          "predicted_class": "cow"
+        },
+        {
+          "test_position": 400,
+          "dataset_index": 2000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/dog/dog_001.jpeg",
+          "true_class": "dog",
+          "predicted_class": "dog"
+        }
+      ],
+      "incorrect": [
+        {
+          "test_position": 0,
+          "dataset_index": 1,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/butterfly/butterfly_002.jpeg",
+          "true_class": "butterfly",
+          "predicted_class": "cow"
+        },
+        {
+          "test_position": 100,
+          "dataset_index": 503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cat/cat_004.jpeg",
+          "true_class": "cat",
+          "predicted_class": "dog"
+        },
+        {
+          "test_position": 200,
+          "dataset_index": 1000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/chicken/chicken_001.jpeg",
+          "true_class": "chicken",
+          "predicted_class": "dog"
+        },
+        {
+          "test_position": 300,
+          "dataset_index": 1502,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cow/cow_003.jpeg",
+          "true_class": "cow",
+          "predicted_class": "elephant"
+        },
+        {
+          "test_position": 402,
+          "dataset_index": 2011,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/dog/dog_012.jpeg",
+          "true_class": "dog",
+          "predicted_class": "chicken"
+        }
+      ]
+    }
+  },
+  "logistic_regression": {
+    "name": "Logistic Regression",
+    "succeeded": true,
+    "error": null,
+    "accuracy": 0.169,
+    "macro_precision": 0.16851316598750507,
+    "macro_recall": 0.16899999999999998,
+    "macro_f1": 0.16747253250148714,
+    "weighted_f1": 0.16747253250148714,
+    "training_time_seconds": 7.176785624999999,
+    "inference_time_ms_per_image": 0.04718133299999927,
+    "confusion_matrix": [
+      [
+        18,
+        11,
+        2,
+        10,
+        6,
+        13,
+        5,
+        11,
+        10,
+        14
+      ],
+      [
+        6,
+        16,
+        7,
+        7,
+        10,
+        11,
+        7,
+        10,
+        12,
+        14
+      ],
+      [
+        16,
+        13,
+        14,
+        4,
+        7,
+        15,
+        12,
+        6,
+        7,
+        6
+      ],
+      [
+        12,
+        6,
+        9,
+        19,
+        12,
+        10,
+        5,
+        9,
+        5,
+        13
+      ],
+      [
+        14,
+        8,
+        11,
+        3,
+        13,
+        15,
+        5,
+        10,
+        8,
+        13
+      ],
+      [
+        9,
+        8,
+        7,
+        8,
+        6,
+        23,
+        9,
+        9,
+        13,
+        8
+      ],
+      [
+        9,
+        9,
+        6,
+        12,
+        16,
+        16,
+        11,
+        7,
+        7,
+        7
+      ],
+      [
+        8,
+        11,
+        6,
+        8,
+        8,
+        4,
+        4,
+        30,
+        11,
+        10
+      ],
+      [
+        5,
+        15,
+        8,
+        11,
+        15,
+        12,
+        8,
+        7,
+        13,
+        6
+      ],
+      [
+        10,
+        10,
+        6,
+        13,
+        12,
+        9,
+        1,
+        12,
+        15,
+        12
+      ]
+    ],
+    "classification_report": {
+      "butterfly": {
+        "precision": 0.16822429906542055,
+        "recall": 0.18,
+        "f1-score": 0.17391304347826086,
+        "support": 100.0
+      },
+      "cat": {
+        "precision": 0.14953271028037382,
+        "recall": 0.16,
+        "f1-score": 0.15458937198067632,
+        "support": 100.0
+      },
+      "chicken": {
+        "precision": 0.18421052631578946,
+        "recall": 0.14,
+        "f1-score": 0.1590909090909091,
+        "support": 100.0
+      },
+      "cow": {
+        "precision": 0.2,
+        "recall": 0.19,
+        "f1-score": 0.19487179487179487,
+        "support": 100.0
+      },
+      "dog": {
+        "precision": 0.12380952380952381,
+        "recall": 0.13,
+        "f1-score": 0.12682926829268293,
+        "support": 100.0
+      },
+      "elephant": {
+        "precision": 0.1796875,
+        "recall": 0.23,
+        "f1-score": 0.20175438596491227,
+        "support": 100.0
+      },
+      "horse": {
+        "precision": 0.16417910447761194,
+        "recall": 0.11,
+        "f1-score": 0.1317365269461078,
+        "support": 100.0
+      },
+      "sheep": {
+        "precision": 0.2702702702702703,
+        "recall": 0.3,
+        "f1-score": 0.2843601895734597,
+        "support": 100.0
+      },
+      "spider": {
+        "precision": 0.12871287128712872,
+        "recall": 0.13,
+        "f1-score": 0.12935323383084577,
+        "support": 100.0
+      },
+      "squirrel": {
+        "precision": 0.11650485436893204,
+        "recall": 0.12,
+        "f1-score": 0.11822660098522167,
+        "support": 100.0
+      },
+      "accuracy": 0.169,
+      "macro avg": {
+        "precision": 0.16851316598750507,
+        "recall": 0.16899999999999998,
+        "f1-score": 0.16747253250148714,
+        "support": 1000.0
+      },
+      "weighted avg": {
+        "precision": 0.16851316598750507,
+        "recall": 0.169,
+        "f1-score": 0.16747253250148714,
+        "support": 1000.0
+      }
+    },
+    "training_history": {},
+    "prediction_examples": {
+      "correct": [
+        {
+          "test_position": 0,
+          "dataset_index": 1,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/butterfly/butterfly_002.jpeg",
+          "true_class": "butterfly",
+          "predicted_class": "butterfly"
+        },
+        {
+          "test_position": 116,
+          "dataset_index": 592,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cat/cat_093.jpeg",
+          "true_class": "cat",
+          "predicted_class": "cat"
+        },
+        {
+          "test_position": 205,
+          "dataset_index": 1019,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/chicken/chicken_020.jpeg",
+          "true_class": "chicken",
+          "predicted_class": "chicken"
+        },
+        {
+          "test_position": 301,
+          "dataset_index": 1503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cow/cow_004.jpeg",
+          "true_class": "cow",
+          "predicted_class": "cow"
+        },
+        {
+          "test_position": 415,
+          "dataset_index": 2117,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/dog/dog_118.jpeg",
+          "true_class": "dog",
+          "predicted_class": "dog"
+        }
+      ],
+      "incorrect": [
+        {
+          "test_position": 1,
+          "dataset_index": 13,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/butterfly/butterfly_014.jpeg",
+          "true_class": "butterfly",
+          "predicted_class": "squirrel"
+        },
+        {
+          "test_position": 100,
+          "dataset_index": 503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cat/cat_004.jpeg",
+          "true_class": "cat",
+          "predicted_class": "sheep"
+        },
+        {
+          "test_position": 200,
+          "dataset_index": 1000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/chicken/chicken_001.jpeg",
+          "true_class": "chicken",
+          "predicted_class": "spider"
+        },
+        {
+          "test_position": 300,
+          "dataset_index": 1502,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/cow/cow_003.jpeg",
+          "true_class": "cow",
+          "predicted_class": "dog"
+        },
+        {
+          "test_position": 400,
+          "dataset_index": 2000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n500/images/dog/dog_001.jpeg",
+          "true_class": "dog",
+          "predicted_class": "chicken"
+        }
+      ]
+    }
+  }
+}

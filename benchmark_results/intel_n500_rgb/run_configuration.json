@@ -1,0 +1,71 @@
+{
+  "package": {
+    "name": "Samuel_Collins_CV_Benchmarking",
+    "version": "0.1.0"
+  },
+  "dataset_type": "csv",
+  "color_mode": "rgb",
+  "image_size": [
+    64,
+    64
+  ],
+  "random_seed": 42,
+  "split": {
+    "training_samples": 2400,
+    "testing_samples": 600,
+    "test_size": 0.2,
+    "random_seed": 42,
+    "stratified": true
+  },
+  "class_names": [
+    "buildings",
+    "forest",
+    "glacier",
+    "mountain",
+    "sea",
+    "street"
+  ],
+  "models": {
+    "simple_cnn": {
+      "architecture": "conv32-pool-conv64-pool-dense128-dropout0.30-softmax",
+      "optimizer": "Adam",
+      "learning_rate": 0.001,
+      "loss": "cross_entropy",
+      "max_epochs": 20,
+      "batch_size": 32,
+      "early_stopping_patience": 3,
+      "min_improvement": 0.0,
+      "validation_fraction": 0.15,
+      "pretrained": false,
+      "device": "cpu",
+      "random_state": 42
+    },
+    "svm": {
+      "kernel": "rbf",
+      "random_state": 42
+    },
+    "random_forest": {
+      "n_estimators": 200,
+      "random_state": 42,
+      "n_jobs": -1
+    },
+    "neural_network": {
+      "hidden_layer_sizes": [
+        128,
+        64
+      ],
+      "max_iter": 100,
+      "early_stopping": true,
+      "validation_fraction": 0.15,
+      "n_iter_no_change": 3,
+      "random_state": 42
+    },
+    "decision_tree": {
+      "random_state": 42
+    },
+    "logistic_regression": {
+      "max_iter": 1000,
+      "random_state": 42
+    }
+  }
+}

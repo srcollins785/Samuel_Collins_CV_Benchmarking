@@ -1,0 +1,1578 @@
+{
+  "simple_cnn": {
+    "name": "Simple CNN",
+    "succeeded": true,
+    "error": null,
+    "accuracy": 0.705,
+    "macro_precision": 0.7117761666303547,
+    "macro_recall": 0.705,
+    "macro_f1": 0.7040087935524961,
+    "weighted_f1": 0.704008793552496,
+    "training_time_seconds": 36.39243195900002,
+    "inference_time_ms_per_image": 0.7993817366666652,
+    "confusion_matrix": [
+      [
+        77,
+        4,
+        2,
+        4,
+        3,
+        10
+      ],
+      [
+        4,
+        86,
+        1,
+        0,
+        0,
+        9
+      ],
+      [
+        10,
+        2,
+        64,
+        17,
+        7,
+        0
+      ],
+      [
+        9,
+        0,
+        9,
+        73,
+        9,
+        0
+      ],
+      [
+        10,
+        0,
+        19,
+        12,
+        55,
+        4
+      ],
+      [
+        20,
+        9,
+        0,
+        1,
+        2,
+        68
+      ]
+    ],
+    "classification_report": {
+      "buildings": {
+        "precision": 0.5923076923076923,
+        "recall": 0.77,
+        "f1-score": 0.6695652173913044,
+        "support": 100.0
+      },
+      "forest": {
+        "precision": 0.8514851485148515,
+        "recall": 0.86,
+        "f1-score": 0.8557213930348259,
+        "support": 100.0
+      },
+      "glacier": {
+        "precision": 0.6736842105263158,
+        "recall": 0.64,
+        "f1-score": 0.6564102564102564,
+        "support": 100.0
+      },
+      "mountain": {
+        "precision": 0.6822429906542056,
+        "recall": 0.73,
+        "f1-score": 0.7053140096618358,
+        "support": 100.0
+      },
+      "sea": {
+        "precision": 0.7236842105263158,
+        "recall": 0.55,
+        "f1-score": 0.625,
+        "support": 100.0
+      },
+      "street": {
+        "precision": 0.7472527472527473,
+        "recall": 0.68,
+        "f1-score": 0.7120418848167539,
+        "support": 100.0
+      },
+      "accuracy": 0.705,
+      "macro avg": {
+        "precision": 0.7117761666303547,
+        "recall": 0.705,
+        "f1-score": 0.7040087935524961,
+        "support": 600.0
+      },
+      "weighted avg": {
+        "precision": 0.7117761666303547,
+        "recall": 0.705,
+        "f1-score": 0.704008793552496,
+        "support": 600.0
+      }
+    },
+    "training_history": {
+      "epochs_run": 13,
+      "epochs_max": 20,
+      "stopped_early": true,
+      "best_validation_loss": 0.8335029482841492,
+      "validation_samples": 360,
+      "training_samples": 2040,
+      "validation_index": [
+        2343,
+        1487,
+        800,
+        174,
+        1762,
+        1331,
+        1998,
+        2368,
+        543,
+        646,
+        149,
+        2357,
+        166,
+        1184,
+        1361,
+        833,
+        2303,
+        2360,
+        1616,
+        257,
+        825,
+        1992,
+        1913,
+        1676,
+        1151,
+        2160,
+        1585,
+        21,
+        214,
+        1757,
+        595,
+        804,
+        1925,
+        1463,
+        344,
+        674,
+        1822,
+        920,
+        894,
+        2330,
+        2004,
+        1991,
+        2268,
+        891,
+        2309,
+        557,
+        2062,
+        517,
+        2327,
+        771,
+        1973,
+        1254,
+        2289,
+        1787,
+        1518,
+        2219,
+        1565,
+        339,
+        2192,
+        2097,
+        2191,
+        877,
+        1780,
+        1364,
+        1170,
+        584,
+        276,
+        2025,
+        1622,
+        842,
+        252,
+        677,
+        1286,
+        91,
+        1217,
+        671,
+        1501,
+        2217,
+        187,
+        452,
+        1080,
+        1638,
+        2168,
+        205,
+        1465,
+        1636,
+        717,
+        1512,
+        2085,
+        860,
+        1645,
+        1790,
+        2000,
+        544,
+        88,
+        330,
+        2366,
+        1522,
+        689,
+        1580,
+        1048,
+        1520,
+        1953,
+        13,
+        2344,
+        892,
+        1754,
+        34,
+        661,
+        2244,
+        1448,
+        1462,
+        1250,
+        1422,
+        264,
+        393,
+        1558,
+        1681,
+        1805,
+        821,
+        1291,
+        2278,
+        308,
+        1145,
+        1583,
+        1365,
+        1732,
+        707,
+        1510,
+        516,
+        807,
+        2118,
+        1999,
+        1769,
+        1894,
+        241,
+        2068,
+        1841,
+        1159,
+        1421,
+        130,
+        546,
+        932,
+        1934,
+        1330,
+        2064,
+        505,
+        1621,
+        1319,
+        1574,
+        1918,
+        1584,
+        745,
+        1712,
+        1360,
+        2286,
+        906,
+        921,
+        628,
+        718,
+        710,
+        1848,
+        636,
+        1529,
+        102,
+        855,
+        1277,
+        348,
+        343,
+        1971,
+        263,
+        1313,
+        475,
+        1056,
+        319,
+        1381,
+        1962,
+        447,
+        553,
+        638,
+        1438,
+        1343,
+        2075,
+        404,
+        525,
+        2072,
+        1944,
+        1206,
+        2158,
+        54,
+        846,
+        1673,
+        1821,
+        1207,
+        811,
+        106,
+        48,
+        982,
+        1350,
+        872,
+        1312,
+        328,
+        1135,
+        2338,
+        1287,
+        1823,
+        2310,
+        1659,
+        1994,
+        1296,
+        1612,
+        1039,
+        2175,
+        1187,
+        495,
+        528,
+        2174,
+        784,
+        71,
+        663,
+        588,
+        1076,
+        20,
+        1393,
+        845,
+        1091,
+        1966,
+        2144,
+        507,
+        58,
+        1454,
+        1149,
+        189,
+        1173,
+        1795,
+        684,
+        1595,
+        399,
+        769,
+        1965,
+        270,
+        345,
+        1959,
+        87,
+        1877,
+        2231,
+        273,
+        468,
+        134,
+        397,
+        678,
+        847,
+        2101,
+        850,
+        2141,
+        485,
+        1791,
+        372,
+        1253,
+        2128,
+        457,
+        1611,
+        2363,
+        1832,
+        1295,
+        383,
+        950,
+        2052,
+        591,
+        1116,
+        2354,
+        1032,
+        1178,
+        2302,
+        99,
+        1644,
+        983,
+        1527,
+        315,
+        169,
+        2288,
+        1266,
+        954,
+        502,
+        1081,
+        1189,
+        1570,
+        1136,
+        1446,
+        1834,
+        1818,
+        2088,
+        491,
+        306,
+        754,
+        1013,
+        772,
+        668,
+        1923,
+        151,
+        764,
+        359,
+        959,
+        1017,
+        2089,
+        994,
+        1218,
+        1630,
+        1377,
+        488,
+        526,
+        1943,
+        459,
+        1125,
+        293,
+        313,
+        2113,
+        52,
+        1195,
+        2323,
+        1548,
+        519,
+        1955,
+        2131,
+        910,
+        749,
+        160,
+        188,
+        235,
+        2142,
+        2081,
+        1456,
+        2146,
+        121,
+        2076,
+        619,
+        1857,
+        969,
+        50,
+        1374,
+        2018,
+        1759,
+        1100,
+        1490,
+        1118,
+        748,
+        1606,
+        400,
+        521,
+        2212,
+        446,
+        1792,
+        243,
+        2135,
+        1428,
+        1038,
+        2301,
+        191,
+        523,
+        912
+      ],
+      "per_epoch": [
+        {
+          "epoch": 1,
+          "train_loss": 1.3998277357980318,
+          "validation_loss": 1.1707513332366943
+        },
+        {
+          "epoch": 2,
+          "train_loss": 1.104277142823911,
+          "validation_loss": 1.134671926498413
+        },
+        {
+          "epoch": 3,
+          "train_loss": 1.010109555721283,
+          "validation_loss": 1.0169086456298828
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.9049393513623406,
+          "validation_loss": 0.9661731123924255
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.8265422991677827,
+          "validation_loss": 0.9362565875053406
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.7874550538904527,
+          "validation_loss": 0.874665379524231
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.7572975848235336,
+          "validation_loss": 0.8988108038902283
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.6770353992780049,
+          "validation_loss": 0.860688328742981
+        },
+        {
+          "epoch": 9,
+          "train_loss": 0.6154345988058576,
+          "validation_loss": 0.8349056839942932
+        },
+        {
+          "epoch": 10,
+          "train_loss": 0.5228591523918451,
+          "validation_loss": 0.8335029482841492
+        },
+        {
+          "epoch": 11,
+          "train_loss": 0.4786141507765826,
+          "validation_loss": 0.8896011114120483
+        },
+        {
+          "epoch": 12,
+          "train_loss": 0.40308247722831425,
+          "validation_loss": 0.9337068200111389
+        },
+        {
+          "epoch": 13,
+          "train_loss": 0.3570919971840054,
+          "validation_loss": 0.9998197555541992
+        }
+      ]
+    },
+    "prediction_examples": {
+      "correct": [
+        {
+          "test_position": 0,
+          "dataset_index": 1,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/buildings/buildings_0002.jpeg",
+          "true_class": "buildings",
+          "predicted_class": "buildings"
+        },
+        {
+          "test_position": 100,
+          "dataset_index": 503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/forest/forest_0004.jpeg",
+          "true_class": "forest",
+          "predicted_class": "forest"
+        },
+        {
+          "test_position": 205,
+          "dataset_index": 1019,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/glacier/glacier_0020.jpeg",
+          "true_class": "glacier",
+          "predicted_class": "glacier"
+        },
+        {
+          "test_position": 300,
+          "dataset_index": 1502,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/mountain/mountain_0003.jpeg",
+          "true_class": "mountain",
+          "predicted_class": "mountain"
+        },
+        {
+          "test_position": 402,
+          "dataset_index": 2011,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/sea/sea_0012.jpeg",
+          "true_class": "sea",
+          "predicted_class": "sea"
+        }
+      ],
+      "incorrect": [
+        {
+          "test_position": 5,
+          "dataset_index": 43,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/buildings/buildings_0044.jpeg",
+          "true_class": "buildings",
+          "predicted_class": "street"
+        },
+        {
+          "test_position": 104,
+          "dataset_index": 518,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/forest/forest_0019.jpeg",
+          "true_class": "forest",
+          "predicted_class": "street"
+        },
+        {
+          "test_position": 200,
+          "dataset_index": 1000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/glacier/glacier_0001.jpeg",
+          "true_class": "glacier",
+          "predicted_class": "sea"
+        },
+        {
+          "test_position": 302,
+          "dataset_index": 1510,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/mountain/mountain_0011.jpeg",
+          "true_class": "mountain",
+          "predicted_class": "sea"
+        },
+        {
+          "test_position": 400,
+          "dataset_index": 2000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/sea/sea_0001.jpeg",
+          "true_class": "sea",
+          "predicted_class": "glacier"
+        }
+      ]
+    }
+  },
+  "svm": {
+    "name": "SVM",
+    "succeeded": true,
+    "error": null,
+    "accuracy": 0.625,
+    "macro_precision": 0.6220234329114211,
+    "macro_recall": 0.625,
+    "macro_f1": 0.6210285485680533,
+    "weighted_f1": 0.6210285485680535,
+    "training_time_seconds": 110.76423370799999,
+    "inference_time_ms_per_image": 345.0748038883333,
+    "confusion_matrix": [
+      [
+        55,
+        3,
+        7,
+        13,
+        11,
+        11
+      ],
+      [
+        4,
+        81,
+        0,
+        1,
+        5,
+        9
+      ],
+      [
+        5,
+        2,
+        66,
+        14,
+        9,
+        4
+      ],
+      [
+        11,
+        3,
+        7,
+        70,
+        8,
+        1
+      ],
+      [
+        10,
+        7,
+        23,
+        14,
+        41,
+        5
+      ],
+      [
+        15,
+        9,
+        5,
+        6,
+        3,
+        62
+      ]
+    ],
+    "classification_report": {
+      "buildings": {
+        "precision": 0.55,
+        "recall": 0.55,
+        "f1-score": 0.55,
+        "support": 100.0
+      },
+      "forest": {
+        "precision": 0.7714285714285715,
+        "recall": 0.81,
+        "f1-score": 0.7902439024390244,
+        "support": 100.0
+      },
+      "glacier": {
+        "precision": 0.6111111111111112,
+        "recall": 0.66,
+        "f1-score": 0.6346153846153846,
+        "support": 100.0
+      },
+      "mountain": {
+        "precision": 0.5932203389830508,
+        "recall": 0.7,
+        "f1-score": 0.6422018348623854,
+        "support": 100.0
+      },
+      "sea": {
+        "precision": 0.5324675324675324,
+        "recall": 0.41,
+        "f1-score": 0.4632768361581921,
+        "support": 100.0
+      },
+      "street": {
+        "precision": 0.6739130434782609,
+        "recall": 0.62,
+        "f1-score": 0.6458333333333334,
+        "support": 100.0
+      },
+      "accuracy": 0.625,
+      "macro avg": {
+        "precision": 0.6220234329114211,
+        "recall": 0.625,
+        "f1-score": 0.6210285485680533,
+        "support": 600.0
+      },
+      "weighted avg": {
+        "precision": 0.6220234329114213,
+        "recall": 0.625,
+        "f1-score": 0.6210285485680535,
+        "support": 600.0
+      }
+    },
+    "training_history": {},
+    "prediction_examples": {
+      "correct": [
+        {
+          "test_position": 0,
+          "dataset_index": 1,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/buildings/buildings_0002.jpeg",
+          "true_class": "buildings",
+          "predicted_class": "buildings"
+        },
+        {
+          "test_position": 100,
+          "dataset_index": 503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/forest/forest_0004.jpeg",
+          "true_class": "forest",
+          "predicted_class": "forest"
+        },
+        {
+          "test_position": 203,
+          "dataset_index": 1012,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/glacier/glacier_0013.jpeg",
+          "true_class": "glacier",
+          "predicted_class": "glacier"
+        },
+        {
+          "test_position": 300,
+          "dataset_index": 1502,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/mountain/mountain_0003.jpeg",
+          "true_class": "mountain",
+          "predicted_class": "mountain"
+        },
+        {
+          "test_position": 400,
+          "dataset_index": 2000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/sea/sea_0001.jpeg",
+          "true_class": "sea",
+          "predicted_class": "sea"
+        }
+      ],
+      "incorrect": [
+        {
+          "test_position": 2,
+          "dataset_index": 20,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/buildings/buildings_0021.jpeg",
+          "true_class": "buildings",
+          "predicted_class": "mountain"
+        },
+        {
+          "test_position": 104,
+          "dataset_index": 518,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/forest/forest_0019.jpeg",
+          "true_class": "forest",
+          "predicted_class": "sea"
+        },
+        {
+          "test_position": 200,
+          "dataset_index": 1000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/glacier/glacier_0001.jpeg",
+          "true_class": "glacier",
+          "predicted_class": "mountain"
+        },
+        {
+          "test_position": 302,
+          "dataset_index": 1510,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/mountain/mountain_0011.jpeg",
+          "true_class": "mountain",
+          "predicted_class": "sea"
+        },
+        {
+          "test_position": 401,
+          "dataset_index": 2009,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/sea/sea_0010.jpeg",
+          "true_class": "sea",
+          "predicted_class": "glacier"
+        }
+      ]
+    }
+  },
+  "random_forest": {
+    "name": "Random Forest",
+    "succeeded": true,
+    "error": null,
+    "accuracy": 0.57,
+    "macro_precision": 0.5661950601778294,
+    "macro_recall": 0.57,
+    "macro_f1": 0.5638715792063363,
+    "weighted_f1": 0.5638715792063365,
+    "training_time_seconds": 2.5574104170000034,
+    "inference_time_ms_per_image": 0.04768361166666679,
+    "confusion_matrix": [
+      [
+        45,
+        5,
+        6,
+        18,
+        11,
+        15
+      ],
+      [
+        5,
+        79,
+        1,
+        1,
+        1,
+        13
+      ],
+      [
+        6,
+        2,
+        59,
+        16,
+        11,
+        6
+      ],
+      [
+        8,
+        2,
+        9,
+        68,
+        11,
+        2
+      ],
+      [
+        6,
+        8,
+        29,
+        14,
+        38,
+        5
+      ],
+      [
+        14,
+        14,
+        10,
+        7,
+        2,
+        53
+      ]
+    ],
+    "classification_report": {
+      "buildings": {
+        "precision": 0.5357142857142857,
+        "recall": 0.45,
+        "f1-score": 0.4891304347826087,
+        "support": 100.0
+      },
+      "forest": {
+        "precision": 0.7181818181818181,
+        "recall": 0.79,
+        "f1-score": 0.7523809523809524,
+        "support": 100.0
+      },
+      "glacier": {
+        "precision": 0.5175438596491229,
+        "recall": 0.59,
+        "f1-score": 0.5514018691588785,
+        "support": 100.0
+      },
+      "mountain": {
+        "precision": 0.5483870967741935,
+        "recall": 0.68,
+        "f1-score": 0.6071428571428571,
+        "support": 100.0
+      },
+      "sea": {
+        "precision": 0.5135135135135135,
+        "recall": 0.38,
+        "f1-score": 0.4367816091954023,
+        "support": 100.0
+      },
+      "street": {
+        "precision": 0.5638297872340425,
+        "recall": 0.53,
+        "f1-score": 0.5463917525773195,
+        "support": 100.0
+      },
+      "accuracy": 0.57,
+      "macro avg": {
+        "precision": 0.5661950601778294,
+        "recall": 0.57,
+        "f1-score": 0.5638715792063363,
+        "support": 600.0
+      },
+      "weighted avg": {
+        "precision": 0.5661950601778294,
+        "recall": 0.57,
+        "f1-score": 0.5638715792063365,
+        "support": 600.0
+      }
+    },
+    "training_history": {},
+    "prediction_examples": {
+      "correct": [
+        {
+          "test_position": 0,
+          "dataset_index": 1,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/buildings/buildings_0002.jpeg",
+          "true_class": "buildings",
+          "predicted_class": "buildings"
+        },
+        {
+          "test_position": 100,
+          "dataset_index": 503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/forest/forest_0004.jpeg",
+          "true_class": "forest",
+          "predicted_class": "forest"
+        },
+        {
+          "test_position": 203,
+          "dataset_index": 1012,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/glacier/glacier_0013.jpeg",
+          "true_class": "glacier",
+          "predicted_class": "glacier"
+        },
+        {
+          "test_position": 300,
+          "dataset_index": 1502,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/mountain/mountain_0003.jpeg",
+          "true_class": "mountain",
+          "predicted_class": "mountain"
+        },
+        {
+          "test_position": 402,
+          "dataset_index": 2011,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/sea/sea_0012.jpeg",
+          "true_class": "sea",
+          "predicted_class": "sea"
+        }
+      ],
+      "incorrect": [
+        {
+          "test_position": 1,
+          "dataset_index": 13,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/buildings/buildings_0014.jpeg",
+          "true_class": "buildings",
+          "predicted_class": "street"
+        },
+        {
+          "test_position": 104,
+          "dataset_index": 518,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/forest/forest_0019.jpeg",
+          "true_class": "forest",
+          "predicted_class": "sea"
+        },
+        {
+          "test_position": 200,
+          "dataset_index": 1000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/glacier/glacier_0001.jpeg",
+          "true_class": "glacier",
+          "predicted_class": "mountain"
+        },
+        {
+          "test_position": 302,
+          "dataset_index": 1510,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/mountain/mountain_0011.jpeg",
+          "true_class": "mountain",
+          "predicted_class": "buildings"
+        },
+        {
+          "test_position": 400,
+          "dataset_index": 2000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/sea/sea_0001.jpeg",
+          "true_class": "sea",
+          "predicted_class": "glacier"
+        }
+      ]
+    }
+  },
+  "neural_network": {
+    "name": "Neural Network",
+    "succeeded": true,
+    "error": null,
+    "accuracy": 0.49833333333333335,
+    "macro_precision": 0.5153915264178122,
+    "macro_recall": 0.4983333333333333,
+    "macro_f1": 0.4985916407943225,
+    "weighted_f1": 0.4985916407943225,
+    "training_time_seconds": 0.7704113750000374,
+    "inference_time_ms_per_image": 0.02617382000001574,
+    "confusion_matrix": [
+      [
+        31,
+        4,
+        9,
+        24,
+        20,
+        12
+      ],
+      [
+        5,
+        72,
+        1,
+        2,
+        9,
+        11
+      ],
+      [
+        4,
+        2,
+        39,
+        16,
+        38,
+        1
+      ],
+      [
+        7,
+        2,
+        7,
+        63,
+        17,
+        4
+      ],
+      [
+        7,
+        7,
+        15,
+        23,
+        42,
+        6
+      ],
+      [
+        12,
+        11,
+        5,
+        6,
+        14,
+        52
+      ]
+    ],
+    "classification_report": {
+      "buildings": {
+        "precision": 0.4696969696969697,
+        "recall": 0.31,
+        "f1-score": 0.37349397590361444,
+        "support": 100.0
+      },
+      "forest": {
+        "precision": 0.7346938775510204,
+        "recall": 0.72,
+        "f1-score": 0.7272727272727273,
+        "support": 100.0
+      },
+      "glacier": {
+        "precision": 0.5131578947368421,
+        "recall": 0.39,
+        "f1-score": 0.4431818181818182,
+        "support": 100.0
+      },
+      "mountain": {
+        "precision": 0.4701492537313433,
+        "recall": 0.63,
+        "f1-score": 0.5384615384615384,
+        "support": 100.0
+      },
+      "sea": {
+        "precision": 0.3,
+        "recall": 0.42,
+        "f1-score": 0.35,
+        "support": 100.0
+      },
+      "street": {
+        "precision": 0.6046511627906976,
+        "recall": 0.52,
+        "f1-score": 0.5591397849462365,
+        "support": 100.0
+      },
+      "accuracy": 0.49833333333333335,
+      "macro avg": {
+        "precision": 0.5153915264178122,
+        "recall": 0.4983333333333333,
+        "f1-score": 0.4985916407943225,
+        "support": 600.0
+      },
+      "weighted avg": {
+        "precision": 0.5153915264178123,
+        "recall": 0.49833333333333335,
+        "f1-score": 0.4985916407943225,
+        "support": 600.0
+      }
+    },
+    "training_history": {},
+    "prediction_examples": {
+      "correct": [
+        {
+          "test_position": 6,
+          "dataset_index": 48,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/buildings/buildings_0049.jpeg",
+          "true_class": "buildings",
+          "predicted_class": "buildings"
+        },
+        {
+          "test_position": 100,
+          "dataset_index": 503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/forest/forest_0004.jpeg",
+          "true_class": "forest",
+          "predicted_class": "forest"
+        },
+        {
+          "test_position": 204,
+          "dataset_index": 1013,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/glacier/glacier_0014.jpeg",
+          "true_class": "glacier",
+          "predicted_class": "glacier"
+        },
+        {
+          "test_position": 300,
+          "dataset_index": 1502,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/mountain/mountain_0003.jpeg",
+          "true_class": "mountain",
+          "predicted_class": "mountain"
+        },
+        {
+          "test_position": 400,
+          "dataset_index": 2000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/sea/sea_0001.jpeg",
+          "true_class": "sea",
+          "predicted_class": "sea"
+        }
+      ],
+      "incorrect": [
+        {
+          "test_position": 0,
+          "dataset_index": 1,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/buildings/buildings_0002.jpeg",
+          "true_class": "buildings",
+          "predicted_class": "sea"
+        },
+        {
+          "test_position": 102,
+          "dataset_index": 512,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/forest/forest_0013.jpeg",
+          "true_class": "forest",
+          "predicted_class": "street"
+        },
+        {
+          "test_position": 200,
+          "dataset_index": 1000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/glacier/glacier_0001.jpeg",
+          "true_class": "glacier",
+          "predicted_class": "mountain"
+        },
+        {
+          "test_position": 302,
+          "dataset_index": 1510,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/mountain/mountain_0011.jpeg",
+          "true_class": "mountain",
+          "predicted_class": "forest"
+        },
+        {
+          "test_position": 402,
+          "dataset_index": 2011,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/sea/sea_0012.jpeg",
+          "true_class": "sea",
+          "predicted_class": "mountain"
+        }
+      ]
+    }
+  },
+  "decision_tree": {
+    "name": "Decision Tree",
+    "succeeded": true,
+    "error": null,
+    "accuracy": 0.395,
+    "macro_precision": 0.3982502710474994,
+    "macro_recall": 0.39499999999999996,
+    "macro_f1": 0.39591199771607627,
+    "weighted_f1": 0.39591199771607627,
+    "training_time_seconds": 15.563449624999997,
+    "inference_time_ms_per_image": 0.0023014583333313965,
+    "confusion_matrix": [
+      [
+        32,
+        11,
+        15,
+        16,
+        14,
+        12
+      ],
+      [
+        18,
+        54,
+        4,
+        3,
+        6,
+        15
+      ],
+      [
+        11,
+        8,
+        37,
+        15,
+        22,
+        7
+      ],
+      [
+        11,
+        1,
+        14,
+        51,
+        16,
+        7
+      ],
+      [
+        16,
+        8,
+        24,
+        16,
+        27,
+        9
+      ],
+      [
+        18,
+        11,
+        10,
+        8,
+        17,
+        36
+      ]
+    ],
+    "classification_report": {
+      "buildings": {
+        "precision": 0.3018867924528302,
+        "recall": 0.32,
+        "f1-score": 0.3106796116504854,
+        "support": 100.0
+      },
+      "forest": {
+        "precision": 0.5806451612903226,
+        "recall": 0.54,
+        "f1-score": 0.5595854922279793,
+        "support": 100.0
+      },
+      "glacier": {
+        "precision": 0.3557692307692308,
+        "recall": 0.37,
+        "f1-score": 0.3627450980392157,
+        "support": 100.0
+      },
+      "mountain": {
+        "precision": 0.46788990825688076,
+        "recall": 0.51,
+        "f1-score": 0.4880382775119617,
+        "support": 100.0
+      },
+      "sea": {
+        "precision": 0.2647058823529412,
+        "recall": 0.27,
+        "f1-score": 0.26732673267326734,
+        "support": 100.0
+      },
+      "street": {
+        "precision": 0.4186046511627907,
+        "recall": 0.36,
+        "f1-score": 0.3870967741935484,
+        "support": 100.0
+      },
+      "accuracy": 0.395,
+      "macro avg": {
+        "precision": 0.3982502710474994,
+        "recall": 0.39499999999999996,
+        "f1-score": 0.39591199771607627,
+        "support": 600.0
+      },
+      "weighted avg": {
+        "precision": 0.3982502710474994,
+        "recall": 0.395,
+        "f1-score": 0.39591199771607627,
+        "support": 600.0
+      }
+    },
+    "training_history": {},
+    "prediction_examples": {
+      "correct": [
+        {
+          "test_position": 0,
+          "dataset_index": 1,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/buildings/buildings_0002.jpeg",
+          "true_class": "buildings",
+          "predicted_class": "buildings"
+        },
+        {
+          "test_position": 100,
+          "dataset_index": 503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/forest/forest_0004.jpeg",
+          "true_class": "forest",
+          "predicted_class": "forest"
+        },
+        {
+          "test_position": 208,
+          "dataset_index": 1037,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/glacier/glacier_0038.jpeg",
+          "true_class": "glacier",
+          "predicted_class": "glacier"
+        },
+        {
+          "test_position": 301,
+          "dataset_index": 1503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/mountain/mountain_0004.jpeg",
+          "true_class": "mountain",
+          "predicted_class": "mountain"
+        },
+        {
+          "test_position": 407,
+          "dataset_index": 2043,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/sea/sea_0044.jpeg",
+          "true_class": "sea",
+          "predicted_class": "sea"
+        }
+      ],
+      "incorrect": [
+        {
+          "test_position": 1,
+          "dataset_index": 13,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/buildings/buildings_0014.jpeg",
+          "true_class": "buildings",
+          "predicted_class": "street"
+        },
+        {
+          "test_position": 102,
+          "dataset_index": 512,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/forest/forest_0013.jpeg",
+          "true_class": "forest",
+          "predicted_class": "buildings"
+        },
+        {
+          "test_position": 200,
+          "dataset_index": 1000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/glacier/glacier_0001.jpeg",
+          "true_class": "glacier",
+          "predicted_class": "buildings"
+        },
+        {
+          "test_position": 300,
+          "dataset_index": 1502,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/mountain/mountain_0003.jpeg",
+          "true_class": "mountain",
+          "predicted_class": "glacier"
+        },
+        {
+          "test_position": 400,
+          "dataset_index": 2000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/sea/sea_0001.jpeg",
+          "true_class": "sea",
+          "predicted_class": "glacier"
+        }
+      ]
+    }
+  },
+  "logistic_regression": {
+    "name": "Logistic Regression",
+    "succeeded": true,
+    "error": null,
+    "accuracy": 0.3933333333333333,
+    "macro_precision": 0.40600268242591975,
+    "macro_recall": 0.39333333333333337,
+    "macro_f1": 0.39518961279050213,
+    "weighted_f1": 0.3951896127905022,
+    "training_time_seconds": 5.101939832999999,
+    "inference_time_ms_per_image": 0.03995861166666762,
+    "confusion_matrix": [
+      [
+        17,
+        2,
+        19,
+        25,
+        24,
+        13
+      ],
+      [
+        8,
+        56,
+        5,
+        5,
+        15,
+        11
+      ],
+      [
+        8,
+        7,
+        38,
+        15,
+        26,
+        6
+      ],
+      [
+        9,
+        3,
+        8,
+        55,
+        22,
+        3
+      ],
+      [
+        16,
+        5,
+        26,
+        20,
+        25,
+        8
+      ],
+      [
+        12,
+        8,
+        13,
+        7,
+        15,
+        45
+      ]
+    ],
+    "classification_report": {
+      "buildings": {
+        "precision": 0.24285714285714285,
+        "recall": 0.17,
+        "f1-score": 0.2,
+        "support": 100.0
+      },
+      "forest": {
+        "precision": 0.691358024691358,
+        "recall": 0.56,
+        "f1-score": 0.6187845303867403,
+        "support": 100.0
+      },
+      "glacier": {
+        "precision": 0.3486238532110092,
+        "recall": 0.38,
+        "f1-score": 0.36363636363636365,
+        "support": 100.0
+      },
+      "mountain": {
+        "precision": 0.4330708661417323,
+        "recall": 0.55,
+        "f1-score": 0.4845814977973568,
+        "support": 100.0
+      },
+      "sea": {
+        "precision": 0.1968503937007874,
+        "recall": 0.25,
+        "f1-score": 0.22026431718061673,
+        "support": 100.0
+      },
+      "street": {
+        "precision": 0.5232558139534884,
+        "recall": 0.45,
+        "f1-score": 0.4838709677419355,
+        "support": 100.0
+      },
+      "accuracy": 0.3933333333333333,
+      "macro avg": {
+        "precision": 0.40600268242591975,
+        "recall": 0.39333333333333337,
+        "f1-score": 0.39518961279050213,
+        "support": 600.0
+      },
+      "weighted avg": {
+        "precision": 0.4060026824259197,
+        "recall": 0.3933333333333333,
+        "f1-score": 0.3951896127905022,
+        "support": 600.0
+      }
+    },
+    "training_history": {},
+    "prediction_examples": {
+      "correct": [
+        {
+          "test_position": 0,
+          "dataset_index": 1,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/buildings/buildings_0002.jpeg",
+          "true_class": "buildings",
+          "predicted_class": "buildings"
+        },
+        {
+          "test_position": 100,
+          "dataset_index": 503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/forest/forest_0004.jpeg",
+          "true_class": "forest",
+          "predicted_class": "forest"
+        },
+        {
+          "test_position": 203,
+          "dataset_index": 1012,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/glacier/glacier_0013.jpeg",
+          "true_class": "glacier",
+          "predicted_class": "glacier"
+        },
+        {
+          "test_position": 300,
+          "dataset_index": 1502,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/mountain/mountain_0003.jpeg",
+          "true_class": "mountain",
+          "predicted_class": "mountain"
+        },
+        {
+          "test_position": 400,
+          "dataset_index": 2000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/sea/sea_0001.jpeg",
+          "true_class": "sea",
+          "predicted_class": "sea"
+        }
+      ],
+      "incorrect": [
+        {
+          "test_position": 2,
+          "dataset_index": 20,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/buildings/buildings_0021.jpeg",
+          "true_class": "buildings",
+          "predicted_class": "mountain"
+        },
+        {
+          "test_position": 102,
+          "dataset_index": 512,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/forest/forest_0013.jpeg",
+          "true_class": "forest",
+          "predicted_class": "sea"
+        },
+        {
+          "test_position": 200,
+          "dataset_index": 1000,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/glacier/glacier_0001.jpeg",
+          "true_class": "glacier",
+          "predicted_class": "sea"
+        },
+        {
+          "test_position": 301,
+          "dataset_index": 1503,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/mountain/mountain_0004.jpeg",
+          "true_class": "mountain",
+          "predicted_class": "buildings"
+        },
+        {
+          "test_position": 401,
+          "dataset_index": 2009,
+          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/intel_n500/images/sea/sea_0010.jpeg",
+          "true_class": "sea",
+          "predicted_class": "glacier"
+        }
+      ]
+    }
+  }
+}

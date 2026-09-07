@@ -3,8 +3,12 @@
 # ours to redistribute. See README "Datasets".
 data/
 
-# Kaggle source archive, kept outside the repo
+# Kaggle source archives, kept outside the repo
 animals10_source/
+intel_source/
+
+# Personal working notes, kept local rather than published
+class_notes/
 
 # Python
 __pycache__/

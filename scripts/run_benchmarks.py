@@ -11,10 +11,16 @@ signature: each tier runs in its own temporary working directory, and the
 directory it produces is moved into ``benchmark_results/<tier>/`` afterwards.
 The library keeps its simple contract, and the runs accumulate.
 
+Results are filed under ``benchmark_results/<tier>_<color_mode>/``. The colour
+mode is part of the directory name because it is part of the run's identity:
+the same images in grayscale and in RGB are two different experiments, and
+naming them alike would let the second silently overwrite the first.
+
 Usage
 -----
-    python scripts/run_benchmarks.py                     # every built tier
-    python scripts/run_benchmarks.py animals10_n100      # just one
+    python scripts/run_benchmarks.py                        # every tier, RGB
+    python scripts/run_benchmarks.py animals10_n100
+    python scripts/run_benchmarks.py --color-mode grayscale
 
 Build a tier first with ``scripts/download_animals10.py``.
 """
@@ -53,8 +59,8 @@ def available_tiers() -> list:
     return sorted(tiers, key=size)
 
 
-def run_tier(tier: str) -> dict:
-    """Benchmark one tier and file its results under that tier's name."""
+def run_tier(tier: str, color_mode: str = "rgb") -> dict:
+    """Benchmark one tier and file its results under tier and colour mode."""
     manifest = DATA_DIR / tier / "labels.csv"
     if not manifest.is_file():
         raise FileNotFoundError(
@@ -62,12 +68,13 @@ def run_tier(tier: str) -> dict:
             f"scripts/download_animals10.py --per-class <N>"
         )
 
-    print(f"\n{'=' * 68}\n{tier}\n{'=' * 68}")
+    run_name = f"{tier}_{color_mode}"
+    print(f"\n{'=' * 68}\n{run_name}\n{'=' * 68}")
     started = time.perf_counter()
 
     # Run somewhere disposable so the benchmark's own output directory cannot
     # collide with a previous tier's.
-    workspace = Path(tempfile.mkdtemp(prefix=f"{tier}_"))
+    workspace = Path(tempfile.mkdtemp(prefix=f"{run_name}_"))
     previous = Path.cwd()
     try:
         os.chdir(workspace)
@@ -75,13 +82,13 @@ def run_tier(tier: str) -> dict:
             dataset=str(manifest),          # absolute, so the cwd move is safe
             dataset_type="csv",
             target_labels="class_name",
-            color_mode="rgb",
+            color_mode=color_mode,
         )
         produced = workspace / "benchmark_results"
     finally:
         os.chdir(previous)
 
-    destination = RESULTS_DIR / tier
+    destination = RESULTS_DIR / run_name
     if destination.exists():
         shutil.rmtree(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -89,13 +96,20 @@ def run_tier(tier: str) -> dict:
     shutil.rmtree(workspace, ignore_errors=True)
 
     elapsed = time.perf_counter() - started
-    print(f"\n{tier}: {elapsed:.1f}s, best {results['best_model']}, "
+    print(f"\n{run_name}: {elapsed:.1f}s, best {results['best_model']}, "
           f"results in {destination.relative_to(REPO_ROOT)}")
     return results
 
 
 def main() -> None:
-    tiers = sys.argv[1:] or available_tiers()
+    arguments = sys.argv[1:]
+    color_mode = "rgb"
+    if "--color-mode" in arguments:
+        position = arguments.index("--color-mode")
+        color_mode = arguments[position + 1]
+        del arguments[position:position + 2]
+
+    tiers = arguments or available_tiers()
     if not tiers:
         sys.exit(
             "No dataset tiers found under data/. Build one first:\n"
@@ -104,7 +118,7 @@ def main() -> None:
 
     summaries = {}
     for tier in tiers:
-        summaries[tier] = run_tier(tier)
+        summaries[f"{tier}_{color_mode}"] = run_tier(tier, color_mode)
 
     if len(summaries) > 1:
         # Tiers are nested subsets of one ordering, so reading across them is
