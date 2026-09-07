@@ -1,0 +1,273 @@
+{
+  "scenes": [
+    {
+      "label": "install",
+      "command": "pip install Samuel_Collins_CV_Benchmarking",
+      "output": [
+        "Collecting mpmath<1.4,>=1.1.0",
+        "  Using cached mpmath-1.3.0-py3-none-any.whl (536 kB)",
+        "Collecting MarkupSafe>=2.0",
+        "  Using cached markupsafe-3.0.3-cp39-cp39-macosx_11_0_arm64.whl (12 kB)",
+        "Installing collected packages: zipp, six, numpy, mpmath, MarkupSafe, tzdata, typing-extensions, threadpoolctl, sympy, scipy, pytz, python-dateutil, pyparsing, pillow, packaging, networkx, kiwisolver, joblib, jinja2, importlib-resources, fsspec, fonttools, filelock, cycler, contourpy, torch, scikit-learn, pandas, matplotlib, Samuel-Collins-CV-Benchmarking",
+        "Successfully installed MarkupSafe-3.0.3 Samuel-Collins-CV-Benchmarking-1.0.1 contourpy-1.3.0 cycler-0.12.1 filelock-3.19.1 fonttools-4.60.2 fsspec-2025.10.0 importlib-resources-6.5.2 jinja2-3.1.6 joblib-1.5.3 kiwisolver-1.4.7 matplotlib-3.9.4 mpmath-1.3.0 networkx-3.2.1 numpy-2.0.2 packaging-26.3 pandas-2.3.3 pillow-11.3.0 pyparsing-3.3.2 python-dateutil-2.9.0.post0 pytz-2026.3.post1 scikit-learn-1.6.1 scipy-1.13.1 six-1.17.0 sympy-1.14.0 threadpoolctl-3.6.0 torch-2.8.0 typing-extensions-4.16.0 tzdata-2026.3 zipp-3.23.1"
+      ],
+      "seconds": 20.7,
+      "returncode": 0
+    },
+    {
+      "label": "show",
+      "command": "pip show Samuel_Collins_CV_Benchmarking",
+      "output": [
+        "Name: Samuel_Collins_CV_Benchmarking",
+        "Version: 1.0.1",
+        "Summary: Benchmark classical machine-learning and neural-network image classifiers through one public function.",
+        "Home-page:",
+        "Author: Samuel Collins",
+        "Author-email:"
+      ],
+      "seconds": 0.4,
+      "returncode": 0
+    },
+    {
+      "label": "import",
+      "command": "python -c \"from samuel_collins_cv_benchmarking import benchmark_image_classification as run; print(run)\"",
+      "output": [
+        "<function benchmark_image_classification at 0x108443d30>"
+      ],
+      "seconds": 1.2,
+      "returncode": 0
+    },
+    {
+      "label": "ex_folder",
+      "command": "python examples/folder_input_example.py",
+      "output": [
+        "  Simple CNN           macro F1 0.2947  fit 11.13s",
+        "wrote results to /private/var/folders/6g/zfdx8n9x6zqbv1mtn4rm0z5m0000gn/T/demo_run_id98l4ug/benchmark_results",
+        "1000 images, 10 classes, shape [64, 64, 3], mode rgb",
+        "best model: Simple CNN",
+        "              Model  Accuracy  Macro Precision  Macro Recall  Macro F1  Weighted F1  Training Time (s)  Inference Time (ms/img) Status",
+        "         Simple CNN     0.320         0.323181         0.320  0.294660     0.294660          11.129067                 0.375734     ok",
+        "      Random Forest     0.300         0.310008         0.300  0.293701     0.293701           0.590425                 0.079377     ok",
+        "                SVM     0.240         0.264519         0.240  0.241963     0.241963          16.994329                23.684641     ok",
+        "Logistic Regression     0.215         0.216409         0.215  0.213337     0.213337           0.955126                 0.029467     ok",
+        "     Neural Network     0.180         0.182313         0.180  0.177762     0.177762           0.337988                 0.024981     ok",
+        "      Decision Tree     0.095         0.091373         0.095  0.092740     0.092740           3.370212                 0.002164     ok",
+        "outputs written to /private/var/folders/6g/zfdx8n9x6zqbv1mtn4rm0z5m0000gn/T/demo_run_id98l4ug/benchmark_results"
+      ],
+      "seconds": 63.9,
+      "returncode": 0
+    },
+    {
+      "label": "ex_json",
+      "command": "python examples/json_input_example.py",
+      "output": [
+        "  Simple CNN           macro F1 0.2947  fit 6.41s",
+        "wrote results to /private/var/folders/6g/zfdx8n9x6zqbv1mtn4rm0z5m0000gn/T/demo_run_id98l4ug/benchmark_results",
+        "1000 images, 10 classes, shape [64, 64, 3], mode rgb",
+        "best model: Simple CNN",
+        "              Model  Accuracy  Macro Precision  Macro Recall  Macro F1  Weighted F1  Training Time (s)  Inference Time (ms/img) Status",
+        "         Simple CNN     0.320         0.323181         0.320  0.294660     0.294660           6.411648                 0.385514     ok",
+        "      Random Forest     0.300         0.310008         0.300  0.293701     0.293701           0.506975                 0.081617     ok",
+        "                SVM     0.240         0.264519         0.240  0.241963     0.241963          56.810277                50.647951     ok",
+        "Logistic Regression     0.215         0.216409         0.215  0.213337     0.213337           2.663515                 0.029694     ok",
+        "     Neural Network     0.180         0.182313         0.180  0.177762     0.177762           0.355092                 0.025048     ok",
+        "      Decision Tree     0.095         0.091373         0.095  0.092740     0.092740           3.185704                 0.002367     ok",
+        "outputs written to /private/var/folders/6g/zfdx8n9x6zqbv1mtn4rm0z5m0000gn/T/demo_run_id98l4ug/benchmark_results"
+      ],
+      "seconds": 166.4,
+      "returncode": 0
+    },
+    {
+      "label": "ex_array",
+      "command": "python examples/array_input_example.py",
+      "output": [
+        "  Simple CNN           macro F1 0.2427  fit 5.83s",
+        "wrote results to /private/var/folders/6g/zfdx8n9x6zqbv1mtn4rm0z5m0000gn/T/demo_run_id98l4ug/benchmark_results",
+        "600 images, 10 classes, shape [64, 64, 3], mode rgb",
+        "best model: Simple CNN",
+        "              Model  Accuracy  Macro Precision  Macro Recall  Macro F1  Weighted F1  Training Time (s)  Inference Time (ms/img) Status",
+        "         Simple CNN  0.300000         0.325152      0.300000  0.242714     0.242714           5.831855                 0.398216     ok",
+        "                SVM  0.250000         0.243213      0.250000  0.236472     0.236472           5.516431                 9.423916     ok",
+        "      Random Forest  0.225000         0.208822      0.225000  0.199862     0.199862           0.452899                 0.129954     ok",
+        "      Decision Tree  0.183333         0.184921      0.183333  0.181800     0.181800           3.774409                 0.007228     ok",
+        "Logistic Regression  0.183333         0.170714      0.183333  0.170214     0.170214           0.707419                 0.071792     ok",
+        "     Neural Network  0.091667         0.089396      0.091667  0.085281     0.085281           0.198999                 0.028537     ok",
+        "outputs written to /private/var/folders/6g/zfdx8n9x6zqbv1mtn4rm0z5m0000gn/T/demo_run_id98l4ug/benchmark_results"
+      ],
+      "seconds": 21.1,
+      "returncode": 0
+    },
+    {
+      "label": "ex_csv",
+      "command": "python examples/csv_input_example.py",
+      "output": [
+        "  Simple CNN           macro F1 0.2947  fit 7.34s",
+        "wrote results to /private/var/folders/6g/zfdx8n9x6zqbv1mtn4rm0z5m0000gn/T/demo_run_id98l4ug/benchmark_results",
+        "1000 images, 10 classes, shape [64, 64, 3], mode rgb",
+        "best model: Simple CNN",
+        "              Model  Accuracy  Macro Precision  Macro Recall  Macro F1  Weighted F1  Training Time (s)  Inference Time (ms/img) Status",
+        "         Simple CNN     0.320         0.323181         0.320  0.294660     0.294660           7.336200                 0.391439     ok",
+        "      Random Forest     0.300         0.310008         0.300  0.293701     0.293701           0.592448                 0.138761     ok",
+        "                SVM     0.240         0.264519         0.240  0.241963     0.241963          16.401218                14.955368     ok",
+        "Logistic Regression     0.215         0.216409         0.215  0.213337     0.213337           0.980053                 0.029603     ok",
+        "     Neural Network     0.180         0.182313         0.180  0.177762     0.177762           0.321467                 0.026118     ok",
+        "      Decision Tree     0.095         0.091373         0.095  0.092740     0.092740           3.218831                 0.002219     ok",
+        "outputs written to /private/var/folders/6g/zfdx8n9x6zqbv1mtn4rm0z5m0000gn/T/demo_run_id98l4ug/benchmark_results"
+      ],
+      "seconds": 35.5,
+      "returncode": 0
+    },
+    {
+      "label": "ex_rgb",
+      "command": "python examples/rgb_example.py",
+      "output": [
+        "best model: Simple CNN",
+        "              Model  Accuracy  Macro Precision  Macro Recall  Macro F1  Weighted F1  Training Time (s)  Inference Time (ms/img) Status",
+        "         Simple CNN     0.320         0.323181         0.320  0.294660     0.294660           7.487831                 0.383049     ok",
+        "      Random Forest     0.300         0.310008         0.300  0.293701     0.293701           0.589554                 0.085441     ok",
+        "                SVM     0.240         0.264519         0.240  0.241963     0.241963          14.690448                15.237430     ok",
+        "Logistic Regression     0.215         0.216409         0.215  0.213337     0.213337           1.223296                 0.029006     ok",
+        "     Neural Network     0.180         0.182313         0.180  0.177762     0.177762           0.325306                 0.026202     ok",
+        "      Decision Tree     0.095         0.091373         0.095  0.092740     0.092740           3.210870                 0.002247     ok",
+        "outputs written to /private/var/folders/6g/zfdx8n9x6zqbv1mtn4rm0z5m0000gn/T/demo_run_id98l4ug/benchmark_results",
+        "flattened feature width: 12,288"
+      ],
+      "seconds": 34.3,
+      "returncode": 0
+    },
+    {
+      "label": "ex_grayscale",
+      "command": "python examples/grayscale_example.py",
+      "output": [
+        "best model: Simple CNN",
+        "              Model  Accuracy  Macro Precision  Macro Recall  Macro F1  Weighted F1  Training Time (s)  Inference Time (ms/img) Status",
+        "         Simple CNN     0.260         0.268868         0.260  0.248823     0.248823           8.157969                 0.229817     ok",
+        "      Random Forest     0.255         0.242457         0.255  0.239172     0.239172           0.379443                 0.080063     ok",
+        "                SVM     0.215         0.213541         0.215  0.207008     0.207008           0.659942                 1.314199     ok",
+        "     Neural Network     0.200         0.190793         0.200  0.191477     0.191477           0.088497                 0.011001     ok",
+        "Logistic Regression     0.135         0.134329         0.135  0.132429     0.132429           0.627089                 0.011486     ok",
+        "      Decision Tree     0.125         0.136402         0.125  0.128686     0.128686           1.203344                 0.003197     ok",
+        "outputs written to /private/var/folders/6g/zfdx8n9x6zqbv1mtn4rm0z5m0000gn/T/demo_run_id98l4ug/benchmark_results",
+        "flattened feature width: 4,096"
+      ],
+      "seconds": 14.9,
+      "returncode": 0
+    },
+    {
+      "label": "config",
+      "command": "cat benchmark_results/run_configuration.json | head -24",
+      "output": [
+        "{",
+        "  \"package\": {",
+        "    \"name\": \"Samuel_Collins_CV_Benchmarking\",",
+        "    \"version\": \"1.0.1\"",
+        "  },",
+        "  \"dataset_type\": \"csv\",",
+        "  \"color_mode\": \"grayscale\",",
+        "  \"image_size\": [",
+        "    64,",
+        "    64",
+        "  ],",
+        "  \"random_seed\": 42,",
+        "  \"split\": {",
+        "    \"training_samples\": 800,",
+        "    \"testing_samples\": 200,",
+        "    \"test_size\": 0.2,",
+        "    \"random_seed\": 42,",
+        "    \"stratified\": true",
+        "  },",
+        "  \"class_names\": [",
+        "    \"butterfly\",",
+        "    \"cat\",",
+        "    \"chicken\",",
+        "    \"cow\","
+      ],
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "label": "outputs",
+      "command": "find benchmark_results -type f | sort",
+      "output": [
+        "benchmark_results/benchmark_metrics.json",
+        "benchmark_results/benchmark_summary.csv",
+        "benchmark_results/class_distribution.png",
+        "benchmark_results/classification_reports/decision_tree.csv",
+        "benchmark_results/classification_reports/logistic_regression.csv",
+        "benchmark_results/classification_reports/neural_network.csv",
+        "benchmark_results/classification_reports/random_forest.csv",
+        "benchmark_results/classification_reports/simple_cnn.csv",
+        "benchmark_results/classification_reports/svm.csv",
+        "benchmark_results/confusion_matrices/decision_tree.png",
+        "benchmark_results/confusion_matrices/logistic_regression.png",
+        "benchmark_results/confusion_matrices/neural_network.png",
+        "benchmark_results/confusion_matrices/random_forest.png",
+        "benchmark_results/confusion_matrices/simple_cnn.png",
+        "benchmark_results/confusion_matrices/svm.png",
+        "benchmark_results/model_comparison.png",
+        "benchmark_results/prediction_examples.png",
+        "benchmark_results/run_configuration.json"
+      ],
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "label": "summary_csv",
+      "command": "column -s, -t < benchmark_results/benchmark_summary.csv | cut -c1-104",
+      "output": [
+        "Model                Accuracy  Macro Precision      Macro Recall  Macro F1             Weighted F1",
+        "Simple CNN           0.26      0.2688676576798566   0.26          0.24882272638086594  0.248822726380865",
+        "Random Forest        0.255     0.24245683936450718  0.255         0.23917182085474398  0.239171820854743",
+        "SVM                  0.215     0.2135412087912088   0.215         0.2070077000536735   0.207007700053673",
+        "Neural Network       0.2       0.19079262669147995  0.2           0.19147678754612119  0.191476787546121",
+        "Logistic Regression  0.135     0.13432888718795302  0.135         0.13242909379925566  0.132429093799255",
+        "Decision Tree        0.125     0.13640182272521756  0.125         0.12868649187762374  0.128686491877623"
+      ],
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "label": "structure",
+      "command": "find src examples tests -name '*.py' | sort",
+      "output": [
+        "examples/array_input_example.py",
+        "examples/csv_input_example.py",
+        "examples/folder_input_example.py",
+        "examples/grayscale_example.py",
+        "examples/json_input_example.py",
+        "examples/rgb_example.py",
+        "src/samuel_collins_cv_benchmarking/__init__.py",
+        "src/samuel_collins_cv_benchmarking/_config.py",
+        "src/samuel_collins_cv_benchmarking/benchmark.py",
+        "src/samuel_collins_cv_benchmarking/classical_models.py",
+        "src/samuel_collins_cv_benchmarking/data_loader.py",
+        "src/samuel_collins_cv_benchmarking/evaluation.py",
+        "src/samuel_collins_cv_benchmarking/neural_models.py",
+        "src/samuel_collins_cv_benchmarking/preprocessing.py",
+        "src/samuel_collins_cv_benchmarking/visualization.py",
+        "tests/conftest.py",
+        "tests/test_benchmark.py",
+        "tests/test_data_loaders.py",
+        "tests/test_evaluation.py",
+        "tests/test_models.py",
+        "tests/test_preprocessing.py",
+        "tests/test_stratification.py",
+        "tests/test_visualization.py"
+      ],
+      "seconds": 0.0,
+      "returncode": 0
+    },
+    {
+      "label": "tests",
+      "command": "pytest tests/ -q",
+      "output": [
+        "........................................................................ [ 77%]",
+        "........................................................................ [ 96%]",
+        ".............                                                            [100%]",
+        "373 passed in 60.67s (0:01:00)"
+      ],
+      "seconds": 61.3,
+      "returncode": 0
+    }
+  ]
+}
