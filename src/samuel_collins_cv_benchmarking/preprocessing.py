@@ -46,6 +46,11 @@ class PreparedDataset:
     class_names: list = field(default_factory=list)
     warnings: list = field(default_factory=list)
     skipped: list = field(default_factory=list)
+    # Where each surviving image came from, parallel to ``images``. A file
+    # path for the three file-based organizations, a positional name for
+    # array input. The report needs it to say which image an example was,
+    # and it costs one string per image.
+    sources: list = field(default_factory=list)
 
     def __len__(self) -> int:
         return len(self.labels)
@@ -193,6 +198,7 @@ def preprocess(dataset: LoadedDataset, color_mode: str) -> PreparedDataset:
     # 245 MB and 490 MB.
     buffer = np.empty((total, *IMAGE_SIZE, channels), dtype=np.float32)
     kept_labels = []
+    kept_sources = []
     kept = 0
 
     for index, (source, label) in enumerate(dataset.samples):
@@ -222,6 +228,7 @@ def preprocess(dataset: LoadedDataset, color_mode: str) -> PreparedDataset:
 
         buffer[kept] = pixels
         kept_labels.append(label)
+        kept_sources.append(_describe(source, index))
         kept += 1
 
     # A class whose images were all corrupt is gone now, so the encoding is
@@ -242,6 +249,7 @@ def preprocess(dataset: LoadedDataset, color_mode: str) -> PreparedDataset:
 
     result.images = buffer[:kept]
     result.labels = np.array([encoding[label] for label in kept_labels], dtype=np.int64)
+    result.sources = kept_sources
 
     if result.skipped:
         result.warnings.append(

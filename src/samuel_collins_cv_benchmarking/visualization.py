@@ -307,4 +307,82 @@ def save_all(results, split, output_dir: Path) -> dict:
         written["confusion_matrices"][result.key] = plot_confusion_matrix(
             result, split.dataset.class_names, matrices_dir / f"{result.key}.png")
 
+    # Section 11 asks for examples of correct and incorrect predictions. They
+    # are drawn for the best-ranked model, which is the one the report leads
+    # with; results are already ranked when they arrive here.
+    best = next((r for r in results if r.succeeded), None)
+    if best is not None:
+        written["prediction_examples"] = plot_prediction_examples(
+            best, split, output_dir / "prediction_examples.png")
+
     return written
+
+
+def plot_prediction_examples(result, split, path: Path, per_row: int = 5) -> Path:
+    """Correct and incorrect predictions, as the model actually saw them.
+
+    Shows the standardised 64x64 input rather than the original photograph.
+    That is what the classifier was given - letterboxed, resized, and in the
+    requested colour mode - so a reader looking for why an image was
+    misclassified is looking at the same evidence the model had. A full
+    resolution photograph would hide the padding and the loss of detail that
+    are often the explanation.
+    """
+    plt.rcParams["font.family"] = FONT
+
+    # Reuses evaluation's selection so the figure and the written examples
+    # show the same images, spread across classes rather than taken in test
+    # order - which would show only whichever class sorts first.
+    from .evaluation import prediction_examples
+
+    chosen = prediction_examples(result, split, limit=per_row)
+    correct = [(e["test_position"], e["true_class"], e["predicted_class"])
+               for e in chosen["correct"]]
+    incorrect = [(e["test_position"], e["true_class"], e["predicted_class"])
+                 for e in chosen["incorrect"]]
+
+    rows = [("Correct", correct, "#0ca30c"), ("Incorrect", incorrect, "#d03b3b")]
+    rows = [row for row in rows if row[1]]
+    if not rows:
+        raise ValueError("No predictions to illustrate.")
+
+    figure, axes_grid = plt.subplots(
+        len(rows), per_row, figsize=(per_row * 1.9, len(rows) * 2.35), squeeze=False)
+    figure.patch.set_facecolor(SURFACE)
+
+    for row_index, (heading, entries, accent) in enumerate(rows):
+        for column in range(per_row):
+            axes = axes_grid[row_index][column]
+            axes.set_xticks([])
+            axes.set_yticks([])
+            for spine in axes.spines.values():
+                spine.set_visible(False)
+
+            if column >= len(entries):
+                axes.set_facecolor(SURFACE)
+                continue
+
+            position, true_name, predicted_name = entries[column]
+            image = split.images_test[position]
+            axes.imshow(image[:, :, 0], cmap="gray", vmin=0, vmax=1) \
+                if image.shape[2] == 1 else axes.imshow(image)
+
+            # The status colour is paired with text, never carrying the
+            # meaning on its own.
+            if true_name == predicted_name:
+                caption = true_name
+            else:
+                caption = f"{true_name} -> {predicted_name}"
+            axes.set_title(caption, fontsize=8.5, color=accent, pad=5)
+
+        axes_grid[row_index][0].set_ylabel(heading, fontsize=10, color=INK,
+                                           rotation=0, ha="right", va="center",
+                                           labelpad=14)
+
+    figure.suptitle(f"{result.name} - example predictions", fontsize=12,
+                    color=INK, x=0.012, ha="left", y=0.995, fontweight="medium")
+    figure.tight_layout(rect=(0, 0, 1, 0.94))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    figure.savefig(path, dpi=150, facecolor=SURFACE)
+    plt.close(figure)
+    return path

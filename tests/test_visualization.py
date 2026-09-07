@@ -70,7 +70,7 @@ class TestRequiredFiles:
     def test_returns_what_it_wrote(self, results, split, tmp_path):
         written = visualization.save_all(results, split, tmp_path)
         assert set(written) == {"class_distribution", "model_comparison",
-                                "confusion_matrices"}
+                                "confusion_matrices", "prediction_examples"}
         assert len(written["confusion_matrices"]) == len(results)
 
 

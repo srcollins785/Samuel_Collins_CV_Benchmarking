@@ -224,27 +224,53 @@ def best_model(results: list) -> str:
 def prediction_examples(result: ModelResult, split, limit: int = 5) -> dict:
     """A few correct and incorrect predictions, for the report.
 
-    Section 11 asks for examples of both. Positions index into the test half,
-    so a caller can recover the image or its path from the split.
+    Section 11 asks for examples of both. They are chosen one class at a time
+    rather than in test order: the split's indices are sorted, so taking the
+    first few would return five images of whichever class sorts first and
+    illustrate nothing about the other nine. Round-robin over the true
+    classes gives a spread, and within a class the order is still the fixed
+    test order, so the selection is reproducible.
+
+    Positions index into the test half, so a caller can recover the image or
+    its source from the split.
     """
     if not result.succeeded or result.predictions is None:
         return {"correct": [], "incorrect": []}
 
     truth = split.labels_test
     names = split.dataset.class_names
-    correct, incorrect = [], []
+    sources = split.dataset.sources
 
+    by_class = {"correct": {}, "incorrect": {}}
     for position, (actual, predicted) in enumerate(zip(truth, result.predictions)):
+        index = int(split.test_index[position])
         entry = {
             "test_position": int(position),
-            "dataset_index": int(split.test_index[position]),
+            "dataset_index": index,
+            "source": sources[index] if index < len(sources) else None,
             "true_class": names[int(actual)],
             "predicted_class": names[int(predicted)],
         }
-        bucket = correct if actual == predicted else incorrect
-        if len(bucket) < limit:
-            bucket.append(entry)
-        if len(correct) >= limit and len(incorrect) >= limit:
-            break
+        bucket = "correct" if actual == predicted else "incorrect"
+        by_class[bucket].setdefault(int(actual), []).append(entry)
 
-    return {"correct": correct, "incorrect": incorrect}
+    def spread(grouped: dict) -> list:
+        """One from each class in turn, until `limit` entries are collected."""
+        chosen = []
+        depth = 0
+        while len(chosen) < limit:
+            added = False
+            for class_index in sorted(grouped):
+                entries = grouped[class_index]
+                if depth < len(entries):
+                    chosen.append(entries[depth])
+                    added = True
+                    if len(chosen) == limit:
+                        break
+            if not added:  # every class exhausted
+                break
+            depth += 1
+        return chosen
+
+    return {"correct": spread(by_class["correct"]),
+            "incorrect": spread(by_class["incorrect"])}

@@ -471,3 +471,48 @@ class TestZeroDivisionOnNeverPredictedClasses:
         # A third of the balanced test set, so accuracy stays near 0.33 while
         # macro precision is dragged down by the two zeros.
         assert result.accuracy == pytest.approx(1 / 3, abs=0.05)
+
+
+class TestExamplesSpreadAcrossClasses:
+    """Examples must illustrate the model, not one alphabetically-first class.
+
+    The split's indices are sorted, so taking the first few test rows returns
+    images of whichever class sorts first - five butterflies telling you
+    nothing about the other nine classes. Found by looking at the generated
+    figure, where every panel carried the same label.
+    """
+
+    @pytest.fixture(scope="class")
+    def many_classes(self):
+        names = ["ant", "bee", "cat", "dog", "eel", "fox"]
+        generator = np.random.default_rng(4)
+        bands = [30 + i * 35 for i in range(len(names)) for _ in range(20)]
+        tensor = np.stack([
+            generator.integers(max(0, b - 40), min(255, b + 40), size=(12, 12, 3))
+            .astype(np.uint8) for b in bands
+        ])
+        labels = [name for name in names for _ in range(20)]
+        return make_split(preprocess(load_array(tensor, labels), "rgb"))
+
+    def test_correct_examples_cover_several_classes(self, many_classes):
+        result = evaluate_model(classical_model_specs()[1], many_classes)
+        examples = prediction_examples(result, many_classes, limit=5)
+        classes = {entry["true_class"] for entry in examples["correct"]}
+        assert len(classes) > 1
+
+    def test_examples_are_not_all_the_first_class(self, many_classes):
+        result = evaluate_model(classical_model_specs()[1], many_classes)
+        examples = prediction_examples(result, many_classes, limit=5)
+        first = many_classes.dataset.class_names[0]
+        assert [e["true_class"] for e in examples["correct"]] != [first] * 5
+
+    def test_selection_is_reproducible(self, many_classes):
+        result = evaluate_model(classical_model_specs()[1], many_classes)
+        first = prediction_examples(result, many_classes, limit=5)
+        second = prediction_examples(result, many_classes, limit=5)
+        assert first == second
+
+    def test_examples_carry_their_source(self, many_classes):
+        result = evaluate_model(classical_model_specs()[1], many_classes)
+        for entry in prediction_examples(result, many_classes)["correct"]:
+            assert entry["source"] is not None

@@ -215,7 +215,11 @@ def _write_artifacts(results, split, dataset_type, color_mode, output_dir: Path)
     recalculated - so the files and the returned dictionary cannot disagree.
     """
     from . import visualization
-    from .evaluation import classification_report_frame, summary_frame
+    from .evaluation import (
+        classification_report_frame,
+        prediction_examples,
+        summary_frame,
+    )
 
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -233,6 +237,11 @@ def _write_artifacts(results, split, dataset_type, color_mode, output_dir: Path)
             "confusion_matrix": _jsonable(result.confusion_matrix),
             "classification_report": _jsonable(result.classification_report),
             "training_history": _jsonable(result.history),
+            # Section 11 asks for examples of correct and incorrect
+            # predictions, and the report reads files rather than importing
+            # the pipeline, so they have to be written rather than only
+            # returned.
+            "prediction_examples": _jsonable(prediction_examples(result, split)),
         }
         for result in results
     }
