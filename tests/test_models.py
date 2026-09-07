@@ -487,3 +487,39 @@ class TestCnnEarlyStoppingActuallyFires:
         # Confirms the fixture set up the situation it claims to.
         losses = [e["validation_loss"] for e in overfitted.history_["per_epoch"]]
         assert losses[-1] > min(losses)
+
+
+class TestCnnValidationGuard:
+    """The validation slice must be able to hold every class.
+
+    Having enough samples is not the same as having enough room. A 15% slice
+    of 12 images is 2, which cannot cover 3 classes, and scikit-learn refuses
+    to stratify it. Found by running the whole pipeline on the 15-image
+    fixture, where every unit test had already passed.
+    """
+
+    def small_split(self, per_class, class_count=3):
+        names = ["cat", "dog", "horse"][:class_count]
+        labels = [name for name in names for _ in range(per_class)]
+        tensor = np.zeros((len(labels), 16, 16, 3), dtype=np.uint8)
+        for index in range(len(labels)):
+            tensor[index] = (index % 7) * 30
+        return make_split(preprocess(load_array(tensor, labels), "rgb"))
+
+    def test_trains_when_the_slice_cannot_cover_every_class(self):
+        # 15 images -> 12 training -> a 15% slice is 2, short of 3 classes.
+        split = self.small_split(per_class=5)
+        model = SimpleCNN(epochs=2)
+        model.fit(split.images_train, split.labels_train)
+        assert model.history_["validation_samples"] == 0
+        assert model.history_["training_samples"] == len(split.train_index)
+
+    def test_still_predicts_every_test_image(self):
+        split = self.small_split(per_class=5)
+        model = SimpleCNN(epochs=2).fit(split.images_train, split.labels_train)
+        assert len(model.predict(split.images_test)) == len(split.test_index)
+
+    def test_uses_a_validation_slice_once_there_is_room(self):
+        split = self.small_split(per_class=20)
+        model = SimpleCNN(epochs=2).fit(split.images_train, split.labels_train)
+        assert model.history_["validation_samples"] >= 3

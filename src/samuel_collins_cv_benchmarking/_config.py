@@ -5,6 +5,11 @@ four public parameters, so image size, seed and split live here rather than in
 the public signature.
 """
 
+DISTRIBUTION_NAME = "Samuel_Collins_CV_Benchmarking"
+# Kept here rather than in __init__ so benchmark.py can read it without
+# importing the package root, which would be circular.
+VERSION = "0.1.0"
+
 IMAGE_SIZE = (64, 64)
 RANDOM_SEED = 42
 TEST_SIZE = 0.20

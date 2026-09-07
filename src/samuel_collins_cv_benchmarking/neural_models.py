@@ -167,10 +167,16 @@ class SimpleCNN:
 
         positions = np.arange(len(labels))
         counts = np.bincount(labels)
-        # Stratifying needs at least one sample per class on each side; with a
-        # very small training set, fall back to training on all of it.
-        smallest_needed = int(np.ceil(1 / self.validation_fraction))
-        if len(labels) < 2 or counts.min() < 2 or len(labels) < smallest_needed:
+        class_count = int((counts > 0).sum())
+
+        # Stratifying needs every class on both sides of the division, so the
+        # validation slice has to be at least as large as the class count -
+        # having enough *samples* is not enough. A 15% slice of 12 images is
+        # 2, which cannot cover 3 classes, and scikit-learn refuses. When the
+        # training set is too small to spare a usable slice, train on all of
+        # it and let the epoch cap stop the run.
+        validation_size = int(np.floor(len(labels) * self.validation_fraction))
+        if len(labels) < 2 or counts.min() < 2 or validation_size < class_count:
             return positions, np.empty(0, dtype=int)
         return train_test_split(
             positions,
