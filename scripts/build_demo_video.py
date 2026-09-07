@@ -81,6 +81,41 @@ class Timeline:
     def __init__(self, directory: Path):
         self.directory = directory
         self.entries = []
+        self.marks = []
+
+    def mark(self, name: str):
+        """Record where a section begins, for the narration to line up with."""
+        self.marks.append({"name": name, "at": round(self.duration, 2),
+                           "frame": len(self.entries)})
+
+    def fit_sections(self, required: list, breath: float = 1.1):
+        """Hold each section long enough for the line spoken over it.
+
+        Extends the last frame of any section that is shorter than its
+        narration. Doing it here rather than by hand-tuning each duration
+        means the text can be rewritten freely: the slide follows the speech
+        rather than the speech being trimmed to the slide.
+        """
+        if not required:
+            return
+        bounds = [m["frame"] for m in self.marks] + [len(self.entries)]
+        for index, seconds in enumerate(required):
+            if index + 1 >= len(bounds):
+                break
+            start, end = bounds[index], bounds[index + 1]
+            if end <= start:
+                continue
+            current = sum(d for _, d in self.entries[start:end])
+            shortfall = (seconds + breath) - current
+            if shortfall > 0:
+                path, held = self.entries[end - 1]
+                self.entries[end - 1] = (path, held + shortfall)
+        # The marks were recorded before the stretch, so restate them.
+        running = 0.0
+        for index, mark in enumerate(self.marks):
+            mark["at"] = round(running, 2)
+            end = bounds[index + 1] if index + 1 < len(bounds) else len(self.entries)
+            running += sum(d for _, d in self.entries[mark["frame"]:end])
 
     def add(self, image: Image.Image, seconds: float):
         path = self.directory / f"f{len(self.entries):05d}.png"
@@ -119,6 +154,7 @@ def wrap(draw, text, fnt, max_width):
 
 
 def card(timeline, step, title, body, seconds=4.2):
+    timeline.mark(title)
     """A full-screen caption introducing the next thing on screen.
 
     Laid out from the middle outwards so the block sits centered in the frame
@@ -144,6 +180,7 @@ def card(timeline, step, title, body, seconds=4.2):
 def terminal_frames(timeline, command, output, note="", line_seconds=0.16,
                     hold=2.2):
     """A terminal window: the prompt, then the output arriving line by line."""
+    timeline.mark(f"$ {command}")
     def draw_window(visible):
         image = blank()
         draw = ImageDraw.Draw(image)
@@ -177,6 +214,7 @@ def figure(timeline, path: Path, caption, seconds=5.0):
     """A generated figure, shown whole with a caption beneath it."""
     if not path.is_file():
         return
+    timeline.mark(f"figure: {path.stem}")
     image = blank()
     draw = ImageDraw.Draw(image)
     picture = Image.open(path).convert("RGB")
@@ -204,6 +242,7 @@ def figure(timeline, path: Path, caption, seconds=5.0):
 
 
 def title_card(timeline, lines, seconds=5.0):
+    timeline.mark(f"title: {lines[0]}")
     image = blank()
     draw = ImageDraw.Draw(image)
     fonts_all = [F_TITLE, F_HEAD, F_BODY, F_BODY, F_SMALL]
@@ -317,18 +356,6 @@ def build(timeline, capture):
            "input the model actually received — the padding is visible because it "
            "is part of what the network sees.", 6.5)
 
-    # --- 5. Repository organization -------------------------------------
-    card(timeline, "5 of 5", "Repository organization",
-         "Eight modules under src/, six runnable examples, seven test files, and "
-         "the scripts that rebuild the datasets, the runs and this report.")
-    for label, note in (("structure", "src/ ships to PyPI; examples/ and tests/ do not"),
-                        ("tests", "the full suite, run against the working tree")):
-        s = scene(capture, label)
-        if s:
-            terminal_frames(timeline, s["command"], s["output"], note,
-                            line_seconds=0.11)
-
-    # --- findings --------------------------------------------------------
     card(timeline, "", "Reproducibility is recorded, not claimed",
          "Every run writes the configuration that produced it: image size, color "
          "mode, seed, split, and each model's parameters. Re-running reproduces "
@@ -359,6 +386,18 @@ def build(timeline, capture):
     figure(timeline, RESULTS / "animals10_n100_rgb" / "model_comparison.png",
            "The same benchmark at 100 images per class. The CNN and Random Forest "
            "are tied here, 0.295 against 0.294.", 6.0)
+    # --- 5. Repository organization -------------------------------------
+    card(timeline, "5 of 5", "Repository organization",
+         "Eight modules under src/, six runnable examples, seven test files, and "
+         "the scripts that rebuild the datasets, the runs and this report.")
+    for label, note in (("structure", "src/ ships to PyPI; examples/ and tests/ do not"),
+                        ("tests", "the full suite, run against the working tree")):
+        s = scene(capture, label)
+        if s:
+            terminal_frames(timeline, s["command"], s["output"], note,
+                            line_seconds=0.11)
+
+    # --- findings --------------------------------------------------------
     card(timeline, "", "What the benchmark found",
          "At 100 images per class the CNN and Random Forest are tied, 0.295 against "
          "0.294. At 500 the CNN leads by 36 percent. A single run would have "
@@ -389,8 +428,22 @@ def main() -> None:
 
     print("rendering frames ...", flush=True)
     build(timeline, capture)
+
+    # If the narration has been synthesized, stretch each slide to cover its
+    # line. Without it the video keeps its natural pacing.
+    spoken = REPO_ROOT / "scripts" / "_narration_durations.json"
+    if spoken.is_file():
+        required = json.loads(spoken.read_text())
+        timeline.fit_sections(required)
+        print(f"  fitted {len(required)} slides to the narration")
     minutes, seconds = divmod(timeline.duration, 60)
     print(f"  {len(timeline.entries)} frames, {int(minutes)}m {seconds:04.1f}s")
+
+    manifest = REPO_ROOT / "scripts" / "_demo_timeline.json"
+    manifest.write_text(json.dumps(
+        {"duration": round(timeline.duration, 2), "sections": timeline.marks},
+        indent=2))
+    print(f"  timeline written to {manifest.name}")
 
     listing = timeline.write_concat()
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)

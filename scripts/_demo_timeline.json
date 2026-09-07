@@ -1,0 +1,185 @@
+{
+  "duration": 377.34,
+  "sections": [
+    {
+      "name": "title: Image Classification Benchmarking",
+      "at": 0.0,
+      "frame": 0
+    },
+    {
+      "name": "Install from PyPI",
+      "at": 14.31,
+      "frame": 1
+    },
+    {
+      "name": "$ pip install Samuel_Collins_CV_Benchmarking",
+      "at": 22.08,
+      "frame": 2
+    },
+    {
+      "name": "$ pip show Samuel_Collins_CV_Benchmarking",
+      "at": 32.41,
+      "frame": 10
+    },
+    {
+      "name": "The student-specific import",
+      "at": 39.92,
+      "frame": 18
+    },
+    {
+      "name": "$ python -c \"from samuel_collins_cv_benchmarking import benchmark_image_classification as run; print(run)\"",
+      "at": 47.69,
+      "frame": 19
+    },
+    {
+      "name": "Running a benchmark",
+      "at": 55.57,
+      "frame": 22
+    },
+    {
+      "name": "$ python examples/csv_input_example.py",
+      "at": 65.72,
+      "frame": 23
+    },
+    {
+      "name": "$ python examples/folder_input_example.py",
+      "at": 73.6,
+      "frame": 37
+    },
+    {
+      "name": "$ python examples/json_input_example.py",
+      "at": 81.48,
+      "frame": 51
+    },
+    {
+      "name": "$ python examples/array_input_example.py",
+      "at": 89.37,
+      "frame": 65
+    },
+    {
+      "name": "Four organizations, one result",
+      "at": 97.25,
+      "frame": 79
+    },
+    {
+      "name": "Two demonstrations, one single-channel and one RGB",
+      "at": 115.19,
+      "frame": 80
+    },
+    {
+      "name": "$ python examples/rgb_example.py",
+      "at": 125.36,
+      "frame": 81
+    },
+    {
+      "name": "$ python examples/grayscale_example.py",
+      "at": 134.61,
+      "frame": 93
+    },
+    {
+      "name": "What color was worth",
+      "at": 143.86,
+      "frame": 105
+    },
+    {
+      "name": "What the run writes",
+      "at": 159.23,
+      "frame": 106
+    },
+    {
+      "name": "$ find benchmark_results -type f | sort",
+      "at": 167.0,
+      "frame": 107
+    },
+    {
+      "name": "$ column -s, -t < benchmark_results/benchmark_summary.csv | cut -c1-104",
+      "at": 176.73,
+      "frame": 127
+    },
+    {
+      "name": "figure: class_distribution",
+      "at": 184.02,
+      "frame": 136
+    },
+    {
+      "name": "figure: model_comparison",
+      "at": 192.34,
+      "frame": 137
+    },
+    {
+      "name": "figure: simple_cnn",
+      "at": 207.52,
+      "frame": 138
+    },
+    {
+      "name": "figure: prediction_examples",
+      "at": 220.23,
+      "frame": 139
+    },
+    {
+      "name": "Reproducibility is recorded, not claimed",
+      "at": 235.6,
+      "frame": 140
+    },
+    {
+      "name": "$ cat benchmark_results/run_configuration.json | head -24",
+      "at": 244.85,
+      "frame": 141
+    },
+    {
+      "name": "A second dataset",
+      "at": 256.51,
+      "frame": 167
+    },
+    {
+      "name": "figure: model_comparison",
+      "at": 269.72,
+      "frame": 168
+    },
+    {
+      "name": "figure: simple_cnn",
+      "at": 281.01,
+      "frame": 169
+    },
+    {
+      "name": "Six runs, three experiments",
+      "at": 291.19,
+      "frame": 170
+    },
+    {
+      "name": "figure: model_comparison",
+      "at": 302.29,
+      "frame": 171
+    },
+    {
+      "name": "Repository organization",
+      "at": 313.39,
+      "frame": 172
+    },
+    {
+      "name": "$ find src examples tests -name '*.py' | sort",
+      "at": 321.16,
+      "frame": 173
+    },
+    {
+      "name": "$ pytest tests/ -q",
+      "at": 331.57,
+      "frame": 198
+    },
+    {
+      "name": "What the benchmark found",
+      "at": 338.12,
+      "frame": 204
+    },
+    {
+      "name": "Cost is not accuracy",
+      "at": 351.97,
+      "frame": 205
+    },
+    {
+      "name": "title: Samuel_Collins_CV_Benchmarking",
+      "at": 366.24,
+      "frame": 206
+    }
+  ]
+}
