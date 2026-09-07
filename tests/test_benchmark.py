@@ -15,6 +15,7 @@ short of running the whole pipeline would have found it.
 
 import json
 import re
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -331,3 +332,66 @@ class TestReproducibility:
             scores.append({key: entry["macro_f1"]
                            for key, entry in results["model_results"].items()})
         assert scores[0] == scores[1]
+
+
+class TestNoMachineSpecificPaths:
+    """Section 13 rules out hard-coded machine-specific file paths.
+
+    No code contained any, but the written results did: prediction example
+    sources were absolute, so benchmark_metrics.json recorded the home
+    directory, the username and the folder layout of whichever machine
+    produced them - committed to a public repository and meaningless
+    anywhere else.
+    """
+
+    @pytest.fixture
+    def written(self, workspace, fixtures_dir):
+        benchmark_image_classification(
+            str(fixtures_dir / "mini_labels.csv"), "csv", "class_name", "rgb")
+        return json.loads(
+            (workspace / "benchmark_results" / "benchmark_metrics.json").read_text())
+
+    def test_example_sources_are_relative(self, written):
+        for entry in written.values():
+            for bucket in entry.get("prediction_examples", {}).values():
+                for example in bucket:
+                    source = example.get("source")
+                    if source:
+                        assert not Path(source).is_absolute(), source
+
+    def test_no_home_directory_appears_in_the_metrics(self, written):
+        text = json.dumps(written)
+        assert "/Users/" not in text
+        assert "/home/" not in text
+
+    def test_sources_still_identify_the_image(self, written):
+        # Relative, but still enough to find the file under the dataset root.
+        sources = [
+            example["source"]
+            for entry in written.values()
+            for bucket in entry.get("prediction_examples", {}).values()
+            for example in bucket
+            if example.get("source")
+        ]
+        assert sources
+        assert all(s.endswith((".jpeg", ".jpg", ".png", ".bmp", ".tiff"))
+                   for s in sources)
+
+    def test_returned_result_matches_what_was_written(self, workspace, fixtures_dir):
+        results = benchmark_image_classification(
+            str(fixtures_dir / "mini_labels.csv"), "csv", "class_name", "rgb")
+        for entry in results["model_results"].values():
+            for bucket in entry["prediction_examples"].values():
+                for example in bucket:
+                    if example.get("source"):
+                        assert not Path(example["source"]).is_absolute()
+
+    def test_array_input_needs_no_root(self, workspace, array_dataset):
+        # Array sources are positional names, not paths, so there is nothing
+        # to relativize and nothing should break.
+        tensor, labels = array_dataset
+        results = benchmark_image_classification(tensor, "array", labels, "grayscale")
+        for entry in results["model_results"].values():
+            for bucket in entry["prediction_examples"].values():
+                for example in bucket:
+                    assert "/Users/" not in str(example.get("source"))

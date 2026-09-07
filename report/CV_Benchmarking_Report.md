@@ -77,12 +77,12 @@ results = benchmark_image_classification(
 
 | Model | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) | Inference Time (ms/img) |
 |---|---|---|---|---|---|---|---|
-| Simple CNN | 0.433 | 0.446 | 0.433 | 0.434 | 0.434 | 42.4 | 0.411 |
-| SVM | 0.353 | 0.362 | 0.353 | 0.352 | 0.352 | 546.5 | 123.585 |
-| Random Forest | 0.322 | 0.331 | 0.322 | 0.319 | 0.319 | 3.1 | 0.034 |
-| Neural Network | 0.287 | 0.280 | 0.287 | 0.281 | 0.281 | 1.3 | 0.024 |
-| Logistic Regression | 0.226 | 0.230 | 0.226 | 0.225 | 0.225 | 9.2 | 0.039 |
-| Decision Tree | 0.180 | 0.182 | 0.180 | 0.180 | 0.180 | 21.4 | 0.003 |
+| Simple CNN | 0.433 | 0.446 | 0.433 | 0.434 | 0.434 | 41.5 | 0.399 |
+| SVM | 0.353 | 0.362 | 0.353 | 0.352 | 0.352 | 418.6 | 89.960 |
+| Random Forest | 0.322 | 0.331 | 0.322 | 0.319 | 0.319 | 2.8 | 0.028 |
+| Neural Network | 0.287 | 0.280 | 0.287 | 0.281 | 0.281 | 1.3 | 0.025 |
+| Logistic Regression | 0.226 | 0.230 | 0.226 | 0.225 | 0.225 | 10.8 | 0.029 |
+| Decision Tree | 0.180 | 0.182 | 0.180 | 0.180 | 0.180 | 20.9 | 0.002 |
 
 **Best: Simple CNN**, macro F1 0.434 (4.3x the 0.100 chance level for 10 classes).
 
@@ -119,12 +119,12 @@ results = benchmark_image_classification(
 
 | Model | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) | Inference Time (ms/img) |
 |---|---|---|---|---|---|---|---|
-| Simple CNN | 0.320 | 0.323 | 0.320 | 0.295 | 0.295 | 6.4 | 0.402 |
-| Random Forest | 0.300 | 0.310 | 0.300 | 0.294 | 0.294 | 0.6 | 0.081 |
-| SVM | 0.240 | 0.265 | 0.240 | 0.242 | 0.242 | 28.2 | 33.793 |
-| Logistic Regression | 0.215 | 0.216 | 0.215 | 0.213 | 0.213 | 1.5 | 0.045 |
-| Neural Network | 0.180 | 0.182 | 0.180 | 0.178 | 0.178 | 0.4 | 0.026 |
-| Decision Tree | 0.095 | 0.091 | 0.095 | 0.093 | 0.093 | 3.4 | 0.005 |
+| Simple CNN | 0.320 | 0.323 | 0.320 | 0.295 | 0.295 | 6.4 | 0.446 |
+| Random Forest | 0.300 | 0.310 | 0.300 | 0.294 | 0.294 | 0.5 | 0.137 |
+| SVM | 0.240 | 0.265 | 0.240 | 0.242 | 0.242 | 26.5 | 19.836 |
+| Logistic Regression | 0.215 | 0.216 | 0.215 | 0.213 | 0.213 | 1.4 | 0.030 |
+| Neural Network | 0.180 | 0.182 | 0.180 | 0.178 | 0.178 | 0.3 | 0.026 |
+| Decision Tree | 0.095 | 0.091 | 0.095 | 0.093 | 0.093 | 3.2 | 0.002 |
 
 **Best: Simple CNN**, macro F1 0.295 (2.9x the 0.100 chance level for 10 classes).
 
@@ -161,12 +161,12 @@ results = benchmark_image_classification(
 
 | Model | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) | Inference Time (ms/img) |
 |---|---|---|---|---|---|---|---|
-| Simple CNN | 0.351 | 0.351 | 0.351 | 0.349 | 0.349 | 43.5 | 0.246 |
-| Random Forest | 0.299 | 0.308 | 0.299 | 0.296 | 0.296 | 1.7 | 0.028 |
-| SVM | 0.283 | 0.294 | 0.283 | 0.281 | 0.281 | 13.0 | 3.991 |
+| Simple CNN | 0.351 | 0.351 | 0.351 | 0.349 | 0.349 | 41.9 | 0.257 |
+| Random Forest | 0.299 | 0.308 | 0.299 | 0.296 | 0.296 | 1.7 | 0.027 |
+| SVM | 0.283 | 0.294 | 0.283 | 0.281 | 0.281 | 12.8 | 3.940 |
 | Neural Network | 0.253 | 0.255 | 0.253 | 0.251 | 0.251 | 0.5 | 0.009 |
-| Decision Tree | 0.191 | 0.190 | 0.191 | 0.190 | 0.190 | 6.8 | 0.003 |
-| Logistic Regression | 0.169 | 0.169 | 0.169 | 0.167 | 0.167 | 5.2 | 0.013 |
+| Decision Tree | 0.191 | 0.190 | 0.191 | 0.190 | 0.190 | 6.7 | 0.001 |
+| Logistic Regression | 0.169 | 0.169 | 0.169 | 0.167 | 0.167 | 5.6 | 0.013 |
 
 **Best: Simple CNN**, macro F1 0.349 (3.5x the 0.100 chance level for 10 classes).
 
@@ -203,12 +203,12 @@ results = benchmark_image_classification(
 
 | Model | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) | Inference Time (ms/img) |
 |---|---|---|---|---|---|---|---|
-| Simple CNN | 0.260 | 0.269 | 0.260 | 0.249 | 0.249 | 7.2 | 0.226 |
-| Random Forest | 0.255 | 0.242 | 0.255 | 0.239 | 0.239 | 0.3 | 0.137 |
-| SVM | 0.215 | 0.214 | 0.215 | 0.207 | 0.207 | 0.6 | 0.806 |
+| Simple CNN | 0.260 | 0.269 | 0.260 | 0.249 | 0.249 | 7.1 | 0.224 |
+| Random Forest | 0.255 | 0.242 | 0.255 | 0.239 | 0.239 | 0.3 | 0.124 |
+| SVM | 0.215 | 0.214 | 0.215 | 0.207 | 0.207 | 0.6 | 0.801 |
 | Neural Network | 0.200 | 0.191 | 0.200 | 0.191 | 0.191 | 0.1 | 0.011 |
-| Logistic Regression | 0.135 | 0.134 | 0.135 | 0.132 | 0.132 | 1.1 | 0.033 |
-| Decision Tree | 0.125 | 0.136 | 0.125 | 0.129 | 0.129 | 1.1 | 0.002 |
+| Logistic Regression | 0.135 | 0.134 | 0.135 | 0.132 | 0.132 | 1.7 | 0.012 |
+| Decision Tree | 0.125 | 0.136 | 0.125 | 0.129 | 0.129 | 1.2 | 0.001 |
 
 **Best: Simple CNN**, macro F1 0.249 (2.5x the 0.100 chance level for 10 classes).
 
@@ -245,12 +245,12 @@ results = benchmark_image_classification(
 
 | Model | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) | Inference Time (ms/img) |
 |---|---|---|---|---|---|---|---|
-| Simple CNN | 0.705 | 0.712 | 0.705 | 0.704 | 0.704 | 26.8 | 0.412 |
-| SVM | 0.625 | 0.622 | 0.625 | 0.621 | 0.621 | 139.5 | 91.082 |
-| Random Forest | 0.570 | 0.566 | 0.570 | 0.564 | 0.564 | 2.7 | 0.049 |
-| Neural Network | 0.498 | 0.515 | 0.498 | 0.499 | 0.499 | 0.8 | 0.025 |
-| Decision Tree | 0.395 | 0.398 | 0.395 | 0.396 | 0.396 | 15.1 | 0.002 |
-| Logistic Regression | 0.393 | 0.406 | 0.393 | 0.395 | 0.395 | 5.7 | 0.041 |
+| Simple CNN | 0.705 | 0.712 | 0.705 | 0.704 | 0.704 | 26.6 | 0.399 |
+| SVM | 0.625 | 0.622 | 0.625 | 0.621 | 0.621 | 109.9 | 83.581 |
+| Random Forest | 0.570 | 0.566 | 0.570 | 0.564 | 0.564 | 2.4 | 0.047 |
+| Neural Network | 0.498 | 0.515 | 0.498 | 0.499 | 0.499 | 0.7 | 0.024 |
+| Decision Tree | 0.395 | 0.398 | 0.395 | 0.396 | 0.396 | 14.4 | 0.002 |
+| Logistic Regression | 0.393 | 0.406 | 0.393 | 0.395 | 0.395 | 4.1 | 0.040 |
 
 **Best: Simple CNN**, macro F1 0.704 (4.2x the 0.167 chance level for 6 classes).
 
@@ -287,12 +287,12 @@ results = benchmark_image_classification(
 
 | Model | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 | Training Time (s) | Inference Time (ms/img) |
 |---|---|---|---|---|---|---|---|
-| Simple CNN | 0.657 | 0.657 | 0.657 | 0.656 | 0.656 | 30.5 | 0.239 |
-| SVM | 0.528 | 0.523 | 0.528 | 0.516 | 0.516 | 3.5 | 3.223 |
-| Random Forest | 0.505 | 0.500 | 0.505 | 0.497 | 0.497 | 1.6 | 0.046 |
-| Neural Network | 0.442 | 0.434 | 0.442 | 0.433 | 0.433 | 0.3 | 0.009 |
+| Simple CNN | 0.657 | 0.657 | 0.657 | 0.656 | 0.656 | 30.3 | 0.238 |
+| SVM | 0.528 | 0.523 | 0.528 | 0.516 | 0.516 | 3.5 | 2.485 |
+| Random Forest | 0.505 | 0.500 | 0.505 | 0.497 | 0.497 | 1.5 | 0.027 |
+| Neural Network | 0.442 | 0.434 | 0.442 | 0.433 | 0.433 | 0.3 | 0.010 |
 | Decision Tree | 0.307 | 0.310 | 0.307 | 0.307 | 0.307 | 5.0 | 0.001 |
-| Logistic Regression | 0.293 | 0.305 | 0.293 | 0.292 | 0.292 | 2.8 | 0.012 |
+| Logistic Regression | 0.293 | 0.305 | 0.293 | 0.292 | 0.292 | 2.5 | 0.017 |
 
 **Best: Simple CNN**, macro F1 0.656 (3.9x the 0.167 chance level for 6 classes).
 
@@ -363,9 +363,9 @@ Identical images in both columns; only `color_mode` differs. Grayscale gives 4,0
 
 | Dataset | SVM training, grayscale | SVM training, RGB | factor |
 |---|---|---|---|
-| Animals-10 | 0.6 s | 28.2 s | 48x |
-| Animals-10 | 13.0 s | 546.5 s | 42x |
-| Intel Image Classification | 3.5 s | 139.5 s | 40x |
+| Animals-10 | 0.6 s | 26.5 s | 45x |
+| Animals-10 | 12.8 s | 418.6 s | 33x |
+| Intel Image Classification | 3.5 s | 109.9 s | 31x |
 
 ## 7. Experiment: dataset and padding
 
@@ -390,14 +390,14 @@ From animals10_n500_rgb:
 
 | Model | Training (s) | Inference (ms/image) | Macro F1 |
 |---|---|---|---|
-| Simple CNN | 42.4 | 0.411 | 0.434 |
-| SVM | 546.5 | 123.585 | 0.352 |
-| Random Forest | 3.1 | 0.034 | 0.319 |
-| Neural Network | 1.3 | 0.024 | 0.281 |
-| Logistic Regression | 9.2 | 0.039 | 0.225 |
-| Decision Tree | 21.4 | 0.003 | 0.180 |
+| Simple CNN | 41.5 | 0.399 | 0.434 |
+| SVM | 418.6 | 89.960 | 0.352 |
+| Random Forest | 2.8 | 0.028 | 0.319 |
+| Neural Network | 1.3 | 0.025 | 0.281 |
+| Logistic Regression | 10.8 | 0.029 | 0.225 |
+| Decision Tree | 20.9 | 0.002 | 0.180 |
 
-Inference cost spans a factor of 48,001 between Decision Tree and SVM. Classifying a thousand images would take SVM about 123.6 seconds against Decision Tree's 0.003 seconds.
+Inference cost spans a factor of 49,200 between Decision Tree and SVM. Classifying a thousand images would take SVM about 90.0 seconds against Decision Tree's 0.002 seconds.
 
 Accuracy alone would not surface this. A model chosen on macro F1 for a CPU-bound application could be unusable in practice, which is why the ranking breaks ties on the lower inference time.
 
@@ -500,6 +500,6 @@ python scripts/run_benchmarks.py --color-mode grayscale
 python scripts/generate_report.py
 ```
 
-Package version 1.0.0, random seed 42, image size 64x64. Every model fixes its own random state; each run's full configuration is in its `run_configuration.json`.
+Package version 1.0.1, random seed 42, image size 64x64. Every model fixes its own random state; each run's full configuration is in its `run_configuration.json`.
 
 The images are not committed. Both datasets are third-party collections, so the download scripts rebuild the subsets instead, and the seeded sampling makes that rebuild exact.

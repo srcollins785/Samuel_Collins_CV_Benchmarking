@@ -193,6 +193,46 @@ def _load(dataset, dataset_type: str, target_labels):
     return data_loader.load_array(dataset, target_labels)
 
 
+def _dataset_root(dataset, dataset_type: str):
+    """The directory a sample path should be reported relative to.
+
+    For the file-based organizations this is the dataset directory or the
+    manifest's own directory; array input has no root and needs none.
+    """
+    if dataset_type == "array" or not isinstance(dataset, (str, Path)):
+        return None
+    path = Path(dataset)
+    return path if path.is_dir() else path.parent
+
+
+def _portable(source, root):
+    """Report a sample by its path relative to the dataset root.
+
+    An absolute path records the machine it was produced on - the home
+    directory, the username, the folder layout - which is meaningless to
+    anyone else and is not something a public repository should carry.
+    Section 13 rules out machine-specific paths, and a results file is the
+    one place they can appear without any code containing them.
+    """
+    if not source or root is None:
+        return source
+    try:
+        return str(Path(source).resolve().relative_to(Path(root).resolve()))
+    except ValueError:
+        # Outside the dataset root - keep the name and its parent only.
+        parts = Path(source).parts
+        return str(Path(*parts[-2:])) if len(parts) >= 2 else str(source)
+
+
+def _relative_examples(examples: dict, root) -> dict:
+    """Rewrite every example's source to a portable form."""
+    return {
+        bucket: [{**entry, "source": _portable(entry.get("source"), root)}
+                 for entry in entries]
+        for bucket, entries in examples.items()
+    }
+
+
 def _jsonable(value):
     """Convert numpy scalars and arrays into something json can write."""
     if isinstance(value, np.ndarray):
@@ -208,7 +248,8 @@ def _jsonable(value):
     return value
 
 
-def _write_artifacts(results, split, dataset_type, color_mode, output_dir: Path) -> dict:
+def _write_artifacts(results, split, dataset_type, color_mode, output_dir: Path,
+                     dataset_root=None) -> dict:
     """Write the result directory section 9 requires.
 
     Everything here is written from the results already computed - nothing is
@@ -241,7 +282,8 @@ def _write_artifacts(results, split, dataset_type, color_mode, output_dir: Path)
             # predictions, and the report reads files rather than importing
             # the pipeline, so they have to be written rather than only
             # returned.
-            "prediction_examples": _jsonable(prediction_examples(result, split)),
+            "prediction_examples": _jsonable(
+                _relative_examples(prediction_examples(result, split), dataset_root)),
         }
         for result in results
     }
@@ -352,7 +394,9 @@ def benchmark_image_classification(
     results = evaluate_all(specs, split, on_progress=announce)
 
     output_dir = Path(RESULTS_DIR)
-    _write_artifacts(results, split, dataset_type, color_mode, output_dir)
+    dataset_root = _dataset_root(dataset, dataset_type)
+    _write_artifacts(results, split, dataset_type, color_mode, output_dir,
+                     dataset_root)
     print(f"wrote results to {output_dir.resolve()}")
 
     channels = prepared.images.shape[3]
@@ -383,7 +427,8 @@ def benchmark_image_classification(
                 **result.metrics(),
                 "parameters": result.parameters,
                 "training_history": result.history,
-                "prediction_examples": prediction_examples(result, split),
+                "prediction_examples": _relative_examples(
+                    prediction_examples(result, split), dataset_root),
             }
             for result in results
         },

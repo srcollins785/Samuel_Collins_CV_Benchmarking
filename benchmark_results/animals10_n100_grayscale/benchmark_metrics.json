@@ -8,8 +8,8 @@
     "macro_recall": 0.26,
     "macro_f1": 0.24882272638086594,
     "weighted_f1": 0.2488227263808659,
-    "training_time_seconds": 7.2068541249999996,
-    "inference_time_ms_per_image": 0.22598416500002827,
+    "training_time_seconds": 7.128324292000002,
+    "inference_time_ms_per_image": 0.22395625000001473,
     "confusion_matrix": [
       [
         5,
@@ -404,35 +404,35 @@
         {
           "test_position": 0,
           "dataset_index": 1,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/butterfly/butterfly_002.jpeg",
+          "source": "images/butterfly/butterfly_002.jpeg",
           "true_class": "butterfly",
           "predicted_class": "butterfly"
         },
         {
           "test_position": 28,
           "dataset_index": 134,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cat/cat_035.jpeg",
+          "source": "images/cat/cat_035.jpeg",
           "true_class": "cat",
           "predicted_class": "cat"
         },
         {
           "test_position": 42,
           "dataset_index": 216,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/chicken/chicken_017.jpeg",
+          "source": "images/chicken/chicken_017.jpeg",
           "true_class": "chicken",
           "predicted_class": "chicken"
         },
         {
           "test_position": 68,
           "dataset_index": 337,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cow/cow_038.jpeg",
+          "source": "images/cow/cow_038.jpeg",
           "true_class": "cow",
           "predicted_class": "cow"
         },
         {
           "test_position": 92,
           "dataset_index": 454,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/dog/dog_055.jpeg",
+          "source": "images/dog/dog_055.jpeg",
           "true_class": "dog",
           "predicted_class": "dog"
         }
@@ -441,35 +441,35 @@
         {
           "test_position": 1,
           "dataset_index": 2,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/butterfly/butterfly_003.jpeg",
+          "source": "images/butterfly/butterfly_003.jpeg",
           "true_class": "butterfly",
           "predicted_class": "cat"
         },
         {
           "test_position": 20,
           "dataset_index": 104,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cat/cat_005.jpeg",
+          "source": "images/cat/cat_005.jpeg",
           "true_class": "cat",
           "predicted_class": "sheep"
         },
         {
           "test_position": 40,
           "dataset_index": 200,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/chicken/chicken_001.jpeg",
+          "source": "images/chicken/chicken_001.jpeg",
           "true_class": "chicken",
           "predicted_class": "horse"
         },
         {
           "test_position": 60,
           "dataset_index": 303,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cow/cow_004.jpeg",
+          "source": "images/cow/cow_004.jpeg",
           "true_class": "cow",
           "predicted_class": "sheep"
         },
         {
           "test_position": 80,
           "dataset_index": 404,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/dog/dog_005.jpeg",
+          "source": "images/dog/dog_005.jpeg",
           "true_class": "dog",
           "predicted_class": "cat"
         }
@@ -485,8 +485,8 @@
     "macro_recall": 0.255,
     "macro_f1": 0.23917182085474398,
     "weighted_f1": 0.23917182085474395,
-    "training_time_seconds": 0.32107804200000345,
-    "inference_time_ms_per_image": 0.1373214550000057,
+    "training_time_seconds": 0.30612845799999633,
+    "inference_time_ms_per_image": 0.12391083500002509,
     "confusion_matrix": [
       [
         1,
@@ -690,35 +690,35 @@
         {
           "test_position": 9,
           "dataset_index": 52,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/butterfly/butterfly_053.jpeg",
+          "source": "images/butterfly/butterfly_053.jpeg",
           "true_class": "butterfly",
           "predicted_class": "butterfly"
         },
         {
           "test_position": 32,
           "dataset_index": 147,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cat/cat_048.jpeg",
+          "source": "images/cat/cat_048.jpeg",
           "true_class": "cat",
           "predicted_class": "cat"
         },
         {
           "test_position": 40,
           "dataset_index": 200,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/chicken/chicken_001.jpeg",
+          "source": "images/chicken/chicken_001.jpeg",
           "true_class": "chicken",
           "predicted_class": "chicken"
         },
         {
           "test_position": 66,
           "dataset_index": 327,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cow/cow_028.jpeg",
+          "source": "images/cow/cow_028.jpeg",
           "true_class": "cow",
           "predicted_class": "cow"
         },
         {
           "test_position": 92,
           "dataset_index": 454,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/dog/dog_055.jpeg",
+          "source": "images/dog/dog_055.jpeg",
           "true_class": "dog",
           "predicted_class": "dog"
         }
@@ -727,35 +727,35 @@
         {
           "test_position": 0,
           "dataset_index": 1,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/butterfly/butterfly_002.jpeg",
+          "source": "images/butterfly/butterfly_002.jpeg",
           "true_class": "butterfly",
           "predicted_class": "chicken"
         },
         {
           "test_position": 20,
           "dataset_index": 104,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cat/cat_005.jpeg",
+          "source": "images/cat/cat_005.jpeg",
           "true_class": "cat",
           "predicted_class": "squirrel"
         },
         {
           "test_position": 41,
           "dataset_index": 201,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/chicken/chicken_002.jpeg",
+          "source": "images/chicken/chicken_002.jpeg",
           "true_class": "chicken",
           "predicted_class": "horse"
         },
         {
           "test_position": 60,
           "dataset_index": 303,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cow/cow_004.jpeg",
+          "source": "images/cow/cow_004.jpeg",
           "true_class": "cow",
           "predicted_class": "sheep"
         },
         {
           "test_position": 80,
           "dataset_index": 404,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/dog/dog_005.jpeg",
+          "source": "images/dog/dog_005.jpeg",
           "true_class": "dog",
           "predicted_class": "spider"
         }
@@ -771,8 +771,8 @@
     "macro_recall": 0.215,
     "macro_f1": 0.2070077000536735,
     "weighted_f1": 0.20700770005367347,
-    "training_time_seconds": 0.5912560840000012,
-    "inference_time_ms_per_image": 0.8061737500000277,
+    "training_time_seconds": 0.5847900830000015,
+    "inference_time_ms_per_image": 0.8011506250000267,
     "confusion_matrix": [
       [
         1,
@@ -976,35 +976,35 @@
         {
           "test_position": 2,
           "dataset_index": 14,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/butterfly/butterfly_015.jpeg",
+          "source": "images/butterfly/butterfly_015.jpeg",
           "true_class": "butterfly",
           "predicted_class": "butterfly"
         },
         {
           "test_position": 21,
           "dataset_index": 106,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cat/cat_007.jpeg",
+          "source": "images/cat/cat_007.jpeg",
           "true_class": "cat",
           "predicted_class": "cat"
         },
         {
           "test_position": 43,
           "dataset_index": 218,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/chicken/chicken_019.jpeg",
+          "source": "images/chicken/chicken_019.jpeg",
           "true_class": "chicken",
           "predicted_class": "chicken"
         },
         {
           "test_position": 66,
           "dataset_index": 327,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cow/cow_028.jpeg",
+          "source": "images/cow/cow_028.jpeg",
           "true_class": "cow",
           "predicted_class": "cow"
         },
         {
           "test_position": 92,
           "dataset_index": 454,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/dog/dog_055.jpeg",
+          "source": "images/dog/dog_055.jpeg",
           "true_class": "dog",
           "predicted_class": "dog"
         }
@@ -1013,35 +1013,35 @@
         {
           "test_position": 0,
           "dataset_index": 1,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/butterfly/butterfly_002.jpeg",
+          "source": "images/butterfly/butterfly_002.jpeg",
           "true_class": "butterfly",
           "predicted_class": "chicken"
         },
         {
           "test_position": 20,
           "dataset_index": 104,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cat/cat_005.jpeg",
+          "source": "images/cat/cat_005.jpeg",
           "true_class": "cat",
           "predicted_class": "sheep"
         },
         {
           "test_position": 40,
           "dataset_index": 200,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/chicken/chicken_001.jpeg",
+          "source": "images/chicken/chicken_001.jpeg",
           "true_class": "chicken",
           "predicted_class": "dog"
         },
         {
           "test_position": 60,
           "dataset_index": 303,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cow/cow_004.jpeg",
+          "source": "images/cow/cow_004.jpeg",
           "true_class": "cow",
           "predicted_class": "sheep"
         },
         {
           "test_position": 80,
           "dataset_index": 404,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/dog/dog_005.jpeg",
+          "source": "images/dog/dog_005.jpeg",
           "true_class": "dog",
           "predicted_class": "elephant"
         }
@@ -1057,8 +1057,8 @@
     "macro_recall": 0.2,
     "macro_f1": 0.19147678754612119,
     "weighted_f1": 0.19147678754612124,
-    "training_time_seconds": 0.0785530420000029,
-    "inference_time_ms_per_image": 0.010576040000032094,
+    "training_time_seconds": 0.07800208400000486,
+    "inference_time_ms_per_image": 0.010862500000001774,
     "confusion_matrix": [
       [
         2,
@@ -1262,35 +1262,35 @@
         {
           "test_position": 9,
           "dataset_index": 52,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/butterfly/butterfly_053.jpeg",
+          "source": "images/butterfly/butterfly_053.jpeg",
           "true_class": "butterfly",
           "predicted_class": "butterfly"
         },
         {
           "test_position": 21,
           "dataset_index": 106,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cat/cat_007.jpeg",
+          "source": "images/cat/cat_007.jpeg",
           "true_class": "cat",
           "predicted_class": "cat"
         },
         {
           "test_position": 42,
           "dataset_index": 216,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/chicken/chicken_017.jpeg",
+          "source": "images/chicken/chicken_017.jpeg",
           "true_class": "chicken",
           "predicted_class": "chicken"
         },
         {
           "test_position": 74,
           "dataset_index": 363,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cow/cow_064.jpeg",
+          "source": "images/cow/cow_064.jpeg",
           "true_class": "cow",
           "predicted_class": "cow"
         },
         {
           "test_position": 82,
           "dataset_index": 407,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/dog/dog_008.jpeg",
+          "source": "images/dog/dog_008.jpeg",
           "true_class": "dog",
           "predicted_class": "dog"
         }
@@ -1299,35 +1299,35 @@
         {
           "test_position": 0,
           "dataset_index": 1,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/butterfly/butterfly_002.jpeg",
+          "source": "images/butterfly/butterfly_002.jpeg",
           "true_class": "butterfly",
           "predicted_class": "squirrel"
         },
         {
           "test_position": 20,
           "dataset_index": 104,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cat/cat_005.jpeg",
+          "source": "images/cat/cat_005.jpeg",
           "true_class": "cat",
           "predicted_class": "elephant"
         },
         {
           "test_position": 40,
           "dataset_index": 200,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/chicken/chicken_001.jpeg",
+          "source": "images/chicken/chicken_001.jpeg",
           "true_class": "chicken",
           "predicted_class": "butterfly"
         },
         {
           "test_position": 60,
           "dataset_index": 303,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cow/cow_004.jpeg",
+          "source": "images/cow/cow_004.jpeg",
           "true_class": "cow",
           "predicted_class": "sheep"
         },
         {
           "test_position": 80,
           "dataset_index": 404,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/dog/dog_005.jpeg",
+          "source": "images/dog/dog_005.jpeg",
           "true_class": "dog",
           "predicted_class": "squirrel"
         }
@@ -1343,8 +1343,8 @@
     "macro_recall": 0.135,
     "macro_f1": 0.13242909379925566,
     "weighted_f1": 0.13242909379925563,
-    "training_time_seconds": 1.0672307500000002,
-    "inference_time_ms_per_image": 0.03258916499998321,
+    "training_time_seconds": 1.6832114580000024,
+    "inference_time_ms_per_image": 0.011892294999995556,
     "confusion_matrix": [
       [
         2,
@@ -1548,35 +1548,35 @@
         {
           "test_position": 4,
           "dataset_index": 21,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/butterfly/butterfly_022.jpeg",
+          "source": "images/butterfly/butterfly_022.jpeg",
           "true_class": "butterfly",
           "predicted_class": "butterfly"
         },
         {
           "test_position": 21,
           "dataset_index": 106,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cat/cat_007.jpeg",
+          "source": "images/cat/cat_007.jpeg",
           "true_class": "cat",
           "predicted_class": "cat"
         },
         {
           "test_position": 44,
           "dataset_index": 223,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/chicken/chicken_024.jpeg",
+          "source": "images/chicken/chicken_024.jpeg",
           "true_class": "chicken",
           "predicted_class": "chicken"
         },
         {
           "test_position": 70,
           "dataset_index": 350,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cow/cow_051.jpeg",
+          "source": "images/cow/cow_051.jpeg",
           "true_class": "cow",
           "predicted_class": "cow"
         },
         {
           "test_position": 82,
           "dataset_index": 407,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/dog/dog_008.jpeg",
+          "source": "images/dog/dog_008.jpeg",
           "true_class": "dog",
           "predicted_class": "dog"
         }
@@ -1585,35 +1585,35 @@
         {
           "test_position": 0,
           "dataset_index": 1,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/butterfly/butterfly_002.jpeg",
+          "source": "images/butterfly/butterfly_002.jpeg",
           "true_class": "butterfly",
           "predicted_class": "elephant"
         },
         {
           "test_position": 20,
           "dataset_index": 104,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cat/cat_005.jpeg",
+          "source": "images/cat/cat_005.jpeg",
           "true_class": "cat",
           "predicted_class": "elephant"
         },
         {
           "test_position": 40,
           "dataset_index": 200,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/chicken/chicken_001.jpeg",
+          "source": "images/chicken/chicken_001.jpeg",
           "true_class": "chicken",
           "predicted_class": "spider"
         },
         {
           "test_position": 60,
           "dataset_index": 303,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cow/cow_004.jpeg",
+          "source": "images/cow/cow_004.jpeg",
           "true_class": "cow",
           "predicted_class": "horse"
         },
         {
           "test_position": 80,
           "dataset_index": 404,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/dog/dog_005.jpeg",
+          "source": "images/dog/dog_005.jpeg",
           "true_class": "dog",
           "predicted_class": "cow"
         }
@@ -1629,8 +1629,8 @@
     "macro_recall": 0.125,
     "macro_f1": 0.12868649187762374,
     "weighted_f1": 0.1286864918776237,
-    "training_time_seconds": 1.149237208999999,
-    "inference_time_ms_per_image": 0.0015468750000025011,
+    "training_time_seconds": 1.162425167000002,
+    "inference_time_ms_per_image": 0.0012383350000177984,
     "confusion_matrix": [
       [
         3,
@@ -1834,35 +1834,35 @@
         {
           "test_position": 4,
           "dataset_index": 21,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/butterfly/butterfly_022.jpeg",
+          "source": "images/butterfly/butterfly_022.jpeg",
           "true_class": "butterfly",
           "predicted_class": "butterfly"
         },
         {
           "test_position": 27,
           "dataset_index": 133,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cat/cat_034.jpeg",
+          "source": "images/cat/cat_034.jpeg",
           "true_class": "cat",
           "predicted_class": "cat"
         },
         {
           "test_position": 41,
           "dataset_index": 201,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/chicken/chicken_002.jpeg",
+          "source": "images/chicken/chicken_002.jpeg",
           "true_class": "chicken",
           "predicted_class": "chicken"
         },
         {
           "test_position": 68,
           "dataset_index": 337,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cow/cow_038.jpeg",
+          "source": "images/cow/cow_038.jpeg",
           "true_class": "cow",
           "predicted_class": "cow"
         },
         {
           "test_position": 80,
           "dataset_index": 404,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/dog/dog_005.jpeg",
+          "source": "images/dog/dog_005.jpeg",
           "true_class": "dog",
           "predicted_class": "dog"
         }
@@ -1871,35 +1871,35 @@
         {
           "test_position": 0,
           "dataset_index": 1,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/butterfly/butterfly_002.jpeg",
+          "source": "images/butterfly/butterfly_002.jpeg",
           "true_class": "butterfly",
           "predicted_class": "dog"
         },
         {
           "test_position": 20,
           "dataset_index": 104,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cat/cat_005.jpeg",
+          "source": "images/cat/cat_005.jpeg",
           "true_class": "cat",
           "predicted_class": "butterfly"
         },
         {
           "test_position": 40,
           "dataset_index": 200,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/chicken/chicken_001.jpeg",
+          "source": "images/chicken/chicken_001.jpeg",
           "true_class": "chicken",
           "predicted_class": "squirrel"
         },
         {
           "test_position": 60,
           "dataset_index": 303,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/cow/cow_004.jpeg",
+          "source": "images/cow/cow_004.jpeg",
           "true_class": "cow",
           "predicted_class": "horse"
         },
         {
           "test_position": 81,
           "dataset_index": 405,
-          "source": "/Users/samuelcollins/Projects/Computer Vision/Assignment 2/Samuel_Collins_CV_Benchmarking/data/animals10_n100/images/dog/dog_006.jpeg",
+          "source": "images/dog/dog_006.jpeg",
           "true_class": "dog",
           "predicted_class": "spider"
         }
