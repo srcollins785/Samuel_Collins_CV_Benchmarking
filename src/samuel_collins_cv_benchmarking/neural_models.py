@@ -260,6 +260,10 @@ class SimpleCNN:
             "best_validation_loss": None if best_loss == np.inf else float(best_loss),
             "validation_samples": int(len(validation_positions)),
             "training_samples": int(len(train_positions)),
+            # Recorded so the restored weights can be checked against the
+            # epoch they came from, and so the report can say exactly which
+            # rows early stopping watched.
+            "validation_index": [int(i) for i in validation_positions],
             "per_epoch": history,
         }
         return self

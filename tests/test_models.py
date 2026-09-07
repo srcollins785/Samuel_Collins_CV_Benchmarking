@@ -433,13 +433,17 @@ class TestCnnEarlyStoppingActuallyFires:
     """
 
     @pytest.fixture(scope="class")
-    def overfitted(self):
+    def split_for_overfit(self):
         generator = np.random.default_rng(3)
         tensor = generator.integers(0, 256, size=(120, 16, 16, 3), dtype=np.uint8)
         labels = ["cat"] * 60 + ["dog"] * 60
         generator.shuffle(labels)
-        split = make_split(preprocess(load_array(tensor, labels), "rgb"))
-        return SimpleCNN(epochs=20).fit(split.images_train, split.labels_train)
+        return make_split(preprocess(load_array(tensor, labels), "rgb"))
+
+    @pytest.fixture(scope="class")
+    def overfitted(self, split_for_overfit):
+        return SimpleCNN(epochs=20).fit(
+            split_for_overfit.images_train, split_for_overfit.labels_train)
 
     def test_stops_before_the_epoch_cap(self, overfitted):
         assert overfitted.history_["stopped_early"] is True
@@ -456,6 +460,28 @@ class TestCnnEarlyStoppingActuallyFires:
         # weights that were measurably worse than ones it had already seen.
         losses = [e["validation_loss"] for e in overfitted.history_["per_epoch"]]
         assert overfitted.history_["best_validation_loss"] == pytest.approx(min(losses))
+
+    def test_the_model_actually_holds_the_best_weights(self, overfitted, split_for_overfit):
+        # The bookkeeping tests above only prove the best loss was *recorded*.
+        # This one re-scores the fitted model on the same validation rows and
+        # checks it matches, which is only true if the weights were rewound.
+        # Without the rewind the model carries the weights from three epochs
+        # later, which are measurably worse.
+        import torch
+        import torch.nn as nn
+
+        history = overfitted.history_
+        rows = np.array(history["validation_index"])
+        images = split_for_overfit.images_train[rows]
+        labels = split_for_overfit.labels_train[rows]
+
+        overfitted.model_.eval()
+        with torch.no_grad():
+            logits = overfitted.model_(overfitted._to_tensor(images))
+            loss = nn.CrossEntropyLoss()(
+                logits, torch.from_numpy(labels.astype(np.int64))).item()
+
+        assert loss == pytest.approx(history["best_validation_loss"], abs=1e-5)
 
     def test_validation_loss_actually_rose(self, overfitted):
         # Confirms the fixture set up the situation it claims to.
