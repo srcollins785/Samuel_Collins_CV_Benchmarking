@@ -58,8 +58,11 @@ AXIS = "#c3c2b7"
 
 BLUES = LinearSegmentedColormap.from_list("benchmark_blues", SEQUENTIAL)
 
-FONT = ["system-ui", "-apple-system", "Helvetica Neue", "Helvetica", "Arial",
-        "DejaVu Sans"]
+# Real font family names only. "system-ui" and "-apple-system" are CSS
+# keywords rather than families: matplotlib cannot resolve them, falls back
+# silently, and warns once per text object - thousands of lines across a full
+# run, which would bury anything worth reading.
+FONT = ["Helvetica Neue", "Helvetica", "Arial", "DejaVu Sans"]
 
 # A hairline of surface colour drawn around each bar, so stacked segments and
 # neighbouring bars are separated by a visible gap rather than touching.

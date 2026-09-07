@@ -296,3 +296,46 @@ class TestPalette:
         import matplotlib
 
         assert matplotlib.get_backend().lower() == "agg"
+
+
+class TestFontResolution:
+    """matplotlib must be able to resolve the fonts we name.
+
+    An unresolvable family is not an error - matplotlib falls back and warns,
+    once per text object. A full run emitted thousands of those lines, which
+    would bury a real warning and swamp a screen recording.
+    """
+
+    def test_every_named_font_family_exists(self):
+        from matplotlib import font_manager
+
+        available = {font.name for font in font_manager.fontManager.ttflist}
+        assert any(name in available for name in visualization.FONT)
+
+    def test_no_css_keywords_in_the_font_list(self):
+        # "system-ui" and "-apple-system" are CSS keywords, not families.
+        for name in visualization.FONT:
+            assert not name.startswith("-")
+            assert name != "system-ui"
+
+    def test_drawing_emits_no_font_warnings(self, results, split, tmp_path):
+        import logging
+
+        records = []
+
+        class Capture(logging.Handler):
+            def emit(self, record):
+                records.append(record.getMessage())
+
+        logger = logging.getLogger("matplotlib.font_manager")
+        handler = Capture()
+        logger.addHandler(handler)
+        previous = logger.level
+        logger.setLevel(logging.WARNING)
+        try:
+            visualization.plot_class_distribution(split, tmp_path / "d.png")
+        finally:
+            logger.removeHandler(handler)
+            logger.setLevel(previous)
+
+        assert not [m for m in records if "findfont" in m or "not found" in m]
