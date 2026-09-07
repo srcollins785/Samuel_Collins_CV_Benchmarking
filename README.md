@@ -146,6 +146,53 @@ smallest class, elephant, at 1,446 images.
 
 **Grayscale - not yet added.**
 
+## Results
+
+Two runs over nested subsets of Animals-10, ten classes, RGB at 64x64. The
+tiers share one fixed ordering, so `n100` is a byte-identical subset of
+`n500` and reading across them is a learning curve rather than a comparison
+of unrelated samples. Chance for ten classes is 0.100.
+
+| Model | Macro F1 @ 100/class | Macro F1 @ 500/class | change |
+|---|---|---|---|
+| Simple CNN | 0.295 | **0.434** | +47% |
+| SVM | 0.242 | 0.352 | +45% |
+| Random Forest | 0.294 | 0.319 | +9% |
+| Neural Network | 0.178 | 0.281 | +58% |
+| Logistic Regression | 0.213 | 0.225 | +6% |
+| Decision Tree | 0.093 | 0.180 | +94% |
+
+At 100 images per class the CNN and Random Forest are tied. At 500 the CNN
+leads by 36%, and Logistic Regression and Random Forest have nearly
+flattened while the CNN and SVM are still climbing steeply. Reporting only
+the smaller run would have supported the conclusion that a CNN and an
+ensemble of trees are equivalent here - true at that size, and misleading as
+a finding.
+
+Cost at 500 per class tells a different story from accuracy alone:
+
+| Model | Training | Inference |
+|---|---|---|
+| SVM | 547.4 s | 150.1 ms/image |
+| Simple CNN | 44.8 s | 0.43 ms/image |
+| Decision Tree | 20.2 s | 0.002 ms/image |
+| Logistic Regression | 9.5 s | 0.040 ms/image |
+| Random Forest | 3.3 s | 0.028 ms/image |
+| Neural Network | 1.3 s | 0.025 ms/image |
+
+The SVM buys third place at 75,000 times the Decision Tree's inference cost:
+classifying a thousand images would take it two and a half minutes against
+Random Forest's 0.03 seconds for a slightly better score.
+
+Full outputs are under `benchmark_results/<tier>/`. Reproduce them with:
+
+```bash
+python scripts/download_animals10.py --per-class 500
+python scripts/run_benchmarks.py
+```
+
+The 500/class run takes about 13 minutes, 9 of which are the SVM.
+
 ## Tests
 
 ```bash
