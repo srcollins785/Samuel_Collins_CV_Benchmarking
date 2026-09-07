@@ -22,6 +22,7 @@ the structural/content split holds.
 import json
 
 import numpy as np
+import pandas as pd
 import pytest
 
 from samuel_collins_cv_benchmarking.data_loader import (
@@ -886,3 +887,160 @@ class TestLoadArrayWarnings:
             images(6, 4, 4), ["cat", "cat", float("nan"), "dog", "dog", "dog"])
         assert len(dataset) == 5
         assert any("blank label" in w for w in dataset.warnings)
+
+
+# --------------------------------------------------------------------------
+# DataFrame input (section 3.4, reached through dataset_type="array")
+# --------------------------------------------------------------------------
+
+class TestDataFrameOfPaths:
+
+    def test_loads_paths_from_a_dataframe(self, fixtures_dir):
+        folder = load_folder(fixtures_dir / "mini", CLASSES)
+        frame = pd.DataFrame({
+            "image_path": [str(path.resolve()) for path, _ in folder.samples],
+            "class_name": [label for _, label in folder.samples],
+        })
+        dataset = load_array(frame, "class_name")
+        assert len(dataset) == 15
+        assert dataset.count_by_class() == {"cat": 5, "dog": 5, "horse": 5}
+
+    def test_matches_the_folder_loader(self, fixtures_dir):
+        folder = load_folder(fixtures_dir / "mini", CLASSES)
+        frame = pd.DataFrame({
+            "image_path": [str(path.resolve()) for path, _ in folder.samples],
+            "class_name": [label for _, label in folder.samples],
+        })
+        dataset = load_array(frame, "class_name")
+        assert sorted(p.resolve() for p, _ in dataset.samples) == \
+               sorted(p.resolve() for p, _ in folder.samples)
+
+    def test_absent_files_are_skipped_not_fatal(self, tmp_path):
+        make_tree(tmp_path, {"cat": ["a.jpg"], "dog": ["b.jpg"]})
+        frame = pd.DataFrame({
+            "image_path": [str(tmp_path / "cat" / "a.jpg"),
+                           str(tmp_path / "dog" / "b.jpg"),
+                           str(tmp_path / "cat" / "gone.jpg")],
+            "class_name": ["cat", "dog", "cat"],
+        })
+        dataset = load_array(frame, "class_name")
+        assert len(dataset) == 2
+        assert any("not found" in w for w in dataset.warnings)
+
+    def test_duplicate_paths_are_skipped(self, tmp_path):
+        make_tree(tmp_path, {"cat": ["a.jpg"], "dog": ["b.jpg"]})
+        frame = pd.DataFrame({
+            "image_path": [str(tmp_path / "cat" / "a.jpg")] * 2 +
+                          [str(tmp_path / "dog" / "b.jpg")],
+            "class_name": ["cat", "cat", "dog"],
+        })
+        dataset = load_array(frame, "class_name")
+        assert len(dataset) == 2
+        assert any("duplicate" in w for w in dataset.warnings)
+
+
+class TestDataFrameOfArrays:
+
+    def frame(self, count=6, shape=(4, 4)):
+        return pd.DataFrame({
+            "image": [np.zeros(shape, dtype=np.uint8) for _ in range(count)],
+            "class_name": ["cat"] * (count // 2) + ["dog"] * (count - count // 2),
+        })
+
+    def test_loads_arrays_from_a_dataframe(self):
+        dataset = load_array(self.frame(), "class_name")
+        assert len(dataset) == 6
+        assert dataset.class_names == ["cat", "dog"]
+
+    def test_samples_carry_arrays(self):
+        dataset = load_array(self.frame(), "class_name")
+        assert all(isinstance(source, np.ndarray) for source, _ in dataset.samples)
+
+    def test_rows_that_are_not_arrays_are_skipped(self):
+        frame = self.frame()
+        frame.at[2, "image"] = None
+        dataset = load_array(frame, "class_name")
+        assert len(dataset) == 5
+        assert any("not an image array" in w for w in dataset.warnings)
+
+    def test_differing_shapes_raise(self):
+        # Stacking needs one common shape; a mismatch is worth naming rather
+        # than letting numpy raise about dimensions.
+        frame = self.frame()
+        frame.at[3, "image"] = np.zeros((8, 8), dtype=np.uint8)
+        with pytest.raises(ValueError, match="differing shapes"):
+            load_array(frame, "class_name")
+
+    def test_nested_lists_are_converted(self):
+        frame = pd.DataFrame({
+            "image": [[[0, 0], [0, 0]] for _ in range(4)],
+            "class_name": ["cat", "cat", "dog", "dog"],
+        })
+        assert len(load_array(frame, "class_name")) == 4
+
+    def test_array_validation_still_applies(self):
+        # The stacked tensor goes through the same checks a caller-supplied
+        # tensor gets, so NaN is still caught here.
+        frame = pd.DataFrame({
+            "image": [np.zeros((4, 4), dtype=np.float32) for _ in range(6)],
+            "class_name": ["cat"] * 3 + ["dog"] * 3,
+        })
+        frame.at[1, "image"] = np.full((4, 4), np.nan, dtype=np.float32)
+        dataset = load_array(frame, "class_name")
+        assert len(dataset) == 5
+        assert any("NaN" in w for w in dataset.warnings)
+
+
+class TestDataFrameColumnSelection:
+
+    def test_image_path_column_is_preferred(self, tmp_path):
+        make_tree(tmp_path, {"cat": ["a.jpg"], "dog": ["b.jpg"]})
+        frame = pd.DataFrame({
+            "image_path": [str(tmp_path / "cat" / "a.jpg"), str(tmp_path / "dog" / "b.jpg")],
+            "notes": ["ignore me", "and me"],
+            "class_name": ["cat", "dog"],
+        })
+        assert len(load_array(frame, "class_name")) == 2
+
+    def test_the_only_other_column_is_used(self):
+        frame = pd.DataFrame({
+            "pixels": [np.zeros((2, 2), dtype=np.uint8) for _ in range(4)],
+            "class_name": ["a", "a", "b", "b"],
+        })
+        assert len(load_array(frame, "class_name")) == 4
+
+    def test_ambiguous_columns_raise_rather_than_guess(self):
+        # Guessing wrong would train on whatever that column happened to hold.
+        frame = pd.DataFrame({"a": [1] * 4, "b": [2] * 4, "class_name": ["a", "a", "b", "b"]})
+        with pytest.raises(ValueError, match="Cannot tell which column"):
+            load_array(frame, "class_name")
+
+    def test_label_column_alone_raises(self):
+        frame = pd.DataFrame({"class_name": ["a", "a", "b", "b"]})
+        with pytest.raises(ValueError, match="only the label column"):
+            load_array(frame, "class_name")
+
+
+class TestDataFrameValidation:
+
+    def test_missing_label_column_raises(self):
+        frame = pd.DataFrame({"image": [np.zeros((2, 2))] * 4, "class_name": ["a"] * 4})
+        with pytest.raises(ValueError, match="no 'missing' column"):
+            load_array(frame, "missing")
+
+    def test_non_string_target_labels_raises(self):
+        # Third meaning for this parameter: class-name list for folder, label
+        # vector for a raw array, target column name for a DataFrame.
+        frame = pd.DataFrame({"image": [np.zeros((2, 2))] * 4, "class_name": ["a"] * 4})
+        with pytest.raises(ValueError, match="name of the target column"):
+            load_array(frame, ["a", "b"])
+
+    def test_empty_dataframe_raises(self):
+        frame = pd.DataFrame({"image_path": [], "class_name": []})
+        with pytest.raises(ValueError, match="empty"):
+            load_array(frame, "class_name")
+
+    def test_unusable_column_type_raises(self):
+        frame = pd.DataFrame({"i": [1, 2, 3, 4], "class_name": ["a", "a", "b", "b"]})
+        with pytest.raises(ValueError, match="image paths or image arrays"):
+            load_array(frame, "class_name")

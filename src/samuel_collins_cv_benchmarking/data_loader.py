@@ -625,6 +625,9 @@ def load_array(
         The tensor has an unusable shape, the label vector length does not
         match the number of images, or fewer than two classes survive.
     """
+    if _looks_like_dataframe(dataset):
+        return _load_dataframe(dataset, target_labels)
+
     if isinstance(dataset, (list, tuple)):
         try:
             dataset = np.asarray(dataset)
@@ -704,3 +707,141 @@ def load_array(
         f"Read {dataset.shape[0]} image(s) of shape "
         f"{tuple(dataset.shape[1:])} with {channels} channel(s).",
     )
+
+
+def _looks_like_dataframe(obj) -> bool:
+    """Duck-type a pandas DataFrame without importing pandas.
+
+    Only the CSV loader and this path need pandas, so the import stays inside
+    the functions that use it rather than costing every caller the load time.
+    """
+    return hasattr(obj, "columns") and hasattr(obj, "dtypes") and hasattr(obj, "iloc")
+
+
+def _pick_image_column(frame, label_column: str) -> str:
+    """Decide which column holds the images.
+
+    Prefers ``image_path``, matching the manifest convention, then falls back
+    to the only other column when the frame has exactly two. Anything more
+    ambiguous is an error rather than a guess, because guessing wrong would
+    train on whatever that column happened to hold.
+    """
+    candidates = [name for name in frame.columns if name != label_column]
+
+    if "image_path" in candidates:
+        return "image_path"
+    if len(candidates) == 1:
+        return candidates[0]
+    if not candidates:
+        raise ValueError(
+            f"DataFrame has only the label column {label_column!r}; it needs a "
+            "column of image paths or image arrays as well."
+        )
+    raise ValueError(
+        f"Cannot tell which column holds the images. Name one 'image_path', or "
+        f"pass a DataFrame with exactly two columns. Columns besides "
+        f"{label_column!r}: {candidates}."
+    )
+
+
+def _load_dataframe(frame, target_labels) -> LoadedDataset:
+    """Load a DataFrame of image paths or image arrays with a label column.
+
+    Section 3.4 accepts this alongside a raw tensor. Note that ``target_labels``
+    names the *target column* here, where for a raw array it is the label
+    vector itself.
+    """
+    if not isinstance(target_labels, str):
+        raise ValueError(
+            "A DataFrame needs target_labels to be the name of the target column, "
+            f'for example "class_name". Got {type(target_labels).__name__}.'
+        )
+    if target_labels not in frame.columns:
+        raise ValueError(
+            f"DataFrame has no {target_labels!r} column. "
+            f"Columns present: {list(frame.columns)}."
+        )
+    if len(frame) == 0:
+        raise ValueError("DataFrame is empty; there is nothing to classify.")
+
+    image_column = _pick_image_column(frame, target_labels)
+    values = list(frame[image_column])
+    raw_labels = list(frame[target_labels])
+
+    # The kind of content decides the route: a column of paths is a manifest
+    # in disguise, a column of arrays is the in-memory case.
+    first = next((value for value in values if value is not None), None)
+    if isinstance(first, (str, Path)):
+        return _dataframe_of_paths(values, raw_labels, image_column, len(frame))
+    if isinstance(first, (np.ndarray, list, tuple)):
+        return _dataframe_of_arrays(values, raw_labels, image_column)
+    raise ValueError(
+        f"Column {image_column!r} holds {type(first).__name__} values; a DataFrame "
+        "must carry either image paths or image arrays."
+    )
+
+
+def _dataframe_of_paths(values, raw_labels, image_column, row_count) -> LoadedDataset:
+    """Treat a column of paths as a manifest whose rows are already parsed.
+
+    A DataFrame has no file location to anchor against, unlike a CSV, so
+    relative paths resolve from the current working directory. Absolute paths
+    avoid the question entirely and are what a generated frame should carry.
+    """
+    result = LoadedDataset()
+    rows = (
+        (f"row {position}", str(value) if value is not None else None, label)
+        for position, (value, label) in enumerate(zip(values, raw_labels))
+    )
+    _collect_samples(rows, Path.cwd(), result)
+    result.class_names = _sorted_class_names(result)
+    return _finalize(
+        result,
+        f"Read {row_count} row(s) from a DataFrame column {image_column!r}.",
+    )
+
+
+def _dataframe_of_arrays(values, raw_labels, image_column) -> LoadedDataset:
+    """Stack a column of per-row image arrays into one tensor.
+
+    Rows that do not hold an array are dropped first so one bad cell cannot
+    fail the stack for everything else. The stacked tensor then goes through
+    the same validation a caller-supplied tensor gets.
+    """
+    warnings = []
+    arrays, labels = [], []
+
+    for position, (value, label) in enumerate(zip(values, raw_labels)):
+        if isinstance(value, (list, tuple)):
+            try:
+                value = np.asarray(value)
+            except Exception:
+                value = None
+        if not isinstance(value, np.ndarray):
+            warnings.append(
+                f"skipped (not an image array): row {position}, column "
+                f"{image_column!r} holds {type(value).__name__}"
+            )
+            continue
+        arrays.append(value)
+        labels.append(label)
+
+    if not arrays:
+        raise ValueError(
+            f"No usable image arrays in column {image_column!r}."
+        )
+
+    shapes = {array.shape for array in arrays}
+    if len(shapes) > 1:
+        raise ValueError(
+            f"Image arrays in column {image_column!r} have differing shapes "
+            f"{sorted(shapes)}; every image must be the same size to stack into "
+            "one tensor."
+        )
+
+    tensor = np.stack(arrays)
+    result = load_array(tensor, labels)
+    # Row-level problems happened before the tensor existed, so they are
+    # prepended rather than lost.
+    result.warnings = warnings + result.warnings
+    return result
