@@ -2,7 +2,7 @@
 
 Covers the assignment's requirements that corrupted files are handled, that
 grayscale output has one channel and RGB three, that every image has the same
-dimensions afterwards, and that label encoding and class-name recovery stay
+dimensions afterward, and that label encoding and class-name recovery stay
 consistent.
 """
 

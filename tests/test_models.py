@@ -76,7 +76,7 @@ class TestModelRegistry:
         for spec in classical_model_specs():
             assert spec() is not spec()
 
-    def test_parameters_are_json_serialisable(self):
+    def test_parameters_are_json_serializable(self):
         # These go into run_configuration.json.
         for spec in classical_model_specs():
             json.dumps(spec.parameters)
@@ -275,7 +275,7 @@ class TestNeuralRegistry:
         # Section 6.2 forbids them, and run_configuration.json should say so.
         assert neural_model_specs()[1].parameters["pretrained"] is False
 
-    def test_neural_parameters_are_json_serialisable(self):
+    def test_neural_parameters_are_json_serializable(self):
         for spec in neural_model_specs():
             json.dumps(spec.parameters)
 
@@ -412,7 +412,7 @@ class TestCnnEarlyStopping:
         assert trained.history_["stopped_early"] is False
 
 
-    def test_history_is_json_serialisable(self, trained):
+    def test_history_is_json_serializable(self, trained):
         json.dumps(trained.history_)
 
     def test_tiny_training_set_skips_validation(self):
@@ -427,7 +427,7 @@ class TestCnnEarlyStopping:
 class TestCnnEarlyStoppingActuallyFires:
     """Early stopping needs data the network cannot learn.
 
-    Random pixels with shuffled labels leave nothing to generalise, so the
+    Random pixels with shuffled labels leave nothing to generalize, so the
     network can only memorise the training rows and validation loss has to
     turn upward. That is the situation early stopping exists for.
     """

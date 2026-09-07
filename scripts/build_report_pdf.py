@@ -153,7 +153,7 @@ def main() -> None:
     html = render_html(REPORT_MD.read_text(encoding="utf-8"))
 
     # Written beside the Markdown so its ../benchmark_results/ image paths
-    # resolve; deleted afterwards either way.
+    # resolve; deleted afterward either way.
     with tempfile.NamedTemporaryFile(
         "w", suffix=".html", dir=REPORT_DIR, encoding="utf-8", delete=False
     ) as handle:

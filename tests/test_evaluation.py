@@ -172,7 +172,7 @@ class TestMetrics:
             assert result.metrics()[name] is not None
 
     def test_metrics_are_plain_floats(self, result):
-        # numpy scalars are not JSON serialisable, and these go into
+        # numpy scalars are not JSON serializable, and these go into
         # benchmark_metrics.json.
         for value in result.metrics().values():
             assert isinstance(value, float)
@@ -422,7 +422,7 @@ class TestPredictionExamples:
         result = evaluate_model(exploding_spec(), split)
         assert prediction_examples(result, split) == {"correct": [], "incorrect": []}
 
-    def test_examples_are_json_serialisable(self, imbalanced_split):
+    def test_examples_are_json_serializable(self, imbalanced_split):
         result = evaluate_model(neural_model_specs()[0], imbalanced_split)
         json.dumps(prediction_examples(result, imbalanced_split))
 

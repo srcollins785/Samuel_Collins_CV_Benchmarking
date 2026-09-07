@@ -209,7 +209,7 @@ class SimpleCNN:
         train_targets = targets[train_positions]
         has_validation = len(validation_positions) > 0
 
-        optimiser = torch.optim.Adam(self.model_.parameters(), lr=self.learning_rate)
+        optimizer = torch.optim.Adam(self.model_.parameters(), lr=self.learning_rate)
         criterion = nn.CrossEntropyLoss()
 
         generator = torch.Generator().manual_seed(self.random_state)
@@ -223,10 +223,10 @@ class SimpleCNN:
 
             for start in range(0, len(order), self.batch_size):
                 batch = order[start:start + self.batch_size]
-                optimiser.zero_grad()
+                optimizer.zero_grad()
                 loss = criterion(self.model_(train_inputs[batch]), train_targets[batch])
                 loss.backward()
-                optimiser.step()
+                optimizer.step()
                 running += loss.item() * len(batch)
 
             train_loss = running / max(1, len(train_inputs))

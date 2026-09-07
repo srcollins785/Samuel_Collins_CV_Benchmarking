@@ -134,7 +134,7 @@ def evaluate_model(spec, split) -> ModelResult:
 
     # zero_division=0 throughout, per section 8. A class the model never
     # predicts has undefined precision; scoring it 0 is what makes macro F1
-    # penalise ignoring a class rather than quietly skipping it.
+    # penalize ignoring a class rather than quietly skipping it.
     result.accuracy = float(accuracy_score(truth, predictions))
     result.macro_precision = float(
         precision_score(truth, predictions, average="macro", zero_division=0))

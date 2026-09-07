@@ -8,7 +8,7 @@ overwrite the last.
 
 This script resolves it from the outside rather than by widening the public
 signature: each tier runs in its own temporary working directory, and the
-directory it produces is moved into ``benchmark_results/<tier>/`` afterwards.
+directory it produces is moved into ``benchmark_results/<tier>/`` afterward.
 The library keeps its simple contract, and the runs accumulate.
 
 Results are filed under ``benchmark_results/<tier>_<color_mode>/``. The color

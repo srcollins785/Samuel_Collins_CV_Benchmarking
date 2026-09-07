@@ -146,7 +146,7 @@ def main() -> None:
     ap.add_argument("--work-dir", type=Path, default=REPO_ROOT.parent / "animals10_source",
                     help="where the archive is downloaded and extracted")
     ap.add_argument("--keep-archive", action="store_true",
-                    help="keep the 614 MB zip and extracted copy afterwards")
+                    help="keep the 614 MB zip and extracted copy afterward")
     args = ap.parse_args()
 
     out_dir = args.out or (DATA_DIR / f"animals10_n{args.per_class}")

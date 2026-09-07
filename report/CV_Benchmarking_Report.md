@@ -5,13 +5,13 @@ Ph.D. Student, Department of Cyber-Physical Systems
 Clark Atlanta University  
 samuel.collins@students.cau.edu
 
-**Course:** CCIS 727 - Introduction to Computer Vision  
+**Course:** CCIS 727 — Introduction to Computer Vision  
 **Instructor:** Dr. Kishor Gupta  
-**Date:** 2026-09-07
+**Date:** September 7, 2026
 
 ## 1. Objective
 
-This report compares six image classification methods - four classical machine-learning models and two neural networks - through a single public function in an installable package, `Samuel_Collins_CV_Benchmarking`.
+This report compares six image classification methods — four classical machine-learning models and two neural networks — through a single public function in an installable package, `Samuel_Collins_CV_Benchmarking`.
 
 Every model in a given run sees one stratified split, one set of metrics and one measurement of cost. Across runs, exactly one thing changes at a time: the size of the training set, the color mode, or the dataset. There are 5 runs over 2 datasets.
 
@@ -54,13 +54,13 @@ Larger than the 64x64 internal size and square, so every image downscales into t
 
 **One split, reused.** The split produces indices rather than data. The classical models consume flattened feature vectors and the CNN consumes image tensors; both are sliced with the same index array, so the two representations cannot disagree about which images are in which half.
 
-**Scaling without leakage.** Logistic Regression, the SVM and the fully connected network are wrapped in a pipeline with a standard scaler, so it is fitted on training rows only. Fitting it before the split does not fail or warn - it simply lets the test set's statistics shape the training transformation, and every scaled model then scores slightly too high.
+**Scaling without leakage.** Logistic Regression, the SVM and the fully connected network are wrapped in a pipeline with a standard scaler, so it is fitted on training rows only. Fitting it before the split does not fail or warn — it simply lets the test set's statistics shape the training transformation, and every scaled model then scores slightly too high.
 
 **Early stopping without leakage.** The neural models hold out 15% of the training half to decide when to stop, because choosing when to stop is a decision informed by data and cannot use the test set. The consequence is that the neural models train on about 68% of all images where the classical models get the full 80%.
 
 **Ranking.** By macro F1, ties broken by lower inference time. Macro F1 rather than accuracy because it weights every class equally: a model that ignores a small class can still post high accuracy.
 
-## 4.1 Animals-10 - rgb, 500 per class
+## 4.1 Animals-10 — rgb, 500 per class
 
 ```python
 results = benchmark_image_classification(
@@ -102,7 +102,7 @@ results = benchmark_image_classification(
 | elephant | sheep | 19 |
 | dog | cat | 16 |
 
-## 4.2 Animals-10 - rgb, 100 per class
+## 4.2 Animals-10 — rgb, 100 per class
 
 ```python
 results = benchmark_image_classification(
@@ -144,7 +144,7 @@ results = benchmark_image_classification(
 | spider | cat | 6 |
 | cow | horse | 4 |
 
-## 4.3 Animals-10 - grayscale, 500 per class
+## 4.3 Animals-10 — grayscale, 500 per class
 
 ```python
 results = benchmark_image_classification(
@@ -186,7 +186,7 @@ results = benchmark_image_classification(
 | cat | dog | 16 |
 | cat | spider | 15 |
 
-## 4.4 Intel Image Classification - rgb, 500 per class
+## 4.4 Intel Image Classification — rgb, 500 per class
 
 ```python
 results = benchmark_image_classification(
@@ -228,7 +228,7 @@ results = benchmark_image_classification(
 | sea | mountain | 12 |
 | buildings | street | 10 |
 
-## 4.5 Intel Image Classification - grayscale, 500 per class
+## 4.5 Intel Image Classification — grayscale, 500 per class
 
 ```python
 results = benchmark_image_classification(
@@ -272,7 +272,7 @@ results = benchmark_image_classification(
 
 ## 5. Experiment: training set size
 
-Same dataset, same color mode, nested subsets - the smaller set is a strict prefix of the larger, so this is a learning curve rather than two unrelated samples.
+Same dataset, same color mode, nested subsets — the smaller set is a strict prefix of the larger, so this is a learning curve rather than two unrelated samples.
 
 **Animals-10, rgb**
 

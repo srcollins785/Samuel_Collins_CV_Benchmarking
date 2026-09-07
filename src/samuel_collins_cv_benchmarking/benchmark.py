@@ -163,7 +163,7 @@ def make_split(
         random_state=random_seed,
     )
 
-    # Sorted so the indices are stable to read, compare and serialise into
+    # Sorted so the indices are stable to read, compare and serialize into
     # run_configuration.json. Membership is what stratification fixes; order
     # within each half carries no meaning.
     return Split(

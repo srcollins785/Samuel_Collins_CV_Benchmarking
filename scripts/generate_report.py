@@ -221,6 +221,16 @@ def macro_f1(run: dict) -> pd.Series:
 # Sections
 # --------------------------------------------------------------------------
 
+def american_date() -> str:
+    """Month day, year - the convention a US reader expects in a report.
+
+    Built by hand rather than with strftime("%B %-d, %Y"); the no-pad flag is
+    a GNU extension and is not portable.
+    """
+    today = date.today()
+    return f"{today.strftime('%B')} {today.day}, {today.year}"
+
+
 def section_header() -> list:
     return [
         "# Image Classification Benchmarking Report",
@@ -232,7 +242,7 @@ def section_header() -> list:
         "",
         f"**Course:** {COURSE}  ",
         f"**Instructor:** {INSTRUCTOR}  ",
-        f"**Date:** {date.today().isoformat()}",
+        f"**Date:** {american_date()}",
         "",
     ]
 
@@ -490,7 +500,7 @@ def section_color_experiment(runs: dict) -> list:
     lines.append("")
 
     # Where the datasets disagree about a model, say so rather than
-    # generalising from one of them.
+    # generalizing from one of them.
     disagreements = []
     for model in models:
         deltas = []
@@ -513,7 +523,7 @@ def section_color_experiment(runs: dict) -> list:
             "",
         ]
 
-    # The cost side generalises even where the accuracy side does not.
+    # The cost side generalizes even where the accuracy side does not.
     lines += ["**Cost.** RGB triples the feature count, and the SVM pays more "
               "than three times for it:", ""]
     lines += ["| Dataset | SVM training, grayscale | SVM training, RGB | factor |",
@@ -671,6 +681,27 @@ def section_reproduction(runs: dict) -> list:
     ]
 
 
+def em_dashes(text: str) -> str:
+    """Replace spaced hyphens with em dashes outside fenced code blocks.
+
+    American style sets a parenthetical dash closed up as an em dash. The
+    replacement skips code fences, where a hyphen is a command-line flag or
+    an operator rather than punctuation, and skips table rows, whose pipes
+    and dashes are structure.
+    """
+    lines, inside_fence = [], False
+    for line in text.split("\n"):
+        if line.lstrip().startswith("```"):
+            inside_fence = not inside_fence
+            lines.append(line)
+            continue
+        if inside_fence or line.lstrip().startswith("|"):
+            lines.append(line)
+            continue
+        lines.append(line.replace(" - ", " \u2014 "))
+    return "\n".join(lines)
+
+
 def build() -> str:
     runs = load_runs()
     if not runs:
@@ -700,7 +731,7 @@ def build() -> str:
     lines += section_cost(runs)
     lines += section_reflection()
     lines += section_reproduction(runs)
-    return "\n".join(lines)
+    return em_dashes("\n".join(lines))
 
 
 def main() -> None:

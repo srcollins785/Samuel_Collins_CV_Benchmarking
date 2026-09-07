@@ -156,7 +156,7 @@ class TestReproducibility:
 
     def test_indices_are_sorted(self, split):
         # Membership is what stratification fixes; sorting makes the indices
-        # stable to read, compare and serialise.
+        # stable to read, compare and serialize.
         assert list(split.train_index) == sorted(split.train_index)
         assert list(split.test_index) == sorted(split.test_index)
 
@@ -202,7 +202,7 @@ class TestSplitSummary:
 
     def test_summary_values_are_json_friendly(self, split):
         # This goes into run_configuration.json, where numpy integers are not
-        # serialisable.
+        # serializable.
         import json
 
         json.dumps(split.summary())
