@@ -13,16 +13,30 @@ the same warning list, which the benchmark returns to the caller.
 """
 
 import json
+import math
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Union
 
+import numpy as np
+
 from ._config import SUPPORTED_EXTENSIONS
 
-# A sample is a path to decode later, paired with its class name as a string.
+# A sample is a source of pixels paired with its class name as a string.
+#
+# For the three file-based organizations the source is a Path - a *promise* of
+# pixels that preprocessing redeems by opening the file, resizing to 64x64 and
+# discarding the full-resolution original. That laziness is what keeps peak
+# memory near 60 MB for a 5,000-image RGB set instead of the ~3 GB the same
+# images would occupy decoded at full size.
+#
+# Array input arrives already decoded, so there is no file to open and the
+# source is the pixel array itself. Preprocessing tells the two apart with a
+# single isinstance check at the point of decoding.
+#
 # Label encoding to integers happens once, in preprocessing, so that every
 # loader stays free of that concern.
-Sample = tuple[Path, str]
+Sample = tuple[Union[Path, np.ndarray], str]
 
 
 @dataclass
@@ -517,3 +531,176 @@ def load_json(
     result.class_names = _sorted_class_names(result)
 
     return _finalize(result, f"Read {len(located)} record(s) from {manifest}.")
+
+
+def _is_blank(value) -> bool:
+    """True for the several ways a label vector can say 'nothing here'."""
+    if value is None:
+        return True
+    if isinstance(value, float) and math.isnan(value):
+        return True
+    return isinstance(value, str) and not value.strip()
+
+
+def _is_whole_number(value) -> bool:
+    """True for an integer, or a float that happens to be whole."""
+    if isinstance(value, (bool, np.bool_)):
+        return False
+    if isinstance(value, (int, np.integer)):
+        return True
+    if isinstance(value, (float, np.floating)):
+        return float(value).is_integer()
+    return False
+
+
+def _class_names_from_vector(values: list, result: LoadedDataset) -> list:
+    """Turn a raw label vector into class-name strings, preserving order.
+
+    Numeric labels are zero-padded to a common width. Without that, ``str()``
+    sorts 0..10 as "0", "1", "10", "2", and since class names are sorted to
+    match ``LabelEncoder``, ``class_names[1]`` would name "10" while the models
+    mean something else - mislabelling every confusion matrix in a way that
+    still looks plausible. Padding makes alphabetical order agree with numeric
+    order at any class count.
+
+    Blanks come back as ``None`` for the caller to skip.
+    """
+    present = [value for value in values if not _is_blank(value)]
+
+    numeric = bool(present) and all(
+        _is_whole_number(value) and int(value) >= 0 for value in present
+    )
+    if numeric:
+        width = len(str(max(int(value) for value in present)))
+        if width > 1:
+            example = format(0, f"0{width}d")
+            result.warnings.append(
+                f"numeric labels zero-padded to width {width} so that sorting "
+                f"matches numeric order (0 becomes {example!r})"
+            )
+        return [None if _is_blank(v) else f"{int(v):0{width}d}" for v in values]
+
+    return [None if _is_blank(v) else str(v).strip() for v in values]
+
+
+def load_array(
+    dataset,
+    target_labels,
+) -> LoadedDataset:
+    """Load an in-memory image tensor with its label vector.
+
+    Accepted shapes, per the assignment::
+
+        (N, Height, Width)      one channel, implicit
+        (N, Height, Width, 1)   one channel
+        (N, Height, Width, 3)   three channels
+
+    Unlike the file-based loaders this receives pixels rather than paths, so
+    there is nothing to open and no such thing as a missing file. The
+    equivalent content failure is an image carrying NaN or infinity, which
+    would poison every metric computed from it, so those are skipped.
+
+    Pixel values are left exactly as given. Preprocessing decides how to
+    normalise them by looking at the dtype, so an integer array of 0-255 and a
+    float array already scaled to 0-1 both survive this stage untouched.
+
+    Parameters
+    ----------
+    dataset
+        Image tensor of shape ``(N, H, W)``, ``(N, H, W, 1)`` or
+        ``(N, H, W, 3)``. Nested lists are accepted and converted.
+    target_labels
+        One-dimensional label vector with one entry per image.
+
+    Returns
+    -------
+    LoadedDataset
+        Samples as ``(image_array, class_name)`` pairs.
+
+    Raises
+    ------
+    TypeError
+        ``dataset`` is not array-like.
+    ValueError
+        The tensor has an unusable shape, the label vector length does not
+        match the number of images, or fewer than two classes survive.
+    """
+    if isinstance(dataset, (list, tuple)):
+        try:
+            dataset = np.asarray(dataset)
+        except Exception as error:  # ragged nesting, mixed types
+            raise ValueError(f"Could not read dataset as an image array: {error}") from None
+    if not isinstance(dataset, np.ndarray):
+        raise TypeError(
+            f'dataset_type="array" needs a NumPy image array, got '
+            f"{type(dataset).__name__}."
+        )
+
+    if dataset.ndim == 3:
+        channels = 1
+    elif dataset.ndim == 4:
+        channels = dataset.shape[3]
+        if channels not in (1, 3):
+            raise ValueError(
+                f"Image arrays must have 1 or 3 channels, got {channels}. "
+                f"Accepted shapes are (N, H, W), (N, H, W, 1) and (N, H, W, 3); "
+                f"this array is {dataset.shape}."
+            )
+    else:
+        raise ValueError(
+            f"Image arrays must be 3- or 4-dimensional, got {dataset.ndim} "
+            f"dimension(s) with shape {dataset.shape}. Accepted shapes are "
+            f"(N, H, W), (N, H, W, 1) and (N, H, W, 3)."
+        )
+
+    if dataset.shape[0] == 0:
+        raise ValueError("Image array is empty; there is nothing to classify.")
+
+    if target_labels is None:
+        raise ValueError(
+            'dataset_type="array" needs target_labels to be the label vector, got None.'
+        )
+    if isinstance(target_labels, (str, bytes)):
+        raise ValueError(
+            'dataset_type="array" needs target_labels to be a label vector with one '
+            f"entry per image, not a single name. Got {type(target_labels).__name__}."
+        )
+
+    labels = np.asarray(target_labels, dtype=object)
+    if labels.ndim != 1:
+        raise ValueError(
+            f"target_labels must be one-dimensional, got shape {labels.shape}."
+        )
+
+    # Section 4.1: the number of images and the number of labels must agree.
+    # Silently zipping to the shorter of the two would mislabel every image
+    # after the first mismatch.
+    if len(labels) != dataset.shape[0]:
+        raise ValueError(
+            f"Number of labels ({len(labels)}) does not match number of images "
+            f"({dataset.shape[0]})."
+        )
+
+    result = LoadedDataset()
+    names = _class_names_from_vector(list(labels), result)
+
+    for index, (image, name) in enumerate(zip(dataset, names)):
+        if name is None:
+            result.warnings.append(f"skipped (blank label): image {index}")
+            continue
+        # The array equivalent of an undecodable file. NaN or infinity would
+        # propagate through scaling and training into every reported metric.
+        if np.issubdtype(image.dtype, np.floating) and not np.isfinite(image).all():
+            result.warnings.append(
+                f"skipped (contains NaN or infinity): image {index}"
+            )
+            continue
+        result.samples.append((image, name))
+
+    result.class_names = _sorted_class_names(result)
+
+    return _finalize(
+        result,
+        f"Read {dataset.shape[0]} image(s) of shape "
+        f"{tuple(dataset.shape[1:])} with {channels} channel(s).",
+    )

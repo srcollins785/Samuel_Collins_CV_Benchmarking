@@ -21,6 +21,7 @@ the structural/content split holds.
 
 import json
 
+import numpy as np
 import pytest
 
 from samuel_collins_cv_benchmarking.data_loader import (
@@ -28,6 +29,7 @@ from samuel_collins_cv_benchmarking.data_loader import (
     load_csv,
     load_folder,
     load_json,
+    load_array,
 )
 
 CLASSES = ["cat", "dog", "horse"]
@@ -694,3 +696,193 @@ class TestAllFourOrganizationsAgree:
         for name, dataset in results.items():
             assert sorted(p.resolve() for p, _ in dataset.samples) == expected, name
             assert dataset.count_by_class() == {"cat": 5, "dog": 5, "horse": 5}, name
+
+    def test_array_input_describes_the_same_dataset(self, fixtures_dir):
+        # Array input cannot reference the same *files* - it carries pixels -
+        # so equivalence is checked at the level of labels and counts, which
+        # is what every downstream stage actually consumes.
+        from PIL import Image
+
+        from_folder = load_folder(fixtures_dir / "mini", CLASSES)
+        # The fixture images are deliberately different sizes, so they have to
+        # be brought to a common shape before they can stack into one tensor.
+        tensor = np.stack([
+            np.asarray(Image.open(path).convert("RGB").resize((16, 16)))
+            for path, _ in from_folder.samples
+        ])
+        labels = [label for _, label in from_folder.samples]
+
+        from_array = load_array(tensor, labels)
+        assert from_array.class_names == from_folder.class_names
+        assert from_array.count_by_class() == from_folder.count_by_class()
+        assert len(from_array) == len(from_folder)
+
+
+# --------------------------------------------------------------------------
+# NumPy array / in-memory input
+# --------------------------------------------------------------------------
+
+def images(count, *shape, dtype=np.uint8):
+    """A tensor of `count` blank images with the given per-image shape."""
+    return np.zeros((count, *shape), dtype=dtype)
+
+
+LABELS_6 = ["cat", "cat", "cat", "dog", "dog", "dog"]
+
+
+class TestLoadArrayHappyPath:
+
+    @pytest.mark.parametrize("shape", [(8, 8), (8, 8, 1), (8, 8, 3)])
+    def test_accepts_every_documented_shape(self, shape):
+        # Section 3.4 lists (N,H,W), (N,H,W,1) and (N,H,W,3).
+        dataset = load_array(images(6, *shape), LABELS_6)
+        assert len(dataset) == 6
+        assert dataset.class_names == ["cat", "dog"]
+
+    def test_samples_carry_arrays_not_paths(self, tmp_path):
+        # The widened Sample type: array input has no file to open, so the
+        # source is the pixel array itself.
+        dataset = load_array(images(4, 4, 4), ["a", "a", "b", "b"])
+        assert all(isinstance(source, np.ndarray) for source, _ in dataset.samples)
+
+    def test_pixel_values_are_left_untouched(self):
+        # Preprocessing decides how to normalise by looking at the dtype, so
+        # an integer 0-255 array must arrive unchanged.
+        raw = np.array([[[10, 200]], [[30, 40]], [[50, 60]], [[70, 80]]], dtype=np.uint8)
+        dataset = load_array(raw, ["a", "a", "b", "b"])
+        assert dataset.samples[0][0].dtype == np.uint8
+        assert list(dataset.samples[0][0].ravel()) == [10, 200]
+
+    def test_accepts_a_nested_list(self):
+        data = [[[0, 0], [0, 0]] for _ in range(4)]
+        assert len(load_array(data, ["a", "a", "b", "b"])) == 4
+
+    def test_accepts_a_numpy_label_vector(self):
+        dataset = load_array(images(4, 4, 4), np.array(["cat", "cat", "dog", "dog"]))
+        assert dataset.class_names == ["cat", "dog"]
+
+    def test_counts_images_per_class(self):
+        dataset = load_array(images(6, 4, 4), LABELS_6)
+        assert dataset.count_by_class() == {"cat": 3, "dog": 3}
+
+
+class TestNumericLabelPadding:
+    """Numeric labels must sort numerically once turned into class names."""
+
+    def test_single_digit_labels_are_not_padded(self):
+        dataset = load_array(images(6, 4, 4), [0, 0, 0, 1, 1, 1])
+        assert dataset.class_names == ["0", "1"]
+
+    def test_double_digit_labels_are_padded(self):
+        # Without padding these sort as "0","1","10","2",..., so class_names[1]
+        # would name "10" while the models mean 1, mislabelling every
+        # confusion matrix in a way that still looks plausible.
+        labels = [i % 11 for i in range(22)]
+        dataset = load_array(images(22, 4, 4), labels)
+        assert dataset.class_names == [f"{i:02d}" for i in range(11)]
+
+    def test_padding_matches_numeric_order(self):
+        labels = [i % 11 for i in range(22)]
+        dataset = load_array(images(22, 4, 4), labels)
+        assert dataset.class_names == sorted(dataset.class_names)
+        assert [int(name) for name in dataset.class_names] == list(range(11))
+
+    def test_padding_is_reported(self):
+        labels = [i % 11 for i in range(22)]
+        dataset = load_array(images(22, 4, 4), labels)
+        assert any("zero-padded" in w for w in dataset.warnings)
+
+    def test_whole_floats_are_treated_as_numeric(self):
+        dataset = load_array(images(4, 4, 4), [0.0, 0.0, 1.0, 1.0])
+        assert dataset.class_names == ["0", "1"]
+
+    def test_string_labels_are_left_alone(self):
+        dataset = load_array(images(4, 4, 4), ["cat", "cat", "dog", "dog"])
+        assert dataset.class_names == ["cat", "dog"]
+        assert not any("zero-padded" in w for w in dataset.warnings)
+
+    def test_negative_labels_fall_back_to_plain_strings(self):
+        dataset = load_array(images(4, 4, 4), [-1, -1, 2, 2])
+        assert dataset.class_names == ["-1", "2"]
+
+
+class TestLoadArrayValidation:
+
+    def test_non_array_raises(self):
+        with pytest.raises(TypeError, match="NumPy image array"):
+            load_array("some/path", ["a", "b"])
+
+    def test_two_dimensional_array_raises(self):
+        with pytest.raises(ValueError, match="3- or 4-dimensional"):
+            load_array(np.zeros((4, 4)), ["a", "b"])
+
+    def test_five_dimensional_array_raises(self):
+        with pytest.raises(ValueError, match="3- or 4-dimensional"):
+            load_array(np.zeros((2, 4, 4, 3, 1)), ["a", "b"])
+
+    def test_unsupported_channel_count_raises(self):
+        with pytest.raises(ValueError, match="1 or 3 channels"):
+            load_array(np.zeros((4, 8, 8, 4)), ["a", "a", "b", "b"])
+
+    def test_empty_array_raises(self):
+        with pytest.raises(ValueError, match="empty"):
+            load_array(np.zeros((0, 4, 4)), [])
+
+    def test_none_labels_raise(self):
+        with pytest.raises(ValueError, match="label vector"):
+            load_array(images(4, 4, 4), None)
+
+    def test_string_labels_raise(self):
+        # The mirror of the folder loader again: here a single name is wrong
+        # because one label per image is required.
+        with pytest.raises(ValueError, match="one entry per image"):
+            load_array(images(4, 4, 4), "cat")
+
+    def test_two_dimensional_labels_raise(self):
+        with pytest.raises(ValueError, match="one-dimensional"):
+            load_array(images(4, 4, 4), np.zeros((2, 2)))
+
+    @pytest.mark.parametrize("labels", [["a", "b", "c"], ["a", "b", "c", "d", "e"]])
+    def test_label_count_must_match_image_count(self, labels):
+        # Section 4.1. Zipping to the shorter of the two would mislabel every
+        # image after the mismatch instead of failing.
+        with pytest.raises(ValueError, match="does not match number of images"):
+            load_array(images(4, 4, 4), labels)
+
+    def test_ragged_nested_list_raises(self):
+        with pytest.raises(ValueError, match="Could not read dataset"):
+            load_array([[[1, 2]], [[1, 2, 3]]], ["a", "b"])
+
+    def test_single_class_raises(self):
+        with pytest.raises(ValueError, match="At least two classes"):
+            load_array(images(4, 4, 4), ["a", "a", "a", "a"])
+
+
+class TestLoadArrayWarnings:
+
+    def test_non_finite_images_are_skipped(self):
+        # The array equivalent of an undecodable file: NaN would propagate
+        # through scaling and training into every reported metric.
+        data = np.zeros((6, 4, 4), dtype=np.float32)
+        data[2, 0, 0] = np.nan
+        data[4] = np.inf
+        dataset = load_array(data, LABELS_6)
+        assert len(dataset) == 4
+        assert sum("NaN or infinity" in w for w in dataset.warnings) == 2
+
+    def test_integer_arrays_are_not_checked_for_nan(self):
+        # np.isfinite is meaningless on integer dtypes; they cannot hold NaN.
+        dataset = load_array(images(6, 4, 4), LABELS_6)
+        assert len(dataset) == 6
+        assert not any("NaN" in w for w in dataset.warnings)
+
+    def test_blank_labels_are_skipped(self):
+        dataset = load_array(images(6, 4, 4), ["cat", "cat", None, "dog", "dog", ""])
+        assert len(dataset) == 4
+        assert sum("blank label" in w for w in dataset.warnings) == 2
+
+    def test_nan_labels_are_skipped(self):
+        dataset = load_array(
+            images(6, 4, 4), ["cat", "cat", float("nan"), "dog", "dog", "dog"])
+        assert len(dataset) == 5
+        assert any("blank label" in w for w in dataset.warnings)
