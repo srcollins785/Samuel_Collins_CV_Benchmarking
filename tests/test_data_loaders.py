@@ -19,15 +19,32 @@ The synthetic tests below rely on that, which is itself a useful check that
 the structural/content split holds.
 """
 
+import json
+
 import pytest
 
 from samuel_collins_cv_benchmarking.data_loader import (
     LoadedDataset,
     load_csv,
     load_folder,
+    load_json,
 )
 
 CLASSES = ["cat", "dog", "horse"]
+
+
+def write_jsonl(path, rows, label_field="class_name"):
+    """Write a JSONL manifest from ``[(path, label), ...]``."""
+    lines = [json.dumps({"image_path": image, label_field: label}) for image, label in rows]
+    path.write_text("\n".join(lines) + "\n")
+    return path
+
+
+def write_json(path, rows, label_field="class_name"):
+    """Write a JSON array manifest from ``[(path, label), ...]``."""
+    records = [{"image_path": image, label_field: label} for image, label in rows]
+    path.write_text(json.dumps(records, indent=2))
+    return path
 
 
 def write_csv(path, rows, header="image_path,class_name"):
@@ -457,3 +474,206 @@ class TestLoadersAgree:
         assert sorted(p.resolve() for p, _ in from_folder.samples) == \
                sorted(p.resolve() for p, _ in from_csv.samples)
         assert from_folder.count_by_class() == from_csv.count_by_class()
+
+
+# --------------------------------------------------------------------------
+# JSON and JSONL manifests
+# --------------------------------------------------------------------------
+
+class TestLoadJsonHappyPath:
+
+    def test_loads_a_json_array(self, fixtures_dir):
+        dataset = load_json(fixtures_dir / "mini_labels.json", "class_name")
+        assert len(dataset) == 15
+
+    def test_loads_a_jsonl_file(self, fixtures_dir):
+        dataset = load_json(fixtures_dir / "mini_labels.jsonl", "class_name")
+        assert len(dataset) == 15
+
+    def test_both_forms_agree(self, fixtures_dir):
+        as_json = load_json(fixtures_dir / "mini_labels.json", "class_name")
+        as_jsonl = load_json(fixtures_dir / "mini_labels.jsonl", "class_name")
+        assert as_json.samples == as_jsonl.samples
+
+    def test_clean_manifest_produces_no_warnings(self, fixtures_dir):
+        dataset = load_json(fixtures_dir / "mini_labels.json", "class_name")
+        assert dataset.warnings == []
+
+    def test_class_names_are_sorted(self, tmp_path):
+        make_tree(tmp_path, {"cat": ["a.jpg"], "dog": ["b.jpg"], "horse": ["c.jpg"]})
+        manifest = write_json(tmp_path / "m.json", [
+            ("horse/c.jpg", "horse"), ("cat/a.jpg", "cat"), ("dog/b.jpg", "dog"),
+        ])
+        assert load_json(manifest, "class_name").class_names == ["cat", "dog", "horse"]
+
+    def test_relative_paths_resolve_from_the_manifest_directory(self, tmp_path):
+        nested = tmp_path / "deep"
+        make_tree(nested, {"cat": ["a.jpg"], "dog": ["b.jpg"]})
+        manifest = write_json(nested / "m.json", [("cat/a.jpg", "cat"), ("dog/b.jpg", "dog")])
+        dataset = load_json(manifest, "class_name")
+        assert len(dataset) == 2
+        assert all(path.exists() for path, _ in dataset.samples)
+
+    def test_blank_lines_in_jsonl_are_ignored(self, tmp_path):
+        make_tree(tmp_path, {"cat": ["a.jpg"], "dog": ["b.jpg"]})
+        manifest = tmp_path / "m.jsonl"
+        manifest.write_text(
+            '{"image_path": "cat/a.jpg", "class_name": "cat"}\n'
+            "\n"
+            '{"image_path": "dog/b.jpg", "class_name": "dog"}\n'
+            "\n"
+        )
+        dataset = load_json(manifest, "class_name")
+        assert len(dataset) == 2
+        # Only the small-class advisory; nothing about parsing or skipped rows.
+        assert not any("skipped" in w or "parse" in w for w in dataset.warnings)
+
+
+class TestJsonFormatDetection:
+    """Extension chooses the parser; content decides if that guess was wrong."""
+
+    ARRAY = '[{"image_path": "cat/a.jpg", "class_name": "cat"}, ' \
+            '{"image_path": "dog/b.jpg", "class_name": "dog"}]'
+    LINES = '{"image_path": "cat/a.jpg", "class_name": "cat"}\n' \
+            '{"image_path": "dog/b.jpg", "class_name": "dog"}\n'
+
+    @pytest.fixture
+    def images(self, tmp_path):
+        make_tree(tmp_path, {"cat": ["a.jpg"], "dog": ["b.jpg"]})
+        return tmp_path
+
+    def test_matching_extensions_load_without_warning(self, images):
+        for name, text in (("m.json", self.ARRAY), ("m.jsonl", self.LINES)):
+            manifest = images / name
+            manifest.write_text(text)
+            dataset = load_json(manifest, "class_name")
+            assert len(dataset) == 2
+            assert not any("parse" in w for w in dataset.warnings)
+
+    def test_jsonl_content_in_a_json_file_still_loads(self, images):
+        manifest = images / "m.json"
+        manifest.write_text(self.LINES)
+        dataset = load_json(manifest, "class_name")
+        assert len(dataset) == 2
+        assert any("loaded as JSONL" in w for w in dataset.warnings)
+
+    def test_array_content_in_a_jsonl_file_still_loads(self, images):
+        # A JSON array on one line parses as a single JSONL record, so without
+        # requiring each line to be an object this would silently yield zero
+        # samples rather than falling back.
+        manifest = images / "m.jsonl"
+        manifest.write_text(self.ARRAY)
+        dataset = load_json(manifest, "class_name")
+        assert len(dataset) == 2
+        assert any("loaded as JSON" in w for w in dataset.warnings)
+
+    def test_unknown_extension_is_sniffed(self, images):
+        manifest = images / "m.txt"
+        manifest.write_text(self.LINES)
+        assert len(load_json(manifest, "class_name")) == 2
+
+    def test_neither_format_raises_naming_both_attempts(self, images):
+        manifest = images / "m.json"
+        manifest.write_text("this is not JSON at all")
+        with pytest.raises(ValueError) as excinfo:
+            load_json(manifest, "class_name")
+        assert "as JSON" in str(excinfo.value) and "as JSONL" in str(excinfo.value)
+
+
+class TestLoadJsonValidation:
+
+    def test_missing_manifest_raises(self, tmp_path):
+        with pytest.raises(FileNotFoundError, match="not found"):
+            load_json(tmp_path / "nope.json", "class_name")
+
+    def test_directory_instead_of_file_raises(self, fixtures_dir):
+        with pytest.raises(IsADirectoryError, match="is a directory"):
+            load_json(fixtures_dir / "mini", "class_name")
+
+    def test_list_target_labels_raises(self, fixtures_dir):
+        with pytest.raises(ValueError, match="name of the label field"):
+            load_json(fixtures_dir / "mini_labels.json", ["cat", "dog"])
+
+    def test_empty_file_raises(self, tmp_path):
+        manifest = tmp_path / "m.json"
+        manifest.write_text("   \n")
+        with pytest.raises(ValueError, match="empty"):
+            load_json(manifest, "class_name")
+
+    def test_missing_image_path_field_raises(self, tmp_path):
+        manifest = tmp_path / "m.json"
+        manifest.write_text(json.dumps([{"file": "a.jpg", "class_name": "cat"}]))
+        with pytest.raises(ValueError, match="image_path"):
+            load_json(manifest, "class_name")
+
+    def test_field_error_names_the_fields_present(self, tmp_path):
+        manifest = tmp_path / "m.json"
+        manifest.write_text(json.dumps([{"file": "a.jpg", "label": "cat"}]))
+        with pytest.raises(ValueError) as excinfo:
+            load_json(manifest, "class_name")
+        assert "'file', 'label'" in str(excinfo.value)
+
+    def test_single_class_raises(self, tmp_path):
+        make_tree(tmp_path, {"cat": ["a.jpg"]})
+        manifest = write_json(tmp_path / "m.json", [("cat/a.jpg", "cat")])
+        with pytest.raises(ValueError, match="At least two classes"):
+            load_json(manifest, "class_name")
+
+
+class TestLoadJsonWarnings:
+
+    def test_record_naming_an_absent_file_is_skipped(self, tmp_path):
+        make_tree(tmp_path, {"cat": ["a.jpg"], "dog": ["b.jpg"]})
+        manifest = write_json(tmp_path / "m.json", [
+            ("cat/a.jpg", "cat"), ("dog/b.jpg", "dog"), ("cat/gone.jpg", "cat"),
+        ])
+        dataset = load_json(manifest, "class_name")
+        assert len(dataset) == 2
+        assert any("not found" in w for w in dataset.warnings)
+
+    def test_non_object_entries_are_skipped(self, tmp_path):
+        make_tree(tmp_path, {"cat": ["a.jpg"], "dog": ["b.jpg"]})
+        manifest = tmp_path / "m.json"
+        manifest.write_text(json.dumps([
+            {"image_path": "cat/a.jpg", "class_name": "cat"},
+            "not a record",
+            {"image_path": "dog/b.jpg", "class_name": "dog"},
+        ]))
+        dataset = load_json(manifest, "class_name")
+        assert len(dataset) == 2
+        assert any("not an object" in w for w in dataset.warnings)
+
+    def test_json_warnings_are_numbered_by_record(self, tmp_path):
+        make_tree(tmp_path, {"cat": ["a.jpg"], "dog": ["b.jpg"]})
+        manifest = write_json(tmp_path / "m.json", [
+            ("cat/a.jpg", "cat"), ("cat/gone.jpg", "cat"), ("dog/b.jpg", "dog"),
+        ])
+        dataset = load_json(manifest, "class_name")
+        assert any("record 2" in w for w in dataset.warnings)
+
+    def test_jsonl_warnings_are_numbered_by_line(self, tmp_path):
+        # A text editor shows line numbers, so JSONL warnings use them.
+        make_tree(tmp_path, {"cat": ["a.jpg"], "dog": ["b.jpg"]})
+        manifest = write_jsonl(tmp_path / "m.jsonl", [
+            ("cat/a.jpg", "cat"), ("cat/gone.jpg", "cat"), ("dog/b.jpg", "dog"),
+        ])
+        dataset = load_json(manifest, "class_name")
+        assert any("line 2" in w for w in dataset.warnings)
+
+
+class TestAllFourOrganizationsAgree:
+
+    def test_folder_csv_json_and_jsonl_return_the_same_samples(self, fixtures_dir):
+        # Section 3: the package changes how it reads the data, not what the
+        # data is. Three of the four organizations are covered here; array
+        # input is checked separately once that loader exists.
+        results = {
+            "folder": load_folder(fixtures_dir / "mini", CLASSES),
+            "csv": load_csv(fixtures_dir / "mini_labels.csv", "class_name"),
+            "json": load_json(fixtures_dir / "mini_labels.json", "class_name"),
+            "jsonl": load_json(fixtures_dir / "mini_labels.jsonl", "class_name"),
+        }
+        expected = sorted(p.resolve() for p, _ in results["folder"].samples)
+        for name, dataset in results.items():
+            assert sorted(p.resolve() for p, _ in dataset.samples) == expected, name
+            assert dataset.count_by_class() == {"cat": 5, "dog": 5, "horse": 5}, name

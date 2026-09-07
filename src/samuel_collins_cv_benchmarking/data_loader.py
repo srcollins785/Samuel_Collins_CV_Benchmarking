@@ -12,6 +12,7 @@ preprocessing reports it after trying to read the pixels. Both stages append to
 the same warning list, which the benchmark returns to the caller.
 """
 
+import json
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Union
@@ -177,6 +178,70 @@ def _finalize(result: LoadedDataset, context: str) -> LoadedDataset:
     return result
 
 
+def _collect_samples(rows, base_dir: Path, result: LoadedDataset) -> None:
+    """Validate ``(where, raw_path, raw_label)`` triples into samples.
+
+    Shared by the CSV and JSON/JSONL loaders so the three manifest formats
+    cannot develop three different ideas of what a bad row is. ``where``
+    is a human-readable location - "row 4", "line 9", "record 2" - used
+    verbatim in warnings, since each format numbers its contents differently.
+
+    Appends to ``result`` in place; the caller sets ``class_names``.
+    """
+    seen_paths = set()
+
+    for where, raw_path, raw_label in rows:
+        if not isinstance(raw_path, str) or not raw_path.strip():
+            result.warnings.append(f"skipped (blank image_path): {where}")
+            continue
+        if not isinstance(raw_label, str) or not raw_label.strip():
+            result.warnings.append(f"skipped (blank label): {where}")
+            continue
+
+        label = raw_label.strip()
+        path = Path(raw_path.strip())
+        if not path.is_absolute():
+            path = base_dir / path
+
+        if path.suffix.lower() not in SUPPORTED_EXTENSIONS:
+            result.warnings.append(
+                f"skipped (unsupported extension {path.suffix!r}): {where}, {path}"
+            )
+            continue
+
+        # The one structural failure a class-folder dataset cannot have: a
+        # manifest can name a file that is simply not there.
+        if not path.exists():
+            result.warnings.append(f"skipped (not found): {where}, {path}")
+            continue
+        if not path.is_file():
+            result.warnings.append(f"skipped (not a file): {where}, {path}")
+            continue
+
+        # A repeated path would put the same image into the dataset twice, so
+        # copies could land in both halves of the split - the leakage section 7
+        # prohibits. The first occurrence is kept.
+        resolved = path.resolve()
+        if resolved in seen_paths:
+            result.warnings.append(
+                f"skipped (duplicate of an earlier row): {where}, {path}"
+            )
+            continue
+        seen_paths.add(resolved)
+
+        result.samples.append((path, label))
+
+
+def _sorted_class_names(result: LoadedDataset) -> list:
+    """Class names in the order scikit-learn's LabelEncoder will use.
+
+    LabelEncoder assigns integers alphabetically. Any other order would leave
+    ``class_names[i]`` naming a different class than the models mean by ``i``,
+    mislabelling every confusion matrix.
+    """
+    return sorted({label for _, label in result.samples})
+
+
 def load_csv(
     dataset: Union[str, Path],
     target_labels: str,
@@ -257,57 +322,198 @@ def load_csv(
             )
 
     result = LoadedDataset()
-    seen_paths = set()
 
-    for position, row in enumerate(frame.itertuples(index=False), start=2):
-        # start=2 so the number matches the line a spreadsheet would show,
-        # counting the header as line 1.
-        raw_path = getattr(row, "image_path", None)
-        raw_label = getattr(row, target_labels, None)
+    # Read the columns directly rather than through itertuples(), which
+    # renames anything that is not a valid Python identifier: a label column
+    # called "class name" would arrive as "_1", every row would look blank,
+    # and the error would be about having no classes rather than about the
+    # column name.
+    raw_paths = frame["image_path"].tolist()
+    raw_labels = frame[target_labels].tolist()
 
-        if not isinstance(raw_path, str) or not raw_path.strip():
-            result.warnings.append(f"skipped (blank image_path): row {position}")
-            continue
-        if not isinstance(raw_label, str) or not raw_label.strip():
-            result.warnings.append(f"skipped (blank label): row {position}")
-            continue
-
-        label = raw_label.strip()
-        path = Path(raw_path.strip())
-        if not path.is_absolute():
-            path = manifest.parent / path
-
-        if path.suffix.lower() not in SUPPORTED_EXTENSIONS:
-            result.warnings.append(
-                f"skipped (unsupported extension {path.suffix!r}): row {position}, {path}"
-            )
-            continue
-
-        # The one structural failure a class-folder dataset cannot have: a
-        # manifest can name a file that is simply not there.
-        if not path.exists():
-            result.warnings.append(f"skipped (not found): row {position}, {path}")
-            continue
-        if not path.is_file():
-            result.warnings.append(f"skipped (not a file): row {position}, {path}")
-            continue
-
-        # A repeated path would put the same image into the dataset twice, so
-        # copies could land in both halves of the split - the leakage section 7
-        # prohibits. The first occurrence is kept.
-        resolved = path.resolve()
-        if resolved in seen_paths:
-            result.warnings.append(
-                f"skipped (duplicate of an earlier row): row {position}, {path}"
-            )
-            continue
-        seen_paths.add(resolved)
-
-        result.samples.append((path, label))
-
-    # Sorted, because scikit-learn's LabelEncoder sorts when it assigns
-    # integers. Any other order would leave class_names[i] naming a different
-    # class than the models mean by i, mislabelling every confusion matrix.
-    result.class_names = sorted({label for _, label in result.samples})
+    # start=2 so the number matches the line a spreadsheet shows, counting
+    # the header as line 1.
+    rows = (
+        (f"row {position}", raw_path, raw_label)
+        for position, (raw_path, raw_label)
+        in enumerate(zip(raw_paths, raw_labels), start=2)
+    )
+    _collect_samples(rows, manifest.parent, result)
+    result.class_names = _sorted_class_names(result)
 
     return _finalize(result, f"Read {len(frame)} row(s) from {manifest}.")
+
+
+def _parse_json_array(text: str) -> list:
+    """Parse a whole-file JSON array of records."""
+    parsed = json.loads(text)
+    if not isinstance(parsed, list):
+        raise ValueError(
+            f"a JSON manifest must hold a list of records, found "
+            f"{type(parsed).__name__}"
+        )
+    return parsed
+
+
+def _parse_jsonl(text: str) -> list:
+    """Parse one JSON record per line, ignoring blank lines."""
+    records = []
+    for number, line in enumerate(text.splitlines(), start=1):
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            parsed = json.loads(line)
+        except json.JSONDecodeError as error:
+            raise ValueError(f"line {number} is not valid JSON: {error.msg}") from None
+        # Each line must be an object. Without this a whole JSON array written
+        # on one line would parse "successfully" as a single JSONL record and
+        # yield a list where a record belongs, so a .jsonl file holding an
+        # array would load as zero samples instead of falling back to JSON.
+        if not isinstance(parsed, dict):
+            raise ValueError(
+                f"line {number} is a JSON {type(parsed).__name__}, not an object"
+            )
+        records.append((number, parsed))
+    if not records:
+        raise ValueError("no JSON records found")
+    return records
+
+
+def load_json(
+    dataset: Union[str, Path],
+    target_labels: str,
+) -> LoadedDataset:
+    """Load a JSON or JSONL manifest.
+
+    Both forms are reached through ``dataset_type="json"``. A ``.json`` file
+    holds one list of records::
+
+        [{"image_path": "images/a.jpg", "class_name": "cat"}]
+
+    while a ``.jsonl`` file holds one record per line::
+
+        {"image_path": "images/a.jpg", "class_name": "cat"}
+        {"image_path": "images/b.jpg", "class_name": "dog"}
+
+    The format is chosen by file extension, then confirmed by parsing. If the
+    extension is absent, unfamiliar or simply wrong, the other form is tried
+    before giving up, so a JSONL file saved as ``.txt`` still loads.
+
+    As with CSV, ``target_labels`` is the *name of the label field*, a single
+    string, not a list of class names.
+
+    Parameters
+    ----------
+    dataset
+        Path to the ``.json`` or ``.jsonl`` file.
+    target_labels
+        Name of the field holding each record's class.
+
+    Returns
+    -------
+    LoadedDataset
+        Samples as ``(path, class_name)`` pairs, with class names sorted.
+
+    Raises
+    ------
+    FileNotFoundError
+        The manifest does not exist.
+    IsADirectoryError
+        The path points at a directory.
+    ValueError
+        ``target_labels`` is not a field name, the file parses as neither
+        JSON nor JSONL, no record carries a required field, or fewer than two
+        classes survive validation.
+    """
+    manifest = Path(dataset)
+    if not manifest.exists():
+        raise FileNotFoundError(f"JSON manifest not found: {manifest}")
+    if manifest.is_dir():
+        raise IsADirectoryError(
+            f'dataset_type="json" needs a JSON or JSONL file, but {manifest} '
+            "is a directory."
+        )
+
+    if not isinstance(target_labels, str):
+        raise ValueError(
+            'dataset_type="json" needs target_labels to be the name of the label '
+            f'field, for example "class_name". Got {type(target_labels).__name__}. '
+            "(A list of class names is only used with dataset_type=\"folder\".)"
+        )
+
+    text = manifest.read_text(encoding="utf-8")
+    if not text.strip():
+        raise ValueError(f"JSON manifest is empty: {manifest}")
+
+    # Try the form the extension advertises first, then fall back to the other.
+    # Extension is the better guess when it is present, but a misnamed file is
+    # a reason to warn rather than to refuse.
+    jsonl_first = manifest.suffix.lower() == ".jsonl"
+    attempts = [("JSONL", _parse_jsonl), ("JSON", _parse_json_array)]
+    if not jsonl_first:
+        attempts.reverse()
+
+    records = None
+    failures = []
+    for index, (name, parser) in enumerate(attempts):
+        try:
+            parsed = parser(text)
+        except (ValueError, json.JSONDecodeError) as error:
+            failures.append(f"as {name}: {error}")
+            continue
+        if index == 1:
+            expected = "JSONL" if jsonl_first else "JSON"
+            result_warning = (
+                f"{manifest.name} does not parse as {expected} but does parse as "
+                f"{name}; loaded as {name}"
+            )
+        else:
+            result_warning = None
+        records = parsed
+        break
+
+    if records is None:
+        raise ValueError(
+            f"Could not parse {manifest} as JSON or JSONL. " + "; ".join(failures)
+        )
+
+    # Normalise both forms to (where, record) so the rest is shared. A JSON
+    # array numbers records by position; JSONL numbers them by line, which is
+    # what a text editor shows.
+    if records and isinstance(records[0], tuple):
+        located = [(f"line {number}", record) for number, record in records]
+    else:
+        located = [(f"record {position}", record)
+                   for position, record in enumerate(records, start=1)]
+
+    result = LoadedDataset()
+    if result_warning:
+        result.warnings.append(result_warning)
+
+    usable = [(where, record) for where, record in located if isinstance(record, dict)]
+    for where, record in located:
+        if not isinstance(record, dict):
+            result.warnings.append(
+                f"skipped (not an object): {where}, found {type(record).__name__}"
+            )
+
+    # A field absent from *every* record is a manifest-level mistake, the
+    # equivalent of a missing CSV column, so it earns an error naming the
+    # fields that are present rather than a warning per record.
+    for field_name in ("image_path", target_labels):
+        if usable and not any(field_name in record for _, record in usable):
+            present = sorted({key for _, record in usable for key in record})
+            raise ValueError(
+                f"No record in {manifest} has an {field_name!r} field. "
+                f"Fields present: {present}."
+            )
+
+    rows = (
+        (where, record.get("image_path"), record.get(target_labels))
+        for where, record in usable
+    )
+    _collect_samples(rows, manifest.parent, result)
+    result.class_names = _sorted_class_names(result)
+
+    return _finalize(result, f"Read {len(located)} record(s) from {manifest}.")
