@@ -22,10 +22,15 @@ Usage
 """
 
 import json
+import sys
 from datetime import date
 from pathlib import Path
 
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import report_part2  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 RESULTS_DIR = REPO_ROOT / "benchmark_results"
@@ -154,6 +159,89 @@ think to write, and those turned out to be where the real mistakes were.
 # Reading the runs
 # --------------------------------------------------------------------------
 
+# Part 2's half of the reflection, kept in its own constant so the Part 1 text
+# stays exactly as it was written.
+PART2_REFLECTION_TEXT = """
+Part 2 tested that habit immediately, and I failed it for most of a day. The training
+loop reported 96.67 percent validation accuracy for a ResNet18 whose true accuracy was
+10.00 percent, and I believed the number long enough to build on it. It was predicting a
+single class for every image in the test set. The cause was one argument,
+non_blocking=True, on the copy that moves labels to the GPU. That copy is only safe from
+pinned host memory, the image cache is not pinned, and on Metal the label tensor arrived
+before its contents did: indices around 6.8e18 for a ten-class problem. Cross-entropy
+indexes its target directly, so on a CPU an index that large raises immediately, and on
+Metal it reads out of bounds and returns a number anyway. The loop trained against
+corrupt labels and then scored itself against the same corrupt labels, and the two halves
+of that agreed with each other perfectly.
+
+What makes it worth writing down is that the bug produced a better number than the truth.
+A crash I would have found in a minute. A validation accuracy of 0.9667 beside a loss of
+0.0001 looks like a network that is working, and the only reason I caught it is that the
+test accuracy underneath was exactly 0.1000 with a macro F1 of 0.0182, which is the
+arithmetic of predicting one class out of ten and not a number a real model produces.
+Every training curve and every table in this report would have inherited it silently. The
+loop now checks its own reported accuracy against an independent evaluation of the same
+weights, once on the device and once on CPU, and a label outside the valid range raises
+instead of being trained on. I had been treating a green test suite as the thing to be
+skeptical of, when the more dangerous object was a metric a component computes about
+itself.
+
+The prescribed learning rate taught me something I had not gone looking for. At AdamW
+with lr 0.001, AlexNet sat at chance for all twenty epochs with its training loss pinned
+at 2.3026, which is ln(10) and exactly what a network emits when its output is uniform,
+and VGG16 crawled to 38.9 percent. Every other architecture trained at the same rate
+without difficulty. The two that failed are the two that predate batch normalization, and
+with no normalization layers to absorb it a 0.001 step on ImageNet weights destroys the
+pretrained features before the first epoch is out. Rerun at 0.0001 they reach 90.0 and
+94.4 percent, and VGG16 finishes as the most accurate model in the whole benchmark, above
+EfficientNet-B0 and ConvNeXt-Tiny.
+
+Had I reported the first run I would have written that AlexNet and VGG16 are obsolete
+designs that modern architectures have left behind. That sentence would have been about
+my optimizer settings rather than about the architectures, and it is the Intel padding
+mistake from Part 1 wearing a different costume: a difference I was ready to attribute to
+the variable I found interesting, which actually belonged to something else in the setup.
+The assignment's instruction to document every learning-rate change is what forced me to
+look, and what turned a nuisance into the most interesting result in Part 2.
+
+The memory measurement took three attempts and the first two both produced numbers I
+would have published. Reading the allocator pool gave a column that rose monotonically in
+the order the architectures happened to run in, so DenseNet121 appeared to need 12.7
+gigabytes, which was simply everything allocated before it. Sampling live allocation
+between batches gave a real quantity but the wrong one: after a forward pass the
+intermediate tensors are already freed, so what is left is the weights, and the column
+matched checkpoint size at a correlation of 1.000 to within 0.23 megabytes. It was
+section 18 wearing a different heading, and it would have carried its own weight in the
+deployment ranking as though it were independent information. Only the third attempt,
+sampling inside the forward pass, measured the working set a deployment target actually
+has to fit.
+
+That third measurement reversed a recommendation I had already half written.
+EfficientNet-B0 holds 16 megabytes of weights and needs roughly 840 megabytes of
+activations to run a batch, about fifty times its own size; DenseNet121 is forty times,
+MobileNetV3 thirty. AlexNet, the second largest model here by weight, has the smallest
+working set of all nine and the lowest single-image latency, because an 11x11 stride-4
+first convolution collapses the spatial dimensions before there is much feature map to
+carry. The architectures marketed as efficient are efficient in parameters, and parameters
+are not what occupies memory at inference. An embedded board picked on checkpoint size
+alone would not run the model I would have recommended, and none of the metrics the
+assignment's table asks for would have shown me that.
+
+The last thing Part 2 changed is how I read a leaderboard. VGG16 is the most accurate
+model in this benchmark and ranks fifth on the deployment score, because it scores the
+maximum on accuracy and zero on throughput, size and memory at once. YOLO reaches 93.9
+percent from 1.5 million parameters and a 3.2 megabyte checkpoint, within half a point of
+the winner at a hundredth of the storage. ConvNeXt-Tiny selected its first epoch and then
+trained nineteen more while its validation loss climbed, and only finished second because
+the rule that keeps the best checkpoint rather than the last one is in the protocol. Three
+different models win the three criteria, and the spread between them in accuracy is far
+smaller than the spread in what they cost. I came into this assignment thinking
+architecture selection was a question with a single answer per dataset. It is a question
+about which constraint binds on the hardware you actually have, and the benchmark's job is
+to tell you where each model sits rather than to crown one.
+"""
+
+
 def parse_run_name(name: str) -> dict:
     """Split ``<dataset>_n<size>_<color_mode>`` into its three parts.
 
@@ -252,14 +340,25 @@ def section_objective(runs: dict) -> list:
     return [
         "## 1. Objective",
         "",
-        "This report compares six image classification methods - four classical "
-        "machine-learning models and two neural networks - through a single "
-        f"public function in an installable package, `{PACKAGE_NAME}`.",
+        "This report compares sixteen image classification methods on one "
+        "problem: four classical machine-learning models, two neural network "
+        "baselines, and ten deep CNN architectures spanning 2012 to 2024. All "
+        "of them are driven through a single public function in an installable "
+        f"package, `{PACKAGE_NAME}`.",
+        "",
+        "It is in two parts. **Part 1**, sections 1 to 8, benchmarks the "
+        "classical models and the two neural baselines on flattened 64x64 "
+        "pixels, and varies training set size, color mode and dataset one at a "
+        "time. **Part 2**, sections 9 to 18, adds AlexNet, VGG16, GoogLeNet, "
+        "ResNet18, ResNet50, DenseNet121, MobileNetV3, EfficientNet-B0, "
+        "ConvNeXt-Tiny and a YOLO classifier at 224x224 and compares them "
+        "directly against those baselines - on the identical images, the same "
+        "seed, the same held-out test half, and the same scoring code.",
         "",
         f"Every model in a given run sees one stratified split, one set of "
-        f"metrics and one measurement of cost. Across runs, exactly one thing "
-        f"changes at a time: the size of the training set, the color mode, or "
-        f"the dataset. There are {len(runs)} runs over "
+        f"metrics and one measurement of cost. Across the Part 1 runs, exactly "
+        f"one thing changes at a time: the size of the training set, the color "
+        f"mode, or the dataset. There are {len(runs)} runs over "
         f"{len(datasets)} datasets.",
         "",
         "```python",
@@ -643,14 +742,32 @@ def section_cost(runs: dict) -> list:
     ]
 
 
-def section_reflection() -> list:
-    return ["## 9. Reflection", "", REFLECTION_TEXT.strip(), ""]
+def section_reflection(number: int = 9) -> list:
+    """Both halves of the reflection, Part 1's text unchanged.
+
+    Part 2's paragraphs follow on from Part 1's closing line about treating a
+    passing test as a claim that needs checking, which is the thing Part 2
+    went on to test.
+    """
+    lines = [f"## {number}. Reflection", "", REFLECTION_TEXT.strip(), ""]
+    if PART2_REFLECTION_TEXT.strip():
+        lines += [PART2_REFLECTION_TEXT.strip(), ""]
+    return lines
 
 
-def section_reproduction(runs: dict) -> list:
+def section_reproduction(runs: dict, number: int = 10) -> list:
+    """One closing section covering both parts.
+
+    Part 2's commands are folded in as a subsection rather than given a
+    section of their own: a reader looking for how to rerun this work should
+    find one place that tells them, not two in different halves of the
+    document.
+    """
     configuration = list(runs.values())[0]["configuration"]
     return [
-        "## 10. Reproducing these results",
+        f"## {number}. Reproducing these results",
+        "",
+        "### Part 1: the traditional ML and baseline neural benchmark",
         "",
         "```bash",
         f"pip install {PACKAGE_NAME}",
@@ -668,11 +785,14 @@ def section_reproduction(runs: dict) -> list:
         "python scripts/generate_report.py",
         "```",
         "",
-        f"Package version {configuration['package']['version']}, random seed "
+        f"The Part 1 results were produced under package version "
+        f"{configuration['package']['version']} at random seed "
         f"{configuration['random_seed']}, image size "
-        f"{configuration['image_size'][0]}x{configuration['image_size'][1]}. "
-        "Every model fixes its own random state; each run's full configuration "
-        "is in its `run_configuration.json`.",
+        f"{configuration['image_size'][0]}x{configuration['image_size'][1]}; "
+        "the package is now at 2.0.0, which adds the Part 2 architectures "
+        "without changing anything Part 1 depends on. Every model fixes its "
+        "own random state, and each run's full configuration is in its "
+        "`run_configuration.json`.",
         "",
         "The images are not committed. Both datasets are third-party "
         "collections, so the download scripts rebuild the subsets instead, and "
@@ -729,8 +849,24 @@ def build() -> str:
     lines += section_color_experiment(runs)
     lines += section_dataset_experiment(runs)
     lines += section_cost(runs)
-    lines += section_reflection()
-    lines += section_reproduction(runs)
+
+    # Part 2 sits after the Part 1 study and before the closing material. Its
+    # reproduction block is held back and placed with Part 1's at the end, so
+    # the document has one place where the commands live rather than two.
+    #
+    # Numbering continues across the seam rather than restarting: Part 1 ends
+    # at section 8, so Part 2 is numbered from 9 and the closing sections
+    # follow it. The count comes from Part 2 itself, so adding a section there
+    # does not silently leave two sections sharing a number here.
+    part2 = report_part2.sections(include_reproduction=False, start_number=9)
+    next_number = 9
+    if part2:
+        lines += part2
+        next_number = 9 + report_part2.section_count()
+
+    lines += section_reflection(next_number)
+    lines += section_reproduction(runs, next_number + 1)
+    lines += report_part2.reproduction_only()
     return em_dashes("\n".join(lines))
 
 
