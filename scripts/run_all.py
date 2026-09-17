@@ -9,16 +9,24 @@ the report that changed.
 Steps
 -----
 1. pytest                    the suite must pass before results are believed
-2. run_benchmarks.py         every built tier, RGB
-3. run_benchmarks.py         every built tier, grayscale
-4. generate_report.py        Markdown, from the files the benchmarks wrote
-5. build_report_pdf.py       PDF, via headless Chrome
+2. run_benchmarks.py         Part 1: every built tier, RGB
+3. run_benchmarks.py         Part 1: every built tier, grayscale
+4. run_benchmark.py          Part 2: the nine deep architectures
+5. remediate_unstable.py     re-run anything the protocol rate destabilized
+6. generate_report.py        Markdown, from the files the benchmarks wrote
+7. build_report_pdf.py       PDF, via headless Chrome
+
+YOLO is not in this pipeline. It needs its own virtual environment (see
+requirements-yolo.txt), so it stays a deliberate separate step:
+
+    python scripts/run_yolo.py
 
 Usage
 -----
-    python scripts/run_all.py                 # everything, about 25 minutes
-    python scripts/run_all.py --report-only   # steps 4-5, about 5 seconds
-    python scripts/run_all.py --skip-tests    # everything except step 1
+    python scripts/run_all.py                 # everything, about 90 minutes
+    python scripts/run_all.py --report-only   # the report only, a few seconds
+    python scripts/run_all.py --skip-tests    # everything except the tests
+    python scripts/run_all.py --skip-deep     # Part 1 and the report only
 """
 
 import argparse
@@ -33,25 +41,37 @@ DATA_DIR = REPO_ROOT / "data"
 RESULTS_DIR = REPO_ROOT / "benchmark_results"
 
 
-def steps(skip_tests: bool, report_only: bool) -> list:
+def steps(skip_tests: bool, report_only: bool, skip_deep: bool) -> list:
     """The pipeline, as (label, command, rough duration) triples."""
-    everything = [
-        ("tests", [sys.executable, "-m", "pytest", "tests/", "-q"], "1 minute"),
-        ("benchmarks (rgb)",
+    part1 = [
+        ("tests", [sys.executable, "-m", "pytest", "tests/", "-q"], "2 minutes"),
+        ("part 1 benchmarks (rgb)",
          [sys.executable, str(SCRIPTS / "run_benchmarks.py")], "20 minutes"),
-        ("benchmarks (grayscale)",
+        ("part 1 benchmarks (grayscale)",
          [sys.executable, str(SCRIPTS / "run_benchmarks.py"),
           "--color-mode", "grayscale"], "3 minutes"),
-        ("report (markdown)",
-         [sys.executable, str(SCRIPTS / "generate_report.py")], "1 second"),
-        ("report (pdf)",
-         [sys.executable, str(SCRIPTS / "build_report_pdf.py")], "5 seconds"),
     ]
+    part2 = [
+        ("part 2 deep CNN benchmark",
+         [sys.executable, str(REPO_ROOT / "run_benchmark.py"),
+          "--model", "all"], "60 minutes"),
+        # Runs unconditionally: it is a no-op when every architecture trained
+        # successfully, and the report needs its output file to exist or not
+        # exist honestly rather than to be skipped on a guess.
+        ("part 2 learning-rate remediation",
+         [sys.executable, str(SCRIPTS / "remediate_unstable.py")], "15 minutes"),
+    ]
+    report = [
+        ("report (markdown)",
+         [sys.executable, str(SCRIPTS / "generate_report.py")], "2 seconds"),
+        ("report (pdf)",
+         [sys.executable, str(SCRIPTS / "build_report_pdf.py")], "10 seconds"),
+    ]
+
     if report_only:
-        return everything[3:]
-    if skip_tests:
-        return everything[1:]
-    return everything
+        return report
+    pipeline = part1 + ([] if skip_deep else part2) + report
+    return pipeline[1:] if skip_tests else pipeline
 
 
 def preflight(report_only: bool) -> None:
@@ -83,10 +103,13 @@ def main() -> None:
                         help="regenerate the report from existing results")
     parser.add_argument("--skip-tests", action="store_true",
                         help="skip the test suite")
+    parser.add_argument("--skip-deep", action="store_true",
+                        help="skip the Part 2 deep CNN benchmark")
     arguments = parser.parse_args()
 
     preflight(arguments.report_only)
-    pipeline = steps(arguments.skip_tests, arguments.report_only)
+    pipeline = steps(arguments.skip_tests, arguments.report_only,
+                     arguments.skip_deep)
 
     print(f"\n{len(pipeline)} step(s):", flush=True)
     for label, _, duration in pipeline:
