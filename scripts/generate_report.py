@@ -162,83 +162,80 @@ think to write, and those turned out to be where the real mistakes were.
 # Part 2's half of the reflection, kept in its own constant so the Part 1 text
 # stays exactly as it was written.
 PART2_REFLECTION_TEXT = """
-Part 2 tested that habit immediately, and I failed it for most of a day. The training
-loop reported 96.67 percent validation accuracy for a ResNet18 whose true accuracy was
-10.00 percent, and I believed the number long enough to build on it. It was predicting a
-single class for every image in the test set. The cause was one argument,
-non_blocking=True, on the copy that moves labels to the GPU. That copy is only safe from
-pinned host memory, the image cache is not pinned, and on Metal the label tensor arrived
-before its contents did: indices around 6.8e18 for a ten-class problem. Cross-entropy
-indexes its target directly, so on a CPU an index that large raises immediately, and on
-Metal it reads out of bounds and returns a number anyway. The loop trained against
-corrupt labels and then scored itself against the same corrupt labels, and the two halves
-of that agreed with each other perfectly.
+Part 2 tested that habit immediately. The training loop reported 96.67 percent validation
+accuracy for a ResNet18 whose true accuracy was 10.00 percent: it was predicting a single
+class for every image in the test set. The cause was one argument, non_blocking=True, on
+the copy that moves labels to the GPU. That copy is only safe from pinned host memory,
+the image cache is not pinned, and on Metal the label tensor arrived before its contents
+did, carrying indices around 6.8e18 for a ten-class problem. Cross-entropy indexes its
+target directly, so on a CPU an index that size raises immediately, and on Metal it reads
+out of bounds and returns a number anyway. The loop trained against corrupt labels and
+then scored itself against the same corrupt labels, and the two halves of that agreed
+with each other.
 
-What makes it worth writing down is that the bug produced a better number than the truth.
-A crash I would have found in a minute. A validation accuracy of 0.9667 beside a loss of
-0.0001 looks like a network that is working, and the only reason I caught it is that the
-test accuracy underneath was exactly 0.1000 with a macro F1 of 0.0182, which is the
-arithmetic of predicting one class out of ten and not a number a real model produces.
-Every training curve and every table in this report would have inherited it silently. The
-loop now checks its own reported accuracy against an independent evaluation of the same
-weights, once on the device and once on CPU, and a label outside the valid range raises
-instead of being trained on. I had been treating a green test suite as the thing to be
-skeptical of, when the more dangerous object was a metric a component computes about
-itself.
+What makes it worth writing down is that the failure produced a better number than the
+truth. A crash announces itself. A validation accuracy of 0.9667 beside a loss of 0.0001
+looks like a network that is learning, and the only thing that did not fit was the test
+accuracy underneath it, exactly 0.1000 with a macro F1 of 0.0182, which is the arithmetic
+of predicting one class out of ten rather than anything a trained model produces. I had
+been treating a passing test suite as the claim that needed checking. The more dangerous
+object is a number a component computes about its own performance, because nothing
+downstream is positioned to contradict it. The loop now recomputes its reported accuracy
+from the same weights outside the training path, once on the device and once on CPU, and
+a label outside the valid range raises instead of being trained on.
 
-The prescribed learning rate taught me something I had not gone looking for. At AdamW
-with lr 0.001, AlexNet sat at chance for all twenty epochs with its training loss pinned
-at 2.3026, which is ln(10) and exactly what a network emits when its output is uniform,
-and VGG16 crawled to 38.9 percent. Every other architecture trained at the same rate
-without difficulty. The two that failed are the two that predate batch normalization, and
-with no normalization layers to absorb it a 0.001 step on ImageNet weights destroys the
-pretrained features before the first epoch is out. Rerun at 0.0001 they reach 90.0 and
-94.4 percent, and VGG16 finishes as the most accurate model in the whole benchmark, above
-EfficientNet-B0 and ConvNeXt-Tiny.
+The learning rate the assignment prescribes produced the result I would least have
+predicted. At AdamW with lr 0.001, AlexNet sat at chance for all twenty epochs with its
+training loss pinned at 2.3026, which is ln(10) and exactly what a network emits when its
+output is uniform, and VGG16 reached only 38.9 percent. Every other architecture trained
+at the same rate without difficulty. The two that failed are the two that predate batch
+normalization, and with no normalization layers to absorb it a 0.001 step on pretrained
+ImageNet weights moves the features somewhere they do not return from. Rerun at 0.0001
+they reach 90.0 and 94.4 percent, and VGG16 finishes as the most accurate model in the
+benchmark, ahead of EfficientNet-B0 and ConvNeXt-Tiny.
 
-Had I reported the first run I would have written that AlexNet and VGG16 are obsolete
-designs that modern architectures have left behind. That sentence would have been about
-my optimizer settings rather than about the architectures, and it is the Intel padding
-mistake from Part 1 wearing a different costume: a difference I was ready to attribute to
-the variable I found interesting, which actually belonged to something else in the setup.
-The assignment's instruction to document every learning-rate change is what forced me to
-look, and what turned a nuisance into the most interesting result in Part 2.
+Reporting the first run without the second would have produced a sentence about AlexNet
+and VGG16 being obsolete designs the field has moved past. That sentence would have
+described my optimizer setting rather than the architectures, and it is the Intel padding
+mistake from Part 1 in different clothes: a difference sitting in front of me that I was
+ready to attribute to the variable I happened to be interested in. What caught it was not
+judgment but the requirement to document every learning-rate change, which is what made
+me look at why those two needed one and the other seven did not.
 
-The memory measurement took three attempts and the first two both produced numbers I
+The memory measurement took three attempts, and the first two both produced numbers I
 would have published. Reading the allocator pool gave a column that rose monotonically in
 the order the architectures happened to run in, so DenseNet121 appeared to need 12.7
-gigabytes, which was simply everything allocated before it. Sampling live allocation
-between batches gave a real quantity but the wrong one: after a forward pass the
-intermediate tensors are already freed, so what is left is the weights, and the column
-matched checkpoint size at a correlation of 1.000 to within 0.23 megabytes. It was
-section 18 wearing a different heading, and it would have carried its own weight in the
-deployment ranking as though it were independent information. Only the third attempt,
-sampling inside the forward pass, measured the working set a deployment target actually
-has to fit.
+gigabytes, which was everything allocated before it rather than anything about
+DenseNet121. Sampling live allocation between batches gave a real quantity but the wrong
+one: after a forward pass the intermediate tensors have already been released, so what
+remains is the weights, and that column matched checkpoint size at a correlation of 1.000
+to within 0.23 megabytes. It was the model size column under a different heading, and it
+would have carried its own weight in the deployment ranking as though it were telling me
+something new. Only sampling inside the forward pass measured the working set a
+deployment target actually has to fit.
 
-That third measurement reversed a recommendation I had already half written.
-EfficientNet-B0 holds 16 megabytes of weights and needs roughly 840 megabytes of
-activations to run a batch, about fifty times its own size; DenseNet121 is forty times,
-MobileNetV3 thirty. AlexNet, the second largest model here by weight, has the smallest
-working set of all nine and the lowest single-image latency, because an 11x11 stride-4
-first convolution collapses the spatial dimensions before there is much feature map to
-carry. The architectures marketed as efficient are efficient in parameters, and parameters
-are not what occupies memory at inference. An embedded board picked on checkpoint size
-alone would not run the model I would have recommended, and none of the metrics the
-assignment's table asks for would have shown me that.
+That third measurement reversed a recommendation I had already written down.
+EfficientNet-B0 holds 16 megabytes of weights and needs about 840 megabytes of
+activations to run a batch, roughly fifty times its own size, where DenseNet121 is forty
+times and MobileNetV3 thirty. AlexNet, the second largest model here by weight, has the
+smallest working set of the nine and the lowest single-image latency, because an 11x11
+stride-4 first convolution collapses the spatial dimensions before there is much feature
+map left to carry. The architectures described as efficient are efficient in parameters,
+and parameters are not what occupies memory at inference. An embedded board chosen on
+checkpoint size would fail to run the model that the size ranking recommends, and none of
+the metrics the assignment's table asks for would have shown me that.
 
-The last thing Part 2 changed is how I read a leaderboard. VGG16 is the most accurate
-model in this benchmark and ranks fifth on the deployment score, because it scores the
-maximum on accuracy and zero on throughput, size and memory at once. YOLO reaches 93.9
-percent from 1.5 million parameters and a 3.2 megabyte checkpoint, within half a point of
-the winner at a hundredth of the storage. ConvNeXt-Tiny selected its first epoch and then
-trained nineteen more while its validation loss climbed, and only finished second because
-the rule that keeps the best checkpoint rather than the last one is in the protocol. Three
-different models win the three criteria, and the spread between them in accuracy is far
-smaller than the spread in what they cost. I came into this assignment thinking
-architecture selection was a question with a single answer per dataset. It is a question
-about which constraint binds on the hardware you actually have, and the benchmark's job is
-to tell you where each model sits rather than to crown one.
+Reading the final table changed what I think the benchmark is for. VGG16 is the most
+accurate model in it and ranks fifth on the deployment score, because it takes the
+maximum on accuracy and zero on throughput, size and memory at the same time. YOLO
+reaches 93.9 percent from 1.5 million parameters and a 3.2 megabyte checkpoint, half a
+point behind the winner at a hundredth of the storage. ConvNeXt-Tiny selected its first
+epoch and then trained nineteen more while its validation loss climbed, and finished
+second only because keeping the best checkpoint rather than the last one is written into
+the protocol. Three different models win the three criteria, and the spread between them
+in accuracy is far smaller than the spread in what they cost. The useful output here is
+not a winner but a position for each model against the constraint that binds, and which
+constraint binds is a fact about the hardware rather than about the models.
 """
 
 
