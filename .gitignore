@@ -10,6 +10,21 @@ intel_source/
 # Personal working notes, kept local rather than published
 class_notes/
 
+# Trained checkpoints. Section 12 requires the best-validation-accuracy
+# weights to be saved and section 18 reports their size on disk, and both are
+# satisfied by the files the benchmark writes - but they are generated
+# artifacts, not source. VGG16's alone is 512 MB, which exceeds GitHub's
+# 100 MB per-file limit, and the nine together are about 1.5 GB. Their sizes
+# are recorded in deep_metrics.json and the master table, so the reported
+# numbers survive without the weights being committed.
+benchmark_results/*/checkpoints/
+
+# The YOLO environment and its scratch workspace. The environment is rebuilt
+# from requirements-yolo.txt; the workspace holds a regenerated symlink tree
+# and ultralytics' own run directory.
+.venv-yolo/
+yolo_workspace/
+
 # Python
 __pycache__/
 *.py[cod]

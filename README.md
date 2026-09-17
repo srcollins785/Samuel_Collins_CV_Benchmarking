@@ -1,13 +1,21 @@
 # Samuel_Collins_CV_Benchmarking
 
-Benchmark classical machine-learning and neural-network image classifiers
-through a single public function. Give it a labeled image dataset in any of
-four organizations; it standardizes the images, builds one stratified split,
-trains every model on that split, and saves comparable metrics, plots and
-reports.
+Benchmark traditional machine-learning classifiers and modern CNN
+architectures on one image-classification problem. Give it a labeled image
+dataset in any of four organizations; it standardizes the images, builds one
+stratified split, trains every model on that split, and saves comparable
+metrics, plots and reports.
 
-**PyPI:** https://pypi.org/project/Samuel_Collins_CV_Benchmarking/ · version 1.0.1
-· MIT licensed · 368 tests
+Sixteen models on a single shared split:
+
+| Group | Models |
+|---|---|
+| Traditional ML | Logistic Regression, Decision Tree, Random Forest, SVM |
+| Baseline neural | Neural Network (MLP), Simple CNN |
+| Deep CNN | AlexNet, VGG16, GoogLeNet, ResNet18, ResNet50, DenseNet121, MobileNetV3-Large, EfficientNet-B0, ConvNeXt-Tiny, YOLO classification |
+
+**PyPI:** https://pypi.org/project/Samuel_Collins_CV_Benchmarking/ · version 2.0.0
+· MIT licensed · 545 tests
 
 ## Installation
 
@@ -28,7 +36,20 @@ interpreters with different packages installed:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e ".[dev,report]"
+pip install -e ".[dev,report,deep]"
+```
+
+The `deep` extra adds torchvision and the two complexity profilers. It is
+optional and imported lazily, so a plain `pip install
+Samuel_Collins_CV_Benchmarking` does not pull a gigabyte of pretrained-model
+machinery onto someone who only wants the traditional classifiers.
+
+To reproduce the published numbers rather than install the newest packages,
+use the pinned set instead:
+
+```bash
+pip install -r requirements.txt
+pip install -e .
 ```
 
 Inside the environment, plain `python`, `pytest` and `twine` resolve to the
@@ -40,6 +61,61 @@ right interpreter, and everything below can be run without a path prefix.
 python scripts/run_all.py                 # tests, benchmarks, report, PDF
 python scripts/run_all.py --report-only   # just rebuild the report
 ```
+
+### The deep CNN benchmark
+
+```bash
+python run_benchmark.py                   # all nine torchvision architectures
+python run_benchmark.py --model resnet50   # one architecture
+python run_benchmark.py --model all        # explicit form of the default
+python run_benchmark.py --tables-only      # rebuild tables and plots only
+```
+
+The deep architectures run on the `animals10_n500` RGB configuration - the
+same one Part 1 benchmarked, so the two halves are directly comparable. RGB
+because every pretrained backbone expects three channels; the grayscale path
+refuses rather than replicating one channel into three and quietly weakening
+transfer learning.
+
+Part 1 is **not** re-run. Its split is reproduced from the same manifest at
+seed 42 and then verified against Part 1's own published artifacts - the
+recorded dataset index behind every stored test position, and the exact rows
+the Simple CNN held back for validation. If the dataset under `data/` has
+changed since Part 1 ran, the benchmark stops with an explanation instead of
+producing a comparison that looks valid and is not.
+
+```bash
+# re-run any architecture the protocol learning rate destabilized
+python scripts/remediate_unstable.py --dry-run   # report only
+python scripts/remediate_unstable.py             # detect and re-run
+```
+
+At the prescribed AdamW learning rate of 0.001, the two pre-BatchNorm
+architectures do not train: AlexNet collapses to chance and VGG16 is crippled.
+Every architecture carrying BatchNorm or LayerNorm trains at that rate without
+difficulty. This script detects the failures by a stated numeric rule, archives
+the protocol-rate results, re-runs only the affected architectures at a lower
+rate, and writes `deep_lr_deviations.json` recording both outcomes. The report
+reads that file, so the deviation is documented rather than silently applied.
+
+### YOLO classification
+
+YOLO needs its own environment. `ultralytics` cannot be installed alongside the
+main one: this project runs on Python 3.9, and on macOS ultralytics excludes
+every numpy 2.0 through 2.3.4 release while numpy >= 2.3.5 requires Python
+3.11+. Installing it would resolve numpy down from 2.0.2 and silently change
+the environment that produced the Part 1 results and the test suite.
+
+```bash
+python3 -m venv .venv-yolo                 # use a Python 3.11+ interpreter
+.venv-yolo/bin/pip install -r requirements-yolo.txt
+python scripts/run_yolo.py
+```
+
+It exports the identical split as a symlink tree, trains in the isolated
+environment as a subprocess, and brings the predictions back to be scored by
+the same code that scores every other architecture - so the metrics are
+computed identically even though the training environment differs.
 
 ## Usage
 
@@ -213,6 +289,40 @@ python scripts/run_benchmarks.py
 ```
 
 The 500/class run takes about 13 minutes, 9 of which are the SVM.
+
+## Output layout
+
+One directory per configuration, holding both halves of the benchmark:
+
+```
+benchmark_results/animals10_n500_rgb/
+    benchmark_summary.csv                       Part 1 comparison table
+    benchmark_metrics.json                      Part 1 full results
+    deep_metrics.json                           Part 2 full results
+    deep_run_configuration.json                 protocol, environment, deviations
+    deep_lr_deviations.json                     learning-rate changes, if any
+    combined_ml_cnn_benchmark_results.csv        the master table, all 16 models
+    per_class_f1_comparison.csv                 per-class F1, every model
+    rankings.json                               rankings A through E
+    confusion_matrices/*.png                    one per model, both halves
+    classification_reports/*.csv                one per model, both halves
+    plots/                                      comparison figures + training curves
+    checkpoints/best_*.pt                       selected weights per architecture
+    logs/*.jsonl                                one line per epoch, written live
+```
+
+The per-epoch logs are committed - they are the record of what each run
+actually did. The checkpoints are not: the nine together are about 1.5 GB and
+VGG16's alone exceeds GitHub's 100 MB per-file limit. They are regenerated by
+`python run_benchmark.py`, and their sizes are recorded in `deep_metrics.json`
+and the master table, so every reported number survives without the weights
+being in version control.
+
+`N/A` appears wherever a metric is not meaningful for a model rather than
+wherever it was inconvenient to obtain. A Random Forest has no parameter count
+in the sense a CNN does, no checkpoint on disk and no device memory figure, and
+a zero in those cells would be a fabricated measurement that looks exactly like
+a real one.
 
 ## Tests
 

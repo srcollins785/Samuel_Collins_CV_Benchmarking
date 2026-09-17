@@ -1,0 +1,24 @@
+# Separate environment for the YOLO classification benchmark.
+#
+# ultralytics cannot be installed into the main environment. The main venv runs
+# Python 3.9, and on macOS ultralytics excludes every numpy 2.0 through 2.3.4
+# release while numpy >= 2.3.5 requires Python 3.11 or newer. On Python 3.9 the
+# only version satisfying ultralytics is numpy 1.26, so pip would resolve numpy
+# down from 2.0.2 - silently changing the environment that produced the Part 1
+# results and the test suite beneath them.
+#
+# Building this environment on a newer Python sidesteps the conflict entirely:
+# it gets a numpy that satisfies ultralytics without touching the main venv.
+# The consequence is that YOLO trains under different library versions from the
+# other nine architectures, which is recorded alongside its results rather than
+# glossed over.
+#
+# YOLO therefore runs as a subprocess against the identical train / validation /
+# test split exported by scripts/run_yolo.py, and its predictions are scored by
+# the same code that scores every other architecture - so the metrics are
+# computed identically even though the training environment differs.
+#
+# Create it with a Python 3.11 or newer interpreter:
+#   python3 -m venv .venv-yolo
+#   .venv-yolo/bin/pip install -r requirements-yolo.txt
+ultralytics>=8.3,<9

@@ -4,13 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Samuel_Collins_CV_Benchmarking"
-version = "1.0.1"
-description = "Benchmark classical machine-learning and neural-network image classifiers through one public function."
+version = "2.0.0"
+description = "Benchmark traditional machine-learning classifiers and modern CNN architectures on one image-classification problem, through one public function."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { file = "LICENSE" }
 authors = [{ name = "Samuel Collins" }]
-keywords = ["computer-vision", "image-classification", "benchmarking", "scikit-learn"]
+keywords = ["computer-vision", "image-classification", "benchmarking",
+            "scikit-learn", "pytorch", "transfer-learning", "cnn"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -31,6 +32,12 @@ dev = ["pytest>=7.4", "build>=1.0", "twine>=4.0"]
 # Only the report tooling in scripts/ needs these; the library itself does
 # not, so they stay out of the default install.
 report = ["markdown>=3.5"]
+# The deep CNN benchmark. Kept optional and imported lazily so that
+# `pip install Samuel_Collins_CV_Benchmarking` does not pull a gigabyte of
+# pretrained-model machinery onto someone who only wants the Part 1
+# classifiers. torchvision supplies the nine architectures; fvcore and thop
+# are the two profilers used for the MAC counts, tried in that order.
+deep = ["torchvision>=0.15", "fvcore>=0.1.5", "thop>=0.1.1"]
 
 [project.urls]
 Homepage = "https://github.com/srcollins785/Samuel_Collins_CV_Benchmarking"
