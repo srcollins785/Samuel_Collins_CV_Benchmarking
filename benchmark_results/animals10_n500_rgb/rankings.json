@@ -1,0 +1,713 @@
+{
+  "A_highest_accuracy": {
+    "basis": "Test accuracy on the shared test half, highest first.",
+    "ranking": [
+      {
+        "rank": 1,
+        "model": "VGG16",
+        "family": "Deep CNN",
+        "value": 0.944,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 2,
+        "model": "YOLO Classification",
+        "family": "Modern Classifier",
+        "value": 0.939,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 3,
+        "model": "EfficientNet-B0",
+        "family": "Scaled CNN",
+        "value": 0.928,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 4,
+        "model": "ConvNeXt-Tiny",
+        "family": "Modern CNN",
+        "value": 0.926,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 5,
+        "model": "ResNet50",
+        "family": "Residual CNN",
+        "value": 0.918,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 6,
+        "model": "MobileNetV3-Large",
+        "family": "Efficient CNN",
+        "value": 0.904,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 7,
+        "model": "AlexNet",
+        "family": "Deep CNN",
+        "value": 0.9,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 8,
+        "model": "DenseNet121",
+        "family": "Dense CNN",
+        "value": 0.896,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 9,
+        "model": "GoogLeNet",
+        "family": "Multi-branch CNN",
+        "value": 0.895,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 10,
+        "model": "ResNet18",
+        "family": "Residual CNN",
+        "value": 0.865,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 11,
+        "model": "Simple CNN",
+        "family": "CNN Baseline",
+        "value": 0.433,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 12,
+        "model": "SVM",
+        "family": "Traditional ML",
+        "value": 0.353,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 13,
+        "model": "Random Forest",
+        "family": "Traditional ML",
+        "value": 0.322,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 14,
+        "model": "Neural Network",
+        "family": "Neural Baseline",
+        "value": 0.287,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 15,
+        "model": "Logistic Regression",
+        "family": "Traditional ML",
+        "value": 0.226,
+        "metric": "accuracy"
+      },
+      {
+        "rank": 16,
+        "model": "Decision Tree",
+        "family": "Traditional ML",
+        "value": 0.18,
+        "metric": "accuracy"
+      }
+    ]
+  },
+  "B_fastest_inference": {
+    "basis": "Batched throughput in images per second, highest first. Traditional ML throughput is derived from the latency Part 1 measured.",
+    "ranking": [
+      {
+        "rank": 1,
+        "model": "Decision Tree",
+        "family": "Traditional ML",
+        "value": 546908.93,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 2,
+        "model": "Neural Network",
+        "family": "Neural Baseline",
+        "value": 40492.8,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 3,
+        "model": "Random Forest",
+        "family": "Traditional ML",
+        "value": 36092.29,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 4,
+        "model": "Logistic Regression",
+        "family": "Traditional ML",
+        "value": 34127.07,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 5,
+        "model": "AlexNet",
+        "family": "Deep CNN",
+        "value": 3650.89,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 6,
+        "model": "Simple CNN",
+        "family": "CNN Baseline",
+        "value": 2508.91,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 7,
+        "model": "ResNet18",
+        "family": "Residual CNN",
+        "value": 2187.01,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 8,
+        "model": "MobileNetV3-Large",
+        "family": "Efficient CNN",
+        "value": 1783.81,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 9,
+        "model": "GoogLeNet",
+        "family": "Multi-branch CNN",
+        "value": 1594.75,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 10,
+        "model": "EfficientNet-B0",
+        "family": "Scaled CNN",
+        "value": 1378.32,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 11,
+        "model": "YOLO Classification",
+        "family": "Modern Classifier",
+        "value": 790.29,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 12,
+        "model": "ResNet50",
+        "family": "Residual CNN",
+        "value": 779.65,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 13,
+        "model": "DenseNet121",
+        "family": "Dense CNN",
+        "value": 655.52,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 14,
+        "model": "ConvNeXt-Tiny",
+        "family": "Modern CNN",
+        "value": 572.12,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 15,
+        "model": "VGG16",
+        "family": "Deep CNN",
+        "value": 464.62,
+        "metric": "images_per_second"
+      },
+      {
+        "rank": 16,
+        "model": "SVM",
+        "family": "Traditional ML",
+        "value": 11.12,
+        "metric": "images_per_second"
+      }
+    ]
+  },
+  "C_smallest_model": {
+    "basis": "Saved checkpoint size in MB, smallest first. Only models that write a checkpoint appear.",
+    "ranking": [
+      {
+        "rank": 1,
+        "model": "YOLO Classification",
+        "family": "Modern Classifier",
+        "value": 3.21,
+        "metric": "megabytes"
+      },
+      {
+        "rank": 2,
+        "model": "EfficientNet-B0",
+        "family": "Scaled CNN",
+        "value": 16.36,
+        "metric": "megabytes"
+      },
+      {
+        "rank": 3,
+        "model": "MobileNetV3-Large",
+        "family": "Efficient CNN",
+        "value": 17.05,
+        "metric": "megabytes"
+      },
+      {
+        "rank": 4,
+        "model": "GoogLeNet",
+        "family": "Multi-branch CNN",
+        "value": 22.61,
+        "metric": "megabytes"
+      },
+      {
+        "rank": 5,
+        "model": "DenseNet121",
+        "family": "Dense CNN",
+        "value": 28.43,
+        "metric": "megabytes"
+      },
+      {
+        "rank": 6,
+        "model": "ResNet18",
+        "family": "Residual CNN",
+        "value": 44.8,
+        "metric": "megabytes"
+      },
+      {
+        "rank": 7,
+        "model": "ResNet50",
+        "family": "Residual CNN",
+        "value": 94.42,
+        "metric": "megabytes"
+      },
+      {
+        "rank": 8,
+        "model": "ConvNeXt-Tiny",
+        "family": "Modern CNN",
+        "value": 111.37,
+        "metric": "megabytes"
+      },
+      {
+        "rank": 9,
+        "model": "AlexNet",
+        "family": "Deep CNN",
+        "value": 228.18,
+        "metric": "megabytes"
+      },
+      {
+        "rank": 10,
+        "model": "VGG16",
+        "family": "Deep CNN",
+        "value": 537.22,
+        "metric": "megabytes"
+      }
+    ]
+  },
+  "D_accuracy_per_million_parameters": {
+    "basis": "Accuracy divided by parameters in millions. A comparative indicator only - it rewards small models heavily and is not a measure of model quality.",
+    "ranking": [
+      {
+        "rank": 1,
+        "model": "YOLO Classification",
+        "family": "Modern Classifier",
+        "accuracy": 0.939,
+        "parameters_millions": 1.544,
+        "accuracy_per_million_parameters": 0.6082
+      },
+      {
+        "rank": 2,
+        "model": "EfficientNet-B0",
+        "family": "Scaled CNN",
+        "accuracy": 0.928,
+        "parameters_millions": 4.02,
+        "accuracy_per_million_parameters": 0.2308
+      },
+      {
+        "rank": 3,
+        "model": "MobileNetV3-Large",
+        "family": "Efficient CNN",
+        "accuracy": 0.904,
+        "parameters_millions": 4.215,
+        "accuracy_per_million_parameters": 0.2145
+      },
+      {
+        "rank": 4,
+        "model": "GoogLeNet",
+        "family": "Multi-branch CNN",
+        "accuracy": 0.895,
+        "parameters_millions": 5.61,
+        "accuracy_per_million_parameters": 0.1595
+      },
+      {
+        "rank": 5,
+        "model": "DenseNet121",
+        "family": "Dense CNN",
+        "accuracy": 0.896,
+        "parameters_millions": 6.964,
+        "accuracy_per_million_parameters": 0.1287
+      },
+      {
+        "rank": 6,
+        "model": "ResNet18",
+        "family": "Residual CNN",
+        "accuracy": 0.865,
+        "parameters_millions": 11.182,
+        "accuracy_per_million_parameters": 0.0774
+      },
+      {
+        "rank": 7,
+        "model": "ResNet50",
+        "family": "Residual CNN",
+        "accuracy": 0.918,
+        "parameters_millions": 23.529,
+        "accuracy_per_million_parameters": 0.039
+      },
+      {
+        "rank": 8,
+        "model": "ConvNeXt-Tiny",
+        "family": "Modern CNN",
+        "accuracy": 0.926,
+        "parameters_millions": 27.828,
+        "accuracy_per_million_parameters": 0.0333
+      },
+      {
+        "rank": 9,
+        "model": "AlexNet",
+        "family": "Deep CNN",
+        "accuracy": 0.9,
+        "parameters_millions": 57.045,
+        "accuracy_per_million_parameters": 0.0158
+      },
+      {
+        "rank": 10,
+        "model": "VGG16",
+        "family": "Deep CNN",
+        "accuracy": 0.944,
+        "parameters_millions": 134.302,
+        "accuracy_per_million_parameters": 0.007
+      }
+    ]
+  },
+  "E_overall_recommendation": {
+    "universal": {
+      "basis": "Every model in the benchmark scored on the three metrics all of them report. Accuracy 40% and macro F1 35% because the task is classification and being right dominates; macro F1 is weighted separately from accuracy because it is the one that catches a model quietly abandoning a class. Latency 25% because a classifier too slow for its deployment is not a usable classifier. Metrics are min-max normalized across the models scored, so the numbers are relative to this benchmark and not absolute.",
+      "weights": {
+        "accuracy": 0.4,
+        "macro_f1": 0.35,
+        "latency_ms": 0.25
+      },
+      "ranking": [
+        {
+          "model": "EfficientNet-B0",
+          "family": "Scaled CNN",
+          "score": 0.8459,
+          "contributions": {
+            "accuracy": 0.3916,
+            "macro_f1": 0.3428,
+            "latency_ms": 0.1115
+          },
+          "rank": 1
+        },
+        {
+          "model": "YOLO Classification",
+          "family": "Modern Classifier",
+          "score": 0.8438,
+          "contributions": {
+            "accuracy": 0.3974,
+            "macro_f1": 0.3477,
+            "latency_ms": 0.0987
+          },
+          "rank": 2
+        },
+        {
+          "model": "AlexNet",
+          "family": "Deep CNN",
+          "score": 0.841,
+          "contributions": {
+            "accuracy": 0.377,
+            "macro_f1": 0.3299,
+            "latency_ms": 0.1341
+          },
+          "rank": 3
+        },
+        {
+          "model": "VGG16",
+          "family": "Deep CNN",
+          "score": 0.8364,
+          "contributions": {
+            "accuracy": 0.4,
+            "macro_f1": 0.35,
+            "latency_ms": 0.0864
+          },
+          "rank": 4
+        },
+        {
+          "model": "MobileNetV3-Large",
+          "family": "Efficient CNN",
+          "score": 0.828,
+          "contributions": {
+            "accuracy": 0.3791,
+            "macro_f1": 0.3314,
+            "latency_ms": 0.1175
+          },
+          "rank": 5
+        },
+        {
+          "model": "ConvNeXt-Tiny",
+          "family": "Modern CNN",
+          "score": 0.8235,
+          "contributions": {
+            "accuracy": 0.3906,
+            "macro_f1": 0.3417,
+            "latency_ms": 0.0912
+          },
+          "rank": 6
+        },
+        {
+          "model": "ResNet50",
+          "family": "Residual CNN",
+          "score": 0.8229,
+          "contributions": {
+            "accuracy": 0.3864,
+            "macro_f1": 0.3381,
+            "latency_ms": 0.0984
+          },
+          "rank": 7
+        },
+        {
+          "model": "GoogLeNet",
+          "family": "Multi-branch CNN",
+          "score": 0.8169,
+          "contributions": {
+            "accuracy": 0.3743,
+            "macro_f1": 0.3277,
+            "latency_ms": 0.1149
+          },
+          "rank": 8
+        },
+        {
+          "model": "DenseNet121",
+          "family": "Dense CNN",
+          "score": 0.7971,
+          "contributions": {
+            "accuracy": 0.3749,
+            "macro_f1": 0.3279,
+            "latency_ms": 0.0943
+          },
+          "rank": 9
+        },
+        {
+          "model": "ResNet18",
+          "family": "Residual CNN",
+          "score": 0.7942,
+          "contributions": {
+            "accuracy": 0.3586,
+            "macro_f1": 0.3134,
+            "latency_ms": 0.1222
+          },
+          "rank": 10
+        },
+        {
+          "model": "Simple CNN",
+          "family": "CNN Baseline",
+          "score": 0.374,
+          "contributions": {
+            "accuracy": 0.1325,
+            "macro_f1": 0.1161,
+            "latency_ms": 0.1254
+          },
+          "rank": 11
+        },
+        {
+          "model": "Random Forest",
+          "family": "Traditional ML",
+          "score": 0.3249,
+          "contributions": {
+            "accuracy": 0.0743,
+            "macro_f1": 0.0635,
+            "latency_ms": 0.1871
+          },
+          "rank": 12
+        },
+        {
+          "model": "Neural Network",
+          "family": "Neural Baseline",
+          "score": 0.2921,
+          "contributions": {
+            "accuracy": 0.056,
+            "macro_f1": 0.0463,
+            "latency_ms": 0.1898
+          },
+          "rank": 13
+        },
+        {
+          "model": "Decision Tree",
+          "family": "Traditional ML",
+          "score": 0.25,
+          "contributions": {
+            "accuracy": 0.0,
+            "macro_f1": 0.0,
+            "latency_ms": 0.25
+          },
+          "rank": 14
+        },
+        {
+          "model": "Logistic Regression",
+          "family": "Traditional ML",
+          "score": 0.2305,
+          "contributions": {
+            "accuracy": 0.0241,
+            "macro_f1": 0.0206,
+            "latency_ms": 0.1858
+          },
+          "rank": 15
+        },
+        {
+          "model": "SVM",
+          "family": "Traditional ML",
+          "score": 0.1693,
+          "contributions": {
+            "accuracy": 0.0906,
+            "macro_f1": 0.0787,
+            "latency_ms": 0.0
+          },
+          "rank": 16
+        }
+      ]
+    },
+    "deployment": {
+      "basis": "The edge-deployment score, for models that report size and memory. Accuracy 30% and macro F1 25% keep correctness dominant at 55%. Throughput 20% and checkpoint size 15% are the two constraints that actually stop a model shipping to a UAV or an embedded board - flash budget and frame rate. Memory is weighted lowest at 10% because on this host it is a sampled MPS allocation rather than a true peak, and a weight should not exceed the confidence in its measurement. Throughput, checkpoint size and memory are normalized on a log scale for the same reason latency is in the universal score; accuracy and macro F1 are normalized directly.",
+      "weights": {
+        "accuracy": 0.3,
+        "macro_f1": 0.25,
+        "throughput": 0.2,
+        "checkpoint_mb": 0.15,
+        "memory_mb": 0.1
+      },
+      "ranking": [
+        {
+          "model": "EfficientNet-B0",
+          "family": "Scaled CNN",
+          "score": 0.745,
+          "contributions": {
+            "accuracy": 0.2392,
+            "macro_f1": 0.2005,
+            "throughput": 0.1055,
+            "checkpoint_mb": 0.15,
+            "memory_mb": 0.0498
+          },
+          "rank": 1
+        },
+        {
+          "model": "MobileNetV3-Large",
+          "family": "Efficient CNN",
+          "score": 0.6254,
+          "contributions": {
+            "accuracy": 0.1481,
+            "macro_f1": 0.1225,
+            "throughput": 0.1305,
+            "checkpoint_mb": 0.1482,
+            "memory_mb": 0.0761
+          },
+          "rank": 2
+        },
+        {
+          "model": "AlexNet",
+          "family": "Deep CNN",
+          "score": 0.5824,
+          "contributions": {
+            "accuracy": 0.1329,
+            "macro_f1": 0.1127,
+            "throughput": 0.2,
+            "checkpoint_mb": 0.0368,
+            "memory_mb": 0.1
+          },
+          "rank": 3
+        },
+        {
+          "model": "ConvNeXt-Tiny",
+          "family": "Modern CNN",
+          "score": 0.5583,
+          "contributions": {
+            "accuracy": 0.2316,
+            "macro_f1": 0.1929,
+            "throughput": 0.0202,
+            "checkpoint_mb": 0.0676,
+            "memory_mb": 0.046
+          },
+          "rank": 4
+        },
+        {
+          "model": "VGG16",
+          "family": "Deep CNN",
+          "score": 0.55,
+          "contributions": {
+            "accuracy": 0.3,
+            "macro_f1": 0.25,
+            "throughput": 0.0,
+            "checkpoint_mb": 0.0,
+            "memory_mb": 0.0
+          },
+          "rank": 5
+        },
+        {
+          "model": "GoogLeNet",
+          "family": "Multi-branch CNN",
+          "score": 0.5483,
+          "contributions": {
+            "accuracy": 0.1139,
+            "macro_f1": 0.0977,
+            "throughput": 0.1196,
+            "checkpoint_mb": 0.1361,
+            "memory_mb": 0.081
+          },
+          "rank": 6
+        },
+        {
+          "model": "ResNet50",
+          "family": "Residual CNN",
+          "score": 0.5478,
+          "contributions": {
+            "accuracy": 0.2013,
+            "macro_f1": 0.1683,
+            "throughput": 0.0502,
+            "checkpoint_mb": 0.0747,
+            "memory_mb": 0.0533
+          },
+          "rank": 7
+        },
+        {
+          "model": "DenseNet121",
+          "family": "Dense CNN",
+          "score": 0.4102,
+          "contributions": {
+            "accuracy": 0.1177,
+            "macro_f1": 0.0985,
+            "throughput": 0.0334,
+            "checkpoint_mb": 0.1263,
+            "memory_mb": 0.0343
+          },
+          "rank": 8
+        },
+        {
+          "model": "ResNet18",
+          "family": "Residual CNN",
+          "score": 0.3356,
+          "contributions": {
+            "accuracy": 0.0,
+            "macro_f1": 0.0,
+            "throughput": 0.1503,
+            "checkpoint_mb": 0.1067,
+            "memory_mb": 0.0786
+          },
+          "rank": 9
+        }
+      ]
+    }
+  }
+}

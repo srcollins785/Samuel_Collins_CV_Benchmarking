@@ -1,0 +1,127 @@
+{
+  "part": 2,
+  "color_mode": "rgb",
+  "input_size": [
+    224,
+    224
+  ],
+  "cache_shapes": {
+    "train": [
+      3400,
+      256,
+      256,
+      3
+    ],
+    "validation": [
+      600,
+      224,
+      224,
+      3
+    ],
+    "test": [
+      1000,
+      224,
+      224,
+      3
+    ],
+    "megabytes": 909.3
+  },
+  "random_seed": 42,
+  "split": {
+    "training_samples": 3400,
+    "validation_samples": 600,
+    "testing_samples": 1000,
+    "training_fraction": 0.68,
+    "validation_fraction": 0.12,
+    "testing_fraction": 0.2,
+    "validation_fraction_of_training": 0.15,
+    "random_seed": 42,
+    "stratified": true,
+    "note": "Validation is carved from the training half only; the test half is identical to the Part 1 split and unseen until model selection is complete."
+  },
+  "class_names": [
+    "butterfly",
+    "cat",
+    "chicken",
+    "cow",
+    "dog",
+    "elephant",
+    "horse",
+    "sheep",
+    "spider",
+    "squirrel"
+  ],
+  "protocol": {
+    "epochs": 20,
+    "batch_size": 64,
+    "optimizer": "AdamW",
+    "learning_rate": 0.001,
+    "learning_rate_this_run": 0.0001,
+    "learning_rate_note": "Per-architecture rates are recorded in each entry's parameters.learning_rate; any departure from the prescribed rate is recorded in deep_lr_deviations.json.",
+    "weight_decay": 0.01,
+    "loss": "CrossEntropyLoss",
+    "pretrained": true,
+    "freeze_backbone": false,
+    "early_stopping": false,
+    "selection_criterion": "highest_validation_accuracy",
+    "train_transforms": [
+      "Resize([224, 224]) via a 256px cache",
+      "RandomCrop(224)",
+      "RandomHorizontalFlip(p=0.5)",
+      "ToTensor",
+      "Normalize(ImageNet mean/std)"
+    ],
+    "eval_transforms": [
+      "Resize([224, 224])",
+      "ToTensor",
+      "Normalize(ImageNet mean/std)"
+    ]
+  },
+  "device": "mps",
+  "environment": {
+    "gpu": "Apple Silicon integrated GPU via Metal (Apple M4 Max)",
+    "cpu": "Apple M4 Max",
+    "ram_gb": 48.0,
+    "operating_system": "Darwin 25.6.0 (arm64)",
+    "os_version": "Darwin Kernel Version 25.6.0: Fri Jul 31 19:17:26 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T6041",
+    "python_version": "3.9.6",
+    "torch_version": "2.8.0",
+    "torchvision_version": "0.23.0",
+    "cuda_version": "not applicable - no CUDA device on this host",
+    "cuda_available": false,
+    "mps_available": true,
+    "numpy_version": "2.0.2"
+  },
+  "deviations": [
+    {
+      "item": "GPU memory measurement (section 21)",
+      "deviation": "No CUDA device on this host, so torch.cuda.max_memory_allocated cannot be called.",
+      "handling": "Reported as the MPS driver allocation sampled once per epoch, labeled as such. Not presented as a CUDA peak."
+    },
+    {
+      "item": "GoogLeNet auxiliary classifiers",
+      "deviation": "Disabled so that every architecture's forward pass returns a single logit tensor and one shared training loop can serve all nine.",
+      "handling": "Removes GoogLeNet's auxiliary loss and 4,329,984 parameters. Inference-time architecture is unchanged, since the auxiliary branches are discarded at inference anyway."
+    },
+    {
+      "item": "Training device",
+      "deviation": "The Part 1 Simple CNN trains on CPU for cross-machine determinism; the deep architectures train on MPS.",
+      "handling": "Unavoidable - nine networks at 224x224 are not tractable on CPU. Recorded in every result."
+    },
+    {
+      "item": "Validation split",
+      "deviation": "The Part 1 split is train/test only, and section 12 requires selection on validation accuracy.",
+      "handling": "Validation is carved from the training half at the same fraction and seed the Part 1 Simple CNN already used, so the test half is unchanged and both model families validate on identical rows."
+    },
+    {
+      "item": "Computational complexity (section 22)",
+      "deviation": "fvcore and thop both count multiply-accumulates and label the total 'flops'.",
+      "handling": "Reported as MACs, with FLOPs derived explicitly as 2x MACs. Operators the profiler could not account for are listed per architecture."
+    },
+    {
+      "item": "YOLO classification",
+      "deviation": "ultralytics excludes numpy 2.0-2.3.4 on macOS and numpy >= 2.3.5 needs Python 3.11+, so installing it would downgrade numpy beneath the environment that produced the Part 1 results.",
+      "handling": "Run as a subprocess in a separate virtual environment against the identical split, writing the same artifacts. Its environment is recorded separately."
+    }
+  ]
+}
