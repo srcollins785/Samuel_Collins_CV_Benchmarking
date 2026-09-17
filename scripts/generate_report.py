@@ -177,12 +177,14 @@ What makes it worth writing down is that the failure produced a better number th
 truth. A crash announces itself. A validation accuracy of 0.9667 beside a loss of 0.0001
 looks like a network that is learning, and the only thing that did not fit was the test
 accuracy underneath it, exactly 0.1000 with a macro F1 of 0.0182, which is the arithmetic
-of predicting one class out of ten rather than anything a trained model produces. I had
-been treating a passing test suite as the claim that needed checking. The more dangerous
-object is a number a component computes about its own performance, because nothing
-downstream is positioned to contradict it. The loop now recomputes its reported accuracy
-from the same weights outside the training path, once on the device and once on CPU, and
-a label outside the valid range raises instead of being trained on.
+of predicting one class out of ten rather than anything a trained model produces. The
+habit written down at the end of Part 1 was about test suites, and it does not reach far
+enough. A suite that passes when it should fail is at least a fixed object that can be
+read line by line. A number a component computes about its own performance is the harder
+case, because nothing downstream is positioned to contradict it and every table and curve
+built on top of it inherits it without complaint. The loop now recomputes its reported
+accuracy from the same weights outside the training path, once on the device and once on
+CPU, and a label outside the valid range raises instead of being trained on.
 
 The learning rate the assignment prescribes produced the result I would least have
 predicted. At AdamW with lr 0.001, AlexNet sat at chance for all twenty epochs with its
