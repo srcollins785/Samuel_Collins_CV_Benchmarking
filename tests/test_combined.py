@@ -358,3 +358,108 @@ def test_accuracy_is_not_log_scaled():
     assert "macro_f1" not in combined.LOG_SCALED_METRICS
     assert "latency_ms" in combined.LOG_SCALED_METRICS
     assert "checkpoint_mb" in combined.LOG_SCALED_METRICS
+
+
+# -- the parameterized baselines -------------------------------------------
+#
+# The first version of this table reported all six Part 1 models as N/A in the
+# parameter column. That is correct for the four traditional models and wrong
+# for the fully connected network and the Simple CNN, which are parameterized
+# networks - section 23's own template marks N/A on the traditional rows only
+# and leaves those two blank. The error was generalizing a true statement about
+# a Random Forest to two models it is false of.
+
+@pytest.fixture
+def config_dir_with_baselines(config_dir):
+    """Part 1 artifacts plus the measured baseline sizes."""
+    matrix = [[8, 2], [3, 7]]
+    derived = combined.metrics_from_confusion_matrix(matrix)
+    stored = json.loads((config_dir / "benchmark_metrics.json").read_text())
+    for key, name in (("neural_network", "Neural Network"),
+                      ("simple_cnn", "Simple CNN")):
+        stored[key] = {
+            "name": name, "succeeded": True, "error": None,
+            "accuracy": derived["accuracy"],
+            "macro_precision": derived["macro_precision"],
+            "macro_recall": derived["macro_recall"],
+            "macro_f1": derived["macro_f1"],
+            "weighted_f1": derived["weighted_f1"],
+            "training_time_seconds": 5.0,
+            "inference_time_ms_per_image": 0.4,
+            "confusion_matrix": matrix,
+            "classification_report": {}, "training_history": {},
+        }
+    (config_dir / "benchmark_metrics.json").write_text(json.dumps(stored))
+    (config_dir / "baseline_model_sizes.json").write_text(json.dumps({
+        "models": {
+            "neural_network": {"name": "Neural Network",
+                               "total_parameters": 1_581_898,
+                               "trainable_parameters": 1_581_898,
+                               "frozen_parameters": 0,
+                               "size_megabytes": 19.29},
+            "simple_cnn": {"name": "Simple CNN",
+                           "total_parameters": 1_626_442,
+                           "trainable_parameters": 1_626_442,
+                           "frozen_parameters": 0,
+                           "size_megabytes": 6.51},
+        }
+    }))
+    return config_dir
+
+
+def test_parameterized_baselines_report_their_parameters(config_dir_with_baselines):
+    rows = {r["key"]: r for r in
+            combined.load_part1_rows(config_dir_with_baselines)}
+
+    assert rows["neural_network"]["total_parameters"] == 1_581_898
+    assert rows["neural_network"]["checkpoint_mb"] == 19.29
+    assert rows["simple_cnn"]["total_parameters"] == 1_626_442
+    assert rows["simple_cnn"]["checkpoint_mb"] == 6.51
+
+
+def test_traditional_models_still_report_nothing(config_dir_with_baselines):
+    """N/A belongs to the models that genuinely have no parameter count."""
+    rows = {r["key"]: r for r in
+            combined.load_part1_rows(config_dir_with_baselines)}
+    assert rows["logistic_regression"]["total_parameters"] is None
+    assert rows["logistic_regression"]["checkpoint_mb"] is None
+
+
+def test_the_table_shows_numbers_for_baselines_and_na_for_the_rest(
+        config_dir_with_baselines, tmp_path):
+    import pandas as pd
+
+    rows = combined.combined_rows(config_dir_with_baselines)
+    path = combined.write_combined_csv(rows, tmp_path / "combined.csv")
+    frame = pd.read_csv(path, keep_default_na=False).set_index("Model")
+
+    # The column holds numbers beside "N/A", so pandas keeps it as strings.
+    # That is the intended shape: the cell has to be able to say N/A.
+    assert int(frame.loc["Neural Network", "Total Parameters"]) == 1_581_898
+    assert float(frame.loc["Simple CNN", "Size MB"]) == 6.51
+    assert frame.loc["Logistic Regression", "Total Parameters"] == "N/A"
+
+
+def test_absent_baseline_measurements_are_not_an_error(config_dir):
+    """The table must still build before measure_baselines.py has been run."""
+    assert combined.load_baseline_sizes(config_dir) == {}
+    rows = combined.load_part1_rows(config_dir)
+    assert all(r["total_parameters"] is None for r in rows)
+
+
+def test_a_trained_model_cannot_report_zero_trainable_parameters():
+    """The shape of the YOLO error, as an invariant.
+
+    YOLO recorded 1,543,914 total parameters and 0 trainable, because the
+    count was taken from requires_grad on a checkpoint reloaded for inference
+    rather than from the training configuration. Zero trainable parameters
+    describes a model that cannot have learned anything, next to a row
+    reporting 93.9% accuracy. The two cannot both be true.
+    """
+    def consistent(total, trainable, frozen, accuracy, chance):
+        if accuracy is not None and accuracy > chance * 1.5 and trainable == 0:
+            return False
+        return trainable + frozen == total and 0 <= trainable <= total
+
+    assert not consistent(1_543_914, 0, 1_543_914, 0.939, 0.1)
+    assert consistent(1_543_914, 1_543_914, 0, 0.939, 0.1)

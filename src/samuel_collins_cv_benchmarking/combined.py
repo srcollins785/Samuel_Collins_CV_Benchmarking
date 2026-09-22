@@ -128,6 +128,25 @@ def _row(key, name, family, metrics, **extra) -> dict:
     return row
 
 
+def load_baseline_sizes(config_dir) -> dict:
+    """Parameter counts and sizes for the two parameterized baselines.
+
+    Part 1 recorded neither, and the first version of the combined table
+    reported all six of its models as N/A. That is right for Logistic
+    Regression, a Decision Tree, a Random Forest and an SVM, none of which has
+    a parameter count in the sense a network does. It is wrong for the fully
+    connected network and the Simple CNN, which are parameterized networks and
+    which section 23's own template leaves blank rather than marking N/A.
+
+    Measured separately by scripts/measure_baselines.py and read from its
+    artifact, so Part 1's published metrics file stays untouched.
+    """
+    path = Path(config_dir) / "baseline_model_sizes.json"
+    if not path.is_file():
+        return {}
+    return (json.loads(path.read_text(encoding="utf-8")) or {}).get("models", {})
+
+
 def load_part1_rows(config_dir) -> list:
     """The six prior methods, read back from Part 1's artifacts.
 
@@ -143,11 +162,13 @@ def load_part1_rows(config_dir) -> list:
         return []
 
     stored = json.loads(path.read_text(encoding="utf-8"))
+    sizes = load_baseline_sizes(config_dir)
     rows = []
 
     for key, entry in stored.items():
         name = entry.get("name", key)
         family = PART1_FAMILIES.get(key, "Traditional ML")
+        measured = sizes.get(key, {})
 
         if not entry.get("succeeded", False):
             rows.append(_row(key, name, family, {},
@@ -174,6 +195,11 @@ def load_part1_rows(config_dir) -> list:
         latency = entry.get("inference_time_ms_per_image")
         rows.append(_row(
             key, name, family, derived,
+            # Present for the two parameterized baselines, absent for the four
+            # traditional models, where N/A is the correct answer.
+            total_parameters=measured.get("total_parameters"),
+            trainable_parameters=measured.get("trainable_parameters"),
+            checkpoint_mb=measured.get("size_megabytes"),
             training_seconds=entry.get("training_time_seconds"),
             latency_ms=latency,
             # Exact arithmetic on a measured latency, not a separate

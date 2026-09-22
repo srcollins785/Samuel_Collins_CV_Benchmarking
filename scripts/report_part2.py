@@ -1028,8 +1028,66 @@ def section_cost(data: dict) -> list:
         "architecture.",
         "",
     ]
+    lines += _capacity_block(data)
     lines += _memory_block(data)
     return lines
+
+
+def _capacity_block(data: dict) -> list:
+    """What the parameter counts say once the baselines carry one.
+
+    Worth its own paragraph because the first version of the master table
+    reported the two neural baselines as N/A in the parameter column, which
+    hid the cleanest comparison in the benchmark.
+    """
+    frame = data["combined"]
+    wanted = ("Neural Network", "Simple CNN", "YOLO Classification")
+    rows = []
+    for _, row in frame.iterrows():
+        if row["Model"] in wanted and row["Total Parameters"] != "N/A":
+            rows.append({
+                "Model": row["Model"],
+                "Family": row["Family"],
+                "Total parameters": f"{int(row['Total Parameters']):,}",
+                "Accuracy": row["Accuracy"],
+            })
+    if len(rows) < 2:
+        return []
+
+    order = {name: i for i, name in enumerate(wanted)}
+    rows.sort(key=lambda r: order.get(r["Model"], 9))
+
+    return [
+        "### Three models at the same capacity",
+        "",
+        "The fully connected network, the Simple CNN and the YOLO classifier "
+        "hold almost the same number of parameters:",
+        "",
+        _table(pd.DataFrame(rows)),
+        "",
+        "That is the cleanest comparison in this benchmark, and it isolates "
+        "the thing the headline number does not. These three have the same "
+        "capacity to within five percent of each other, and they are "
+        "separated by roughly sixty-five points of accuracy. Whatever the "
+        "deep architectures are buying, it is not parameter count.",
+        "",
+        "What separates them is what each one is allowed to assume. The fully "
+        "connected network sees 12,288 independent columns and has to "
+        "discover from data that two adjacent ones are related. The Simple "
+        "CNN is handed locality and weight sharing and immediately doubles "
+        "the score at the same budget. The YOLO classifier adds a "
+        "convolutional design refined over a decade and features already "
+        "learned from ImageNet, and doubles it again. The architecture and "
+        "the pretraining are doing the work, not the size.",
+        "",
+        "Those two columns read N/A in the first version of this table. "
+        "Section 23 marks N/A on the four traditional rows and leaves these "
+        "two blank, and reporting all six Part 1 models the same way "
+        "generalized a statement that is true of a Random Forest - which has "
+        "no parameter count in this sense - to two models that plainly do. "
+        "The comparison above was invisible until they were measured.",
+        "",
+    ]
 
 
 def _memory_block(data: dict) -> list:

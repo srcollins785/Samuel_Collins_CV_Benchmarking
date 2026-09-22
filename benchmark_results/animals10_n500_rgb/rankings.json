@@ -245,62 +245,76 @@
       },
       {
         "rank": 2,
+        "model": "Simple CNN",
+        "family": "CNN Baseline",
+        "value": 6.51,
+        "metric": "megabytes"
+      },
+      {
+        "rank": 3,
         "model": "EfficientNet-B0",
         "family": "Scaled CNN",
         "value": 16.36,
         "metric": "megabytes"
       },
       {
-        "rank": 3,
+        "rank": 4,
         "model": "MobileNetV3-Large",
         "family": "Efficient CNN",
         "value": 17.05,
         "metric": "megabytes"
       },
       {
-        "rank": 4,
+        "rank": 5,
+        "model": "Neural Network",
+        "family": "Neural Baseline",
+        "value": 19.29,
+        "metric": "megabytes"
+      },
+      {
+        "rank": 6,
         "model": "GoogLeNet",
         "family": "Multi-branch CNN",
         "value": 22.61,
         "metric": "megabytes"
       },
       {
-        "rank": 5,
+        "rank": 7,
         "model": "DenseNet121",
         "family": "Dense CNN",
         "value": 28.43,
         "metric": "megabytes"
       },
       {
-        "rank": 6,
+        "rank": 8,
         "model": "ResNet18",
         "family": "Residual CNN",
         "value": 44.8,
         "metric": "megabytes"
       },
       {
-        "rank": 7,
+        "rank": 9,
         "model": "ResNet50",
         "family": "Residual CNN",
         "value": 94.42,
         "metric": "megabytes"
       },
       {
-        "rank": 8,
+        "rank": 10,
         "model": "ConvNeXt-Tiny",
         "family": "Modern CNN",
         "value": 111.37,
         "metric": "megabytes"
       },
       {
-        "rank": 9,
+        "rank": 11,
         "model": "AlexNet",
         "family": "Deep CNN",
         "value": 228.18,
         "metric": "megabytes"
       },
       {
-        "rank": 10,
+        "rank": 12,
         "model": "VGG16",
         "family": "Deep CNN",
         "value": 537.22,
@@ -321,6 +335,14 @@
       },
       {
         "rank": 2,
+        "model": "Simple CNN",
+        "family": "CNN Baseline",
+        "accuracy": 0.433,
+        "parameters_millions": 1.626,
+        "accuracy_per_million_parameters": 0.2662
+      },
+      {
+        "rank": 3,
         "model": "EfficientNet-B0",
         "family": "Scaled CNN",
         "accuracy": 0.928,
@@ -328,7 +350,7 @@
         "accuracy_per_million_parameters": 0.2308
       },
       {
-        "rank": 3,
+        "rank": 4,
         "model": "MobileNetV3-Large",
         "family": "Efficient CNN",
         "accuracy": 0.904,
@@ -336,7 +358,15 @@
         "accuracy_per_million_parameters": 0.2145
       },
       {
-        "rank": 4,
+        "rank": 5,
+        "model": "Neural Network",
+        "family": "Neural Baseline",
+        "accuracy": 0.287,
+        "parameters_millions": 1.582,
+        "accuracy_per_million_parameters": 0.1814
+      },
+      {
+        "rank": 6,
         "model": "GoogLeNet",
         "family": "Multi-branch CNN",
         "accuracy": 0.895,
@@ -344,7 +374,7 @@
         "accuracy_per_million_parameters": 0.1595
       },
       {
-        "rank": 5,
+        "rank": 7,
         "model": "DenseNet121",
         "family": "Dense CNN",
         "accuracy": 0.896,
@@ -352,7 +382,7 @@
         "accuracy_per_million_parameters": 0.1287
       },
       {
-        "rank": 6,
+        "rank": 8,
         "model": "ResNet18",
         "family": "Residual CNN",
         "accuracy": 0.865,
@@ -360,7 +390,7 @@
         "accuracy_per_million_parameters": 0.0774
       },
       {
-        "rank": 7,
+        "rank": 9,
         "model": "ResNet50",
         "family": "Residual CNN",
         "accuracy": 0.918,
@@ -368,7 +398,7 @@
         "accuracy_per_million_parameters": 0.039
       },
       {
-        "rank": 8,
+        "rank": 10,
         "model": "ConvNeXt-Tiny",
         "family": "Modern CNN",
         "accuracy": 0.926,
@@ -376,7 +406,7 @@
         "accuracy_per_million_parameters": 0.0333
       },
       {
-        "rank": 9,
+        "rank": 11,
         "model": "AlexNet",
         "family": "Deep CNN",
         "accuracy": 0.9,
@@ -384,7 +414,7 @@
         "accuracy_per_million_parameters": 0.0158
       },
       {
-        "rank": 10,
+        "rank": 12,
         "model": "VGG16",
         "family": "Deep CNN",
         "accuracy": 0.944,

@@ -91,8 +91,16 @@ def main() -> None:
             predictions[path.name] = names[int(result.probs.top1)]
     inference_seconds = time.perf_counter() - inference_started
 
+    # Counted from the training configuration, not from requires_grad on the
+    # reloaded model. ultralytics returns best.pt in inference mode with grads
+    # disabled, so counting requires_grad there reports zero trainable
+    # parameters for a network that was fully fine-tuned - which is what this
+    # script did originally. No freeze argument is passed to train(), so every
+    # layer was optimized; the per-group learning rates in results.csv confirm
+    # it, all three decaying across all twenty epochs.
     parameters = sum(p.numel() for p in trained.model.parameters())
-    trainable = sum(p.numel() for p in trained.model.parameters() if p.requires_grad)
+    froze_layers = False  # no freeze= argument is passed to model.train()
+    trainable = 0 if froze_layers else parameters
 
     Path(arguments.output).write_text(json.dumps({
         "predictions": predictions,
@@ -102,6 +110,11 @@ def main() -> None:
         "images": len(test_files),
         "total_parameters": int(parameters),
         "trainable_parameters": int(trainable),
+        "trainable_counted_from": (
+            "training configuration - no freeze argument was passed, so every "
+            "layer was optimized. requires_grad on the reloaded best.pt reads "
+            "zero because ultralytics returns it in inference mode."
+        ),
         "checkpoint_bytes": weights.stat().st_size if weights.is_file() else None,
         "checkpoint_path": str(weights),
         "device": str(device),

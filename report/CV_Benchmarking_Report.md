@@ -7,7 +7,7 @@ samuel.collins@students.cau.edu
 
 **Course:** CCIS 727 — Introduction to Computer Vision  
 **Instructor:** Dr. Kishor Gupta  
-**Date:** September 16, 2026
+**Date:** September 22, 2026
 
 ## 1. Objective
 
@@ -538,8 +538,8 @@ Every model in the assignment, traditional and deep, scored on the same test hal
 | Decision Tree | Traditional ML | 0.18 | 0.1819 | 0.18 | 0.1802 | 0.1802 | N/A | N/A | 20.9 | 0.002 | 546908.9 | N/A |
 | Random Forest | Traditional ML | 0.322 | 0.3315 | 0.322 | 0.3188 | 0.3188 | N/A | N/A | 2.8 | 0.028 | 36092.3 | N/A |
 | SVM | Traditional ML | 0.353 | 0.362 | 0.353 | 0.352 | 0.352 | N/A | N/A | 418.6 | 89.96 | 11.1 | N/A |
-| Neural Network | Neural Baseline | 0.287 | 0.2803 | 0.287 | 0.2812 | 0.2812 | N/A | N/A | 1.3 | 0.025 | 40492.8 | N/A |
-| Simple CNN | CNN Baseline | 0.433 | 0.4462 | 0.433 | 0.4336 | 0.4336 | N/A | N/A | 41.5 | 0.399 | 2508.9 | N/A |
+| Neural Network | Neural Baseline | 0.287 | 0.2803 | 0.287 | 0.2812 | 0.2812 | 1581898 | 19.29 | 1.3 | 0.025 | 40492.8 | N/A |
+| Simple CNN | CNN Baseline | 0.433 | 0.4462 | 0.433 | 0.4336 | 0.4336 | 1626442 | 6.51 | 41.5 | 0.399 | 2508.9 | N/A |
 | AlexNet | Deep CNN | 0.9 | 0.9032 | 0.9 | 0.9003 | 0.9003 | 57044810 | 228.18 | 70.3 | 0.274 | 3650.9 | 328.2 |
 | VGG16 | Deep CNN | 0.944 | 0.9448 | 0.944 | 0.9441 | 0.9441 | 134301514 | 537.22 | 697.5 | 2.152 | 464.6 | 2219.9 |
 | GoogLeNet | Multi-branch CNN | 0.895 | 0.9009 | 0.895 | 0.8955 | 0.8955 | 5610154 | 22.61 | 164.5 | 0.627 | 1594.8 | 472.1 |
@@ -662,15 +662,17 @@ Saved checkpoint size in MB, smallest first. Only models that write a checkpoint
 | Rank | Model | Family | Value |
 |---|---|---|---|
 | 1 | YOLO Classification | Modern Classifier | 3.21 |
-| 2 | EfficientNet-B0 | Scaled CNN | 16.36 |
-| 3 | MobileNetV3-Large | Efficient CNN | 17.05 |
-| 4 | GoogLeNet | Multi-branch CNN | 22.61 |
-| 5 | DenseNet121 | Dense CNN | 28.43 |
-| 6 | ResNet18 | Residual CNN | 44.80 |
-| 7 | ResNet50 | Residual CNN | 94.42 |
-| 8 | ConvNeXt-Tiny | Modern CNN | 111.37 |
-| 9 | AlexNet | Deep CNN | 228.18 |
-| 10 | VGG16 | Deep CNN | 537.22 |
+| 2 | Simple CNN | CNN Baseline | 6.51 |
+| 3 | EfficientNet-B0 | Scaled CNN | 16.36 |
+| 4 | MobileNetV3-Large | Efficient CNN | 17.05 |
+| 5 | Neural Network | Neural Baseline | 19.29 |
+| 6 | GoogLeNet | Multi-branch CNN | 22.61 |
+| 7 | DenseNet121 | Dense CNN | 28.43 |
+| 8 | ResNet18 | Residual CNN | 44.80 |
+| 9 | ResNet50 | Residual CNN | 94.42 |
+| 10 | ConvNeXt-Tiny | Modern CNN | 111.37 |
+| 11 | AlexNet | Deep CNN | 228.18 |
+| 12 | VGG16 | Deep CNN | 537.22 |
 
 ### Ranking D — accuracy per million parameters
 
@@ -679,15 +681,17 @@ Accuracy divided by parameters in millions. A comparative indicator only — it 
 | Rank | Model | Accuracy | Parameters (M) | Accuracy per M |
 |---|---|---|---|---|
 | 1 | YOLO Classification | 0.9390 | 1.544 | 0.6082 |
-| 2 | EfficientNet-B0 | 0.9280 | 4.020 | 0.2308 |
-| 3 | MobileNetV3-Large | 0.9040 | 4.215 | 0.2145 |
-| 4 | GoogLeNet | 0.8950 | 5.610 | 0.1595 |
-| 5 | DenseNet121 | 0.8960 | 6.964 | 0.1287 |
-| 6 | ResNet18 | 0.8650 | 11.182 | 0.0774 |
-| 7 | ResNet50 | 0.9180 | 23.529 | 0.0390 |
-| 8 | ConvNeXt-Tiny | 0.9260 | 27.828 | 0.0333 |
-| 9 | AlexNet | 0.9000 | 57.045 | 0.0158 |
-| 10 | VGG16 | 0.9440 | 134.302 | 0.0070 |
+| 2 | Simple CNN | 0.4330 | 1.626 | 0.2662 |
+| 3 | EfficientNet-B0 | 0.9280 | 4.020 | 0.2308 |
+| 4 | MobileNetV3-Large | 0.9040 | 4.215 | 0.2145 |
+| 5 | Neural Network | 0.2870 | 1.582 | 0.1814 |
+| 6 | GoogLeNet | 0.8950 | 5.610 | 0.1595 |
+| 7 | DenseNet121 | 0.8960 | 6.964 | 0.1287 |
+| 8 | ResNet18 | 0.8650 | 11.182 | 0.0774 |
+| 9 | ResNet50 | 0.9180 | 23.529 | 0.0390 |
+| 10 | ConvNeXt-Tiny | 0.9260 | 27.828 | 0.0333 |
+| 11 | AlexNet | 0.9000 | 57.045 | 0.0158 |
+| 12 | VGG16 | 0.9440 | 134.302 | 0.0070 |
 
 ### Ranking E — overall, every model
 
@@ -858,7 +862,7 @@ Two readings stand out. **ConvNeXt-Tiny selected epoch 1** and then trained for 
 | MobileNetV3-Large | 4,214,842 | 4,214,842 | 17.05 | 0.225 | 0.45 |
 | EfficientNet-B0 | 4,020,358 | 4,020,358 | 16.36 | 0.4 | 0.801 |
 | ConvNeXt-Tiny | 27,827,818 | 27,827,818 | 111.37 | 4.47 | 8.939 |
-| YOLO Classification | 1,543,914 | 0 | 3.21 | N/A | N/A |
+| YOLO Classification | 1,543,914 | 1,543,914 | 3.21 | N/A | N/A |
 
 Total and trainable parameters are equal for every architecture because the protocol fine-tunes all layers. That is worth showing rather than collapsing into one column: a reader comparing these against a frozen-backbone benchmark elsewhere needs to see which regime produced them.
 
@@ -880,6 +884,22 @@ The complexity column needs one clarification that the tooling makes easy to get
 | YOLO Classification | 207.6 | 10.18 | 1.2654 | 790.29 | N/A | N/A |
 
 Latency is reported at two batch sizes because they answer different questions. Batched throughput is what a server sees and flatters every architecture, since a batch of 64 keeps the device busy in a way a single frame never does. Single-image latency is what a drone or a phone pays when it classifies one frame as it arrives, and it is the figure the deployment recommendation below is argued from. Both were measured after an untimed warm-up, because the first batches through a freshly loaded network pay for lazy kernel compilation that belongs to startup rather than to the architecture.
+
+### Three models at the same capacity
+
+The fully connected network, the Simple CNN and the YOLO classifier hold almost the same number of parameters:
+
+| Model | Family | Total parameters | Accuracy |
+|---|---|---|---|
+| Neural Network | Neural Baseline | 1,581,898 | 0.287 |
+| Simple CNN | CNN Baseline | 1,626,442 | 0.433 |
+| YOLO Classification | Modern Classifier | 1,543,914 | 0.939 |
+
+That is the cleanest comparison in this benchmark, and it isolates the thing the headline number does not. These three have the same capacity to within five percent of each other, and they are separated by roughly sixty-five points of accuracy. Whatever the deep architectures are buying, it is not parameter count.
+
+What separates them is what each one is allowed to assume. The fully connected network sees 12,288 independent columns and has to discover from data that two adjacent ones are related. The Simple CNN is handed locality and weight sharing and immediately doubles the score at the same budget. The YOLO classifier adds a convolutional design refined over a decade and features already learned from ImageNet, and doubles it again. The architecture and the pretraining are doing the work, not the size.
+
+Those two columns read N/A in the first version of this table. Section 23 marks N/A on the four traditional rows and leaves these two blank, and reporting all six Part 1 models the same way generalized a statement that is true of a Random Forest — which has no parameter count in this sense — to two models that plainly do. The comparison above was invisible until they were measured.
 
 ### Memory, and why the obvious measurement was useless twice
 

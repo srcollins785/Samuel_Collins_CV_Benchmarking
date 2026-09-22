@@ -1,0 +1,25 @@
+{
+  "note": "Measured by scripts/measure_baselines.py. Part 1 did not record parameter counts or model sizes; these two models are parameterized networks and belong in section 23's parameter column, where the four traditional models correctly read N/A. Written separately so Part 1's published benchmark_metrics.json stays the record it was.",
+  "models": {
+    "neural_network": {
+      "name": "Neural Network",
+      "total_parameters": 1581898,
+      "trainable_parameters": 1581898,
+      "frozen_parameters": 0,
+      "total_parameters_millions": 1.582,
+      "size_megabytes": 19.29,
+      "size_measured_as": "the pickled fitted pipeline, scaler included - the scaler holds a mean and a scale per input feature and the classifier cannot be deployed without it",
+      "architecture": "12288 - 128 - 64 - 10 fully connected"
+    },
+    "simple_cnn": {
+      "name": "Simple CNN",
+      "total_parameters": 1626442,
+      "trainable_parameters": 1626442,
+      "frozen_parameters": 0,
+      "total_parameters_millions": 1.626,
+      "size_megabytes": 6.51,
+      "size_measured_as": "a saved state dict, the same way section 18 measures every deep architecture",
+      "architecture": "conv32-pool-conv64-pool-dense128-dropout0.30-linear10 at 64x64"
+    }
+  }
+}

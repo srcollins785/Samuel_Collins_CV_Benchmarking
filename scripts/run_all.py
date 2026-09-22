@@ -62,6 +62,13 @@ def steps(skip_tests: bool, report_only: bool, skip_deep: bool) -> list:
          [sys.executable, str(SCRIPTS / "remediate_unstable.py")], "15 minutes"),
     ]
     report = [
+        # Runs before the report so a failure stops the pipeline rather than
+        # being written up. It checks identities between recorded numbers -
+        # weighted recall against accuracy, trainable against total, the
+        # confusion matrix against the test half - which is the class of error
+        # that got through the first time.
+        ("validate results",
+         [sys.executable, str(SCRIPTS / "validate_results.py")], "2 seconds"),
         ("report (markdown)",
          [sys.executable, str(SCRIPTS / "generate_report.py")], "2 seconds"),
         ("report (pdf)",

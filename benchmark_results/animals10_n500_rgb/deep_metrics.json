@@ -4698,9 +4698,10 @@
     "inference_time_ms_per_image": 1.2654,
     "parameter_counts": {
       "total_parameters": 1543914,
-      "trainable_parameters": 0,
+      "trainable_parameters": 1543914,
       "total_parameters_millions": 1.544,
-      "frozen_parameters": 1543914
+      "frozen_parameters": 0,
+      "note": "Trainable count taken from the training configuration. No freeze argument was passed, and the three parameter-group learning rates in logs/yolo_cls.csv all decay across all twenty epochs, so every layer was optimized. requires_grad on the reloaded checkpoint reads zero only because ultralytics returns it in inference mode."
     },
     "complexity": {
       "macs": null,
