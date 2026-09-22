@@ -21,7 +21,12 @@ state and hard to satisfy by accident:
   sum(epoch_seconds) ~= total time       the clock and the epochs agree
   best_epoch is argmax(validation)       selection did what it claims
 
-    python scripts/validate_results.py
+Part 1 configurations are audited too. Most of these identities need only a
+confusion matrix and the metrics recorded beside it, which every configuration
+has, so the six Part 1 runs are checked against their own matrices whether or
+not the deep benchmark ran on them.
+
+    python scripts/validate_results.py --all
     python scripts/validate_results.py --config animals10_n500_rgb
 """
 
@@ -79,20 +84,65 @@ class Audit:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default=DEFAULT_CONFIG)
+    parser.add_argument("--all", action="store_true",
+                        help="audit every configuration under benchmark_results")
     arguments = parser.parse_args()
 
-    d = REPO_ROOT / "benchmark_results" / arguments.config
+    root = REPO_ROOT / "benchmark_results"
+    if arguments.all:
+        configs = sorted(c.name for c in root.iterdir()
+                         if (c / "benchmark_metrics.json").is_file())
+    else:
+        configs = [arguments.config]
+
+    overall = True
+    for name in configs:
+        print(f"\n{'=' * 64}\n{name}\n{'=' * 64}")
+        overall &= audit_config(root / name)
+
+    check_report_figures()
+    sys.exit(0 if overall else 1)
+
+
+def check_report_figures() -> None:
+    """Every figure the report links to must exist. Global, not per-config."""
+    import re
+
+    report = (REPO_ROOT / "report" / "CV_Benchmarking_Report.md")
+    if not report.is_file():
+        return
+    missing = [rel for rel in
+               re.findall(r"\]\((\.\./benchmark_results/[^)]+)\)", report.read_text())
+               if not (report.parent / rel).resolve().is_file()]
+    print(f"\nreport figures: "
+          + ("all present" if not missing else f"MISSING {missing[:4]}"))
+
+
+def audit_config(d: Path) -> bool:
     a = Audit()
 
-    deep = json.loads((d / "deep_metrics.json").read_text())
     part1 = json.loads((d / "benchmark_metrics.json").read_text())
-    conf = json.loads((d / "deep_run_configuration.json").read_text())
-    rankings = json.loads((d / "rankings.json").read_text())
-    combined = pd.read_csv(d / "combined_ml_cnn_benchmark_results.csv",
-                           keep_default_na=False)
+
+    # Part 2 artifacts exist for the configuration the deep benchmark ran on.
+    # The others are Part 1 only, and the Part 1 identities still apply.
+    deep_path = d / "deep_metrics.json"
+    deep = json.loads(deep_path.read_text()) if deep_path.is_file() else {}
+
+    conf_path = d / "deep_run_configuration.json"
+    if conf_path.is_file():
+        conf = json.loads(conf_path.read_text())
+    else:
+        conf = json.loads((d / "run_configuration.json").read_text())
 
     classes = conf["class_names"]
     n_test = conf["split"]["testing_samples"]
+
+    combined_path = d / "combined_ml_cnn_benchmark_results.csv"
+    combined = (pd.read_csv(combined_path, keep_default_na=False)
+                if combined_path.is_file() else None)
+    rankings_path = d / "rankings.json"
+    rankings = (json.loads(rankings_path.read_text())
+                if rankings_path.is_file() else None)
 
     # -- metric identities, per model ---------------------------------------
     for source, name in ((deep, "deep"), (part1, "part1")):
@@ -105,10 +155,40 @@ def main() -> None:
                 a.check(int(cm.sum()) == n_test,
                         f"{label}: confusion matrix covers the test half",
                         f"matrix totals {int(cm.sum())}, test half is {n_test}")
-                acc = float(np.trace(cm) / cm.sum())
-                a.check(math.isclose(acc, e["accuracy"], abs_tol=1e-9),
-                        f"{label}: accuracy matches its confusion matrix",
-                        f"recorded {e['accuracy']:.6f}, matrix gives {acc:.6f}")
+                a.check(cm.shape == (len(classes), len(classes)),
+                        f"{label}: confusion matrix is square over the classes",
+                        f"shape {cm.shape} against {len(classes)} classes")
+
+                # Every averaged metric is recoverable from the matrix, so
+                # each recorded one is checked against its own derivation
+                # rather than only accuracy. This is what validates the
+                # weighted precision and recall the combined table recomputes
+                # for the Part 1 models, and it applies to every
+                # configuration, not just the one Part 2 ran on.
+                from samuel_collins_cv_benchmarking.combined import (
+                    metrics_from_confusion_matrix,
+                )
+                derived = metrics_from_confusion_matrix(cm)
+                for metric in ("accuracy", "macro_precision", "macro_recall",
+                               "macro_f1", "weighted_precision",
+                               "weighted_recall", "weighted_f1"):
+                    recorded = e.get(metric)
+                    if recorded is None:
+                        continue
+                    a.check(math.isclose(recorded, derived[metric], abs_tol=1e-9),
+                            f"{label}: {metric} matches its confusion matrix",
+                            f"recorded {recorded:.8f}, matrix gives "
+                            f"{derived[metric]:.8f}")
+
+                # Per-class support must match the test distribution exactly.
+                report = e.get("classification_report") or {}
+                for index, cls in enumerate(classes):
+                    entry = report.get(cls)
+                    if isinstance(entry, dict) and "support" in entry:
+                        a.check(int(entry["support"]) == int(cm[index].sum()),
+                                f"{label}: {cls} support matches the matrix row",
+                                f"report says {entry['support']}, row sums to "
+                                f"{int(cm[index].sum())}")
 
             # weighted recall is accuracy, exactly, for single-label problems.
             if e.get("weighted_recall") is not None:
@@ -147,7 +227,7 @@ def main() -> None:
                     f"{label}: trainable does not exceed total")
 
     # -- the neural baselines are parameterized and must report it ----------
-    for _, row in combined.iterrows():
+    for _, row in (combined.iterrows() if combined is not None else []):
         model = row["Model"]
         if model in PARAMETERIZED_BASELINES:
             a.check(row["Total Parameters"] != "N/A",
@@ -217,35 +297,37 @@ def main() -> None:
                     f"{label}: GMACs near the published figure",
                     f"measured {gm}, published about {PUBLISHED_GMACS[key]}")
 
+    # -- per-model artifacts exist for every successful model ---------------
+    for source in (part1, deep):
+        for key, e in source.items():
+            if not e.get("succeeded"):
+                continue
+            label = e.get("name", key)
+            a.check((d / "confusion_matrices" / f"{key}.png").is_file(),
+                    f"{label}: confusion matrix figure written")
+            a.check((d / "classification_reports" / f"{key}.csv").is_file(),
+                    f"{label}: per-class report written")
+
     # -- the combined table and the rankings agree ---------------------------
-    ok_models = {e.get("name", k) for k, e in {**part1, **deep}.items()
-                 if e.get("succeeded")}
-    table_models = set(combined[combined["Status"] == "ok"]["Model"])
-    a.check(ok_models == table_models,
-            "every successful model appears in the master table",
-            f"missing from table: {sorted(ok_models - table_models)}; "
-            f"extra: {sorted(table_models - ok_models)}")
+    if combined is not None:
+        ok_models = {e.get("name", k) for k, e in {**part1, **deep}.items()
+                     if e.get("succeeded")}
+        table_models = set(combined[combined["Status"] == "ok"]["Model"])
+        a.check(ok_models == table_models,
+                "every successful model appears in the master table",
+                f"missing from table: {sorted(ok_models - table_models)}; "
+                f"extra: {sorted(table_models - ok_models)}")
 
-    acc_rank = [r["model"] for r in rankings["A_highest_accuracy"]["ranking"]]
-    a.check(len(acc_rank) == len(table_models),
-            "the accuracy ranking covers every successful model",
-            f"{len(acc_rank)} ranked against {len(table_models)} models")
-    values = [r["value"] for r in rankings["A_highest_accuracy"]["ranking"]]
-    a.check(values == sorted(values, reverse=True),
-            "the accuracy ranking is ordered")
+        if rankings:
+            ranking = rankings["A_highest_accuracy"]["ranking"]
+            a.check(len(ranking) == len(table_models),
+                    "the accuracy ranking covers every successful model",
+                    f"{len(ranking)} ranked against {len(table_models)} models")
+            values = [r["value"] for r in ranking]
+            a.check(values == sorted(values, reverse=True),
+                    "the accuracy ranking is ordered")
 
-    # -- figures the report links to must exist -----------------------------
-    report = (REPO_ROOT / "report" / "CV_Benchmarking_Report.md").read_text()
-    import re
-    missing = []
-    for rel in re.findall(r"\]\((\.\./benchmark_results/[^)]+)\)", report):
-        if not (REPO_ROOT / "report" / rel).resolve().is_file():
-            missing.append(rel)
-    a.check(not missing, "every figure the report links to exists",
-            f"missing: {missing[:4]}")
-
-    ok = a.report()
-    sys.exit(0 if ok else 1)
+    return a.report()
 
 
 if __name__ == "__main__":

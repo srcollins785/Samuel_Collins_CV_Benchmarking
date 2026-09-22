@@ -68,7 +68,8 @@ def steps(skip_tests: bool, report_only: bool, skip_deep: bool) -> list:
         # confusion matrix against the test half - which is the class of error
         # that got through the first time.
         ("validate results",
-         [sys.executable, str(SCRIPTS / "validate_results.py")], "2 seconds"),
+         [sys.executable, str(SCRIPTS / "validate_results.py"), "--all"],
+         "3 seconds"),
         ("report (markdown)",
          [sys.executable, str(SCRIPTS / "generate_report.py")], "2 seconds"),
         ("report (pdf)",
